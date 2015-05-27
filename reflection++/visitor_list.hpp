@@ -55,10 +55,10 @@ void visitor_verify(const VisitorBase<> &);
 
     #include <type_traits>
 
-    struct Visitor1: public VisitorBase<> {};
-    struct Visitor2: public VisitorBase<> {};
+    struct Visitor1: public VisitorIgnoreBase<> {};
+    struct Visitor2: public VisitorIgnoreBase<> {};
     namespace some_namespace {
-        struct Visitor3: public VisitorBase<> {};
+        struct Visitor3: public VisitorIgnoreBase<> {};
     }
     using Visitor3 = some_namespace::Visitor3;
 
