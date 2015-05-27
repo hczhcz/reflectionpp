@@ -4,19 +4,18 @@
 
 namespace rpp {
 
+// the base class of meta information containers
 template <class Visitors>
 struct MetaBase;
 
 template <>
 struct MetaBase<VisitorList<>> {
-    const char *name;
-
-    inline MetaBase(const char *_name): name(_name) {}
+    virtual const char *getName();
 };
 
 template <class Visitor, class... Args>
 struct MetaBase<VisitorList<Visitor, Args...>>: public MetaBase<VisitorList<Args...>> {
-    using MetaBase<Args...>::MetaBase;
+    using Visitors = VisitorList<Visitor, Args...>;
 
     virtual typename Visitor::ReturnValue visit(Visitor &visitor) = 0;
 };
