@@ -7,4 +7,7 @@ struct VisitorBase {
     using ReturnValue = void;
 };
 
+template <class... Args>
+struct VisitorList {};
+
 }

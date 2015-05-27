@@ -17,22 +17,26 @@ VisitorTail visitor_next(...);
         VisitorBase<>(value), \
         visitor_trace_##Type(visitor_next(value), value) \
     ); \
+    \
     template <class Last> \
     Last visitor_trace_##Type(VisitorTail, Last); \
+    \
     Type visitor_next( \
         decltype(visitor_trace_##Type(visitor_next(visitor_head), visitor_head)) \
     );
 
-// pass all visitor classes to a template and get a type alias
-// using Type = Wrapper<Visitor1, Visitor2, ...>
-#define VISITOR_COLLECT(Type, Wrapper) \
+// pass all visitor classes to VisitorList and get a type alias
+// using Type = VisitorList<Visitor1, Visitor2, ...>
+#define VISITOR_COLLECT(Type) \
     template <class T, class... Args> \
     auto visitor_trace2_##Type(T value, Args... args) -> decltype( \
         VisitorBase<>(value), \
         visitor_trace2_##Type(visitor_next(value), args..., value) \
     ); \
+    \
     template <class... Args> \
-    Wrapper<Args...> visitor_trace2_##Type(VisitorTail, Args...); \
+    VisitorList<Args...> visitor_trace2_##Type(VisitorTail, Args...); \
+    \
     using Type = \
         decltype(visitor_trace2_##Type(visitor_next(visitor_head)));
 
@@ -49,8 +53,8 @@ VisitorTail visitor_next(...);
 // VISITOR_REG(V2)
 // VISITOR_REG(V3)
 
-// VISITOR_COLLECT(VAll, std::tuple)
+// VISITOR_COLLECT(VAll)
 
-// VAll all; // show the type of VAll
+// VAll all = "make_error"; // show the type of VAll
 
 }
