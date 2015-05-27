@@ -4,13 +4,19 @@
 
 namespace rpp {
 
-struct {} visitor_head;
+// the abstract head of the visitor chain
+static constexpr struct {} visitor_head{};
 
-struct VisitorTail {};
+// the abstract tail of the visitor chain
+struct VisitorTail final {
+    // compile-time only
+    VisitorTail() = delete;
+};
 
+// an abstract function to get the next member of the visitor chain
 VisitorTail visitor_next(...);
 
-// register a visitor class
+// register a visitor class into the visitor chain
 #define VISITOR_REG(Type) \
     template <class T, class Last> \
     auto visitor_trace_##Type(T value, Last last) -> decltype( \
@@ -25,7 +31,7 @@ VisitorTail visitor_next(...);
         decltype(visitor_trace_##Type(visitor_next(visitor_head), visitor_head)) \
     );
 
-// pass all visitor classes to VisitorList and get a type alias
+// pass all visitor classes in the chain to VisitorList and create a type alias
 // using Type = VisitorList<Visitor1, Visitor2, ...>
 #define VISITOR_COLLECT(Type) \
     template <class T, class... Args> \
