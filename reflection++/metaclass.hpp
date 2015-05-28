@@ -23,26 +23,26 @@ struct MetaBase<VisitorList<Visitor, Args...>>: public MetaBase<VisitorList<Args
 };
 
 // the implementation of MetaBase
-template <class Visitors, const char Name[], class Accessor, class Base = MetaBase<Visitors>>
+template <class Visitors, class Accessor, class Base = MetaBase<Visitors>>
 struct MetaImpl;
 
-template <const char Name[], class Accessor, class Base>
+template <class Accessor, class Base>
 struct MetaImpl<
-    VisitorList<>, Name, Accessor, Base
+    VisitorList<>, Accessor, Base
 >: public Base, Accessor {
     virtual const char *getName() {
-        return Name;
+        return Accessor::getRealName();
     }
 };
 
-template <class Visitor, class... Args, const char Name[], class Accessor, class Base>
+template <class Visitor, class... Args, class Accessor, class Base>
 struct MetaImpl<
-    VisitorList<Visitor, Args...>, Name, Accessor, Base
->: public MetaImpl<VisitorList<Args...>, Name, Accessor, Base> {
+    VisitorList<Visitor, Args...>, Accessor, Base
+>: public MetaImpl<VisitorList<Args...>, Accessor, Base> {
     using Base::visit;
 
     virtual typename Visitor::ReturnValue visit(Visitor &visitor) override {
-        return visitor.visit(this->access());
+        return visitor.visit(Accessor::access());
     }
 };
 
@@ -81,18 +81,24 @@ struct MetaImpl<
             }
         };
 
-        const char value_name_1[] = "value1";
         struct Accessor1: public AccessorBase<> {
             int value = 0;
+
+            inline const char *getRealName() {
+                return "value1";
+            }
 
             int &access() {
                 return value;
             }
         };
 
-        const char value_name_2[] = "value2";
         struct Accessor2: public AccessorBase<> {
             char value = 'A';
+
+            inline const char *getRealName() {
+                return "value2";
+            }
 
             char &access() {
                 return value;
@@ -104,15 +110,17 @@ struct MetaImpl<
         RPP_VISITOR_COLLECT(VisitorAll3)
 
         static const int test1 = []() {
-            MetaImpl<VisitorAll3, value_name_1, Accessor1> meta1;
-            MetaImpl<VisitorAll3, value_name_2, Accessor2> meta2;
+            MetaImpl<VisitorAll3, Accessor1> meta1;
+            MetaImpl<VisitorAll3, Accessor2> meta2;
 
             Visitor4 v4;
             Visitor5 v5;
 
+            std::cerr << "Meta1: " << meta1.getName() << std::endl;
             meta1.visit(v4);
-            meta2.visit(v4);
             meta1.visit(v5);
+            std::cerr << "Meta2: " << meta2.getName() << std::endl;
+            meta2.visit(v4);
             meta2.visit(v5);
 
             return 0;
