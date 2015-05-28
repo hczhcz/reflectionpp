@@ -52,7 +52,7 @@ struct MetaImpl<
 
     #include <typeinfo>
     #include <iostream>
-    #include "visitor_list.hpp"
+    #include "visitor_chain.hpp"
 
     struct Visitor4: public VisitorBase<> {
         void visit(int &value) {
@@ -98,7 +98,7 @@ struct MetaImpl<
     RPP_VISITOR_REG(Visitor5)
     RPP_VISITOR_COLLECT(VisitorAll3)
 
-    static int test1 = []() {
+    static const int test1 = []() {
         MetaImpl<VisitorAll3, value_name_1, Accessor1> meta1;
         MetaImpl<VisitorAll3, value_name_2, Accessor2> meta2;
 
