@@ -1,6 +1,6 @@
 #pragma once
 
-#include "visitor.hpp"
+#include "visitor_list.hpp"
 
 namespace rpp {
 
@@ -46,6 +46,8 @@ struct MetaImpl<
     }
 };
 
+}
+
 // ======== Usage example ========
 
 #ifdef RPP_DEBUG
@@ -53,66 +55,69 @@ struct MetaImpl<
     #include <typeinfo>
     #include <iostream>
     #include "visitor_chain.hpp"
+    #include "accessor.hpp"
 
-    struct Visitor4: public VisitorBase<> {
-        void visit(int &value) {
-            std::cerr << "Visitor4: int, " << value << std::endl;
-        }
+    namespace rpp {
 
-        void visit(char &value) {
-            std::cerr << "Visitor4: char, " << value << std::endl;
-            value = 'B';
-        }
+        struct Visitor4: public VisitorBase<> {
+            void visit(int &value) {
+                std::cerr << "Visitor4: int, " << value << std::endl;
+            }
 
-        void visit(bool &value) {
-            std::cerr << "Visitor4: bool, " << value << std::endl;
-        }
-    };
+            void visit(char &value) {
+                std::cerr << "Visitor4: char, " << value << std::endl;
+                value = 'B';
+            }
 
-    struct Visitor5: public VisitorBase<> {
-        template <class T>
-        void visit(T &value) {
-            std::cerr << "Visitor5: " << typeid(T).name() << ", " << value << std::endl;
-        }
-    };
+            void visit(bool &value) {
+                std::cerr << "Visitor4: bool, " << value << std::endl;
+            }
+        };
 
-    const char value_name_1[] = "value1";
-    struct Accessor1 {
-        int value = 0;
+        struct Visitor5: public VisitorBase<> {
+            template <class T>
+            void visit(T &value) {
+                std::cerr << "Visitor5: " << typeid(T).name() << ", " << value << std::endl;
+            }
+        };
 
-        int &access() {
-            return value;
-        }
-    };
+        const char value_name_1[] = "value1";
+        struct Accessor1: public AccessorBase<> {
+            int value = 0;
 
-    const char value_name_2[] = "value2";
-    struct Accessor2 {
-        char value = 'A';
+            int &access() {
+                return value;
+            }
+        };
 
-        char &access() {
-            return value;
-        }
-    };
+        const char value_name_2[] = "value2";
+        struct Accessor2: public AccessorBase<> {
+            char value = 'A';
 
-    RPP_VISITOR_REG(Visitor4)
-    RPP_VISITOR_REG(Visitor5)
-    RPP_VISITOR_COLLECT(VisitorAll3)
+            char &access() {
+                return value;
+            }
+        };
 
-    static const int test1 = []() {
-        MetaImpl<VisitorAll3, value_name_1, Accessor1> meta1;
-        MetaImpl<VisitorAll3, value_name_2, Accessor2> meta2;
+        RPP_VISITOR_REG(Visitor4)
+        RPP_VISITOR_REG(Visitor5)
+        RPP_VISITOR_COLLECT(VisitorAll3)
 
-        Visitor4 v4;
-        Visitor5 v5;
+        static const int test1 = []() {
+            MetaImpl<VisitorAll3, value_name_1, Accessor1> meta1;
+            MetaImpl<VisitorAll3, value_name_2, Accessor2> meta2;
 
-        meta1.visit(v4);
-        meta2.visit(v4);
-        meta1.visit(v5);
-        meta2.visit(v5);
+            Visitor4 v4;
+            Visitor5 v5;
 
-        return 0;
-    }();
+            meta1.visit(v4);
+            meta2.visit(v4);
+            meta1.visit(v5);
+            meta2.visit(v5);
+
+            return 0;
+        }();
+
+    }
 
 #endif
-
-}

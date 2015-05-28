@@ -1,5 +1,6 @@
 #pragma once
 
+#include "visitor_list.hpp"
 #include "visitor.hpp"
 
 namespace rpp {
@@ -49,32 +50,34 @@ void visitor_verify(const VisitorBase<> &);
     using Type = \
         decltype(visitor_trace2_##Type(visitor_next(visitor_head)));
 
+}
+
 // ======== Usage example ========
 
 #ifdef RPP_DEBUG
 
     #include <type_traits>
 
-    struct Visitor1: public VisitorIgnoreBase<> {};
-    struct Visitor2: public VisitorIgnoreBase<> {};
-    namespace some_namespace {
-        struct Visitor3: public VisitorIgnoreBase<> {};
+    namespace rpp {
+
+        struct Visitor1: public VisitorIgnoreBase<> {};
+        struct Visitor2: public VisitorIgnoreBase<> {};
+        namespace some_namespace {
+            struct Visitor3: public VisitorIgnoreBase<> {};
+        }
+        using Visitor3 = some_namespace::Visitor3;
+
+        RPP_VISITOR_COLLECT(VisitorAll1)
+
+        RPP_VISITOR_REG(Visitor1)
+        RPP_VISITOR_REG(Visitor2)
+        RPP_VISITOR_REG(Visitor3)
+
+        RPP_VISITOR_COLLECT(VisitorAll2)
+
+        static_assert(std::is_same<VisitorAll1, VisitorList<>>(), "");
+        static_assert(std::is_same<VisitorAll2, VisitorList<Visitor1, Visitor2, Visitor3>>(), "");
+
     }
-    using Visitor3 = some_namespace::Visitor3;
-
-    RPP_VISITOR_COLLECT(VisitorAll1)
-
-    RPP_VISITOR_REG(Visitor1)
-    RPP_VISITOR_REG(Visitor2)
-    RPP_VISITOR_REG(Visitor3)
-
-    RPP_VISITOR_COLLECT(VisitorAll2)
-
-    static_assert(std::is_same<VisitorAll1, VisitorList<>>(), "");
-    static_assert(std::is_same<VisitorAll2, VisitorList<Visitor1, Visitor2, Visitor3>>(), "");
-
-    // VisitorTestAll all = "make_error"; // show the type of VisitorTestAll
 
 #endif
-
-}
