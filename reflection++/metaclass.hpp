@@ -30,6 +30,9 @@ template <class Accessor, class Base>
 struct MetaImpl<
     VisitorList<>, Accessor, Base
 >: public Base, Accessor {
+    using Accessor::Accessor;
+    using Base::visit;
+
     virtual const char *getName() {
         return Accessor::getRealName();
     }
@@ -39,7 +42,8 @@ template <class Visitor, class... Args, class Accessor, class Base>
 struct MetaImpl<
     VisitorList<Visitor, Args...>, Accessor, Base
 >: public MetaImpl<VisitorList<Args...>, Accessor, Base> {
-    using Base::visit;
+    using MetaImpl<VisitorList<Args...>, Accessor, Base>::MetaImpl;
+    using MetaImpl<VisitorList<Args...>, Accessor, Base>::visit;
 
     virtual typename Visitor::ReturnValue visit(Visitor &visitor) override {
         return visitor.visit(Accessor::access());
@@ -66,7 +70,7 @@ struct MetaImpl<
 
             void visit(char &value) {
                 std::cerr << "Visitor4: char, " << value << std::endl;
-                value = 'B';
+                value += 1;
             }
 
             void visit(bool &value) {
@@ -81,27 +85,37 @@ struct MetaImpl<
             }
         };
 
-        struct Accessor1: public AccessorBase<> {
-            int value = 0;
+        struct Accessor1: public AccessorLocal<int> {
+            using AccessorLocal::AccessorLocal;
 
-            inline const char *getRealName() {
+            const char *getRealName() {
                 return "value1";
-            }
-
-            int &access() {
-                return value;
             }
         };
 
-        struct Accessor2: public AccessorBase<> {
-            char value = 'A';
+        struct Accessor2: public AccessorLocal<char> {
+            using AccessorLocal::AccessorLocal;
 
-            inline const char *getRealName() {
+            const char *getRealName() {
                 return "value2";
             }
+        };
 
-            char &access() {
-                return value;
+        static char accessor_value = 'C';
+
+        struct Accessor3: public AccessorStatic<char, accessor_value> {
+            using AccessorStatic::AccessorStatic;
+
+            const char *getRealName() {
+                return "value3";
+            }
+        };
+
+        struct Accessor4: public AccessorDynamic<char> {
+            using AccessorDynamic::AccessorDynamic;
+
+            const char *getRealName() {
+                return "value4";
             }
         };
 
@@ -110,8 +124,10 @@ struct MetaImpl<
         RPP_VISITOR_COLLECT(VisitorAll3)
 
         static const int test1 = []() {
-            MetaImpl<VisitorAll3, Accessor1> meta1;
-            MetaImpl<VisitorAll3, Accessor2> meta2;
+            MetaImpl<VisitorAll3, Accessor1> meta1{0};
+            MetaImpl<VisitorAll3, Accessor2> meta2{'A'};
+            MetaImpl<VisitorAll3, Accessor3> meta3;
+            MetaImpl<VisitorAll3, Accessor4> meta4{accessor_value};
 
             Visitor4 v4;
             Visitor5 v5;
@@ -122,6 +138,12 @@ struct MetaImpl<
             std::cerr << "Meta2: " << meta2.getName() << std::endl;
             meta2.visit(v4);
             meta2.visit(v5);
+            std::cerr << "Meta3: " << meta3.getName() << std::endl;
+            meta3.visit(v4);
+            meta3.visit(v5);
+            std::cerr << "Meta4: " << meta4.getName() << std::endl;
+            meta4.visit(v4);
+            meta4.visit(v5);
 
             return 0;
         }();
