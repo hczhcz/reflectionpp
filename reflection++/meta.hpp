@@ -1,6 +1,6 @@
 #pragma once
 
-#include "visitor_list.hpp"
+#include "type_list.hpp"
 
 namespace rpp {
 
@@ -9,15 +9,15 @@ template <class Visitors>
 struct MetaBase;
 
 template <>
-struct MetaBase<VisitorList<>> {
+struct MetaBase<TypeList<>> {
     virtual const char *getName() = 0;
 
     virtual void visit(void) {};
 };
 
 template <class Visitor, class... Args>
-struct MetaBase<VisitorList<Visitor, Args...>>: public MetaBase<VisitorList<Args...>> {
-    using MetaBase<VisitorList<Args...>>::visit;
+struct MetaBase<TypeList<Visitor, Args...>>: public MetaBase<TypeList<Args...>> {
+    using MetaBase<TypeList<Args...>>::visit;
 
     virtual typename Visitor::ReturnValue visit(Visitor &visitor) = 0;
 };
@@ -28,7 +28,7 @@ struct MetaImpl;
 
 template <class Accessor, class Base>
 struct MetaImpl<
-    VisitorList<>, Accessor, Base
+    TypeList<>, Accessor, Base
 >: public Base, Accessor {
     using Accessor::Accessor;
     using Base::visit;
@@ -40,10 +40,10 @@ struct MetaImpl<
 
 template <class Visitor, class... Args, class Accessor, class Base>
 struct MetaImpl<
-    VisitorList<Visitor, Args...>, Accessor, Base
->: public MetaImpl<VisitorList<Args...>, Accessor, Base> {
-    using MetaImpl<VisitorList<Args...>, Accessor, Base>::MetaImpl;
-    using MetaImpl<VisitorList<Args...>, Accessor, Base>::visit;
+    TypeList<Visitor, Args...>, Accessor, Base
+>: public MetaImpl<TypeList<Args...>, Accessor, Base> {
+    using MetaImpl<TypeList<Args...>, Accessor, Base>::MetaImpl;
+    using MetaImpl<TypeList<Args...>, Accessor, Base>::visit;
 
     virtual typename Visitor::ReturnValue visit(Visitor &visitor) override {
         return visitor.visit(Accessor::access());

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "visitor_list.hpp"
+#include "type_list.hpp"
 #include "visitor.hpp"
 
 namespace rpp {
@@ -35,8 +35,8 @@ void visitor_verify(const VisitorBase<> &);
         decltype(visitor_trace_##Type(visitor_next(visitor_head), visitor_head)) \
     );
 
-// pass all visitor classes in the chain to VisitorList and create a type alias
-// using Type = VisitorList<Visitor1, Visitor2, ...>
+// pass all visitor classes in the chain to a type list and create a type alias
+// using Type = TypeList<Visitor1, Visitor2, ...>
 #define RPP_VISITOR_COLLECT(Type) \
     template <class T, class... Args> \
     auto visitor_trace2_##Type(T value, Args... args) -> decltype( \
@@ -45,7 +45,7 @@ void visitor_verify(const VisitorBase<> &);
     ); \
     \
     template <class... Args> \
-    VisitorList<Args...> visitor_trace2_##Type(VisitorTail, Args...); \
+    TypeList<Args...> visitor_trace2_##Type(VisitorTail, Args...); \
     \
     using Type = \
         decltype(visitor_trace2_##Type(visitor_next(visitor_head)));
@@ -75,8 +75,8 @@ void visitor_verify(const VisitorBase<> &);
 
         RPP_VISITOR_COLLECT(VisitorAll2)
 
-        static_assert(std::is_same<VisitorAll1, VisitorList<>>(), "");
-        static_assert(std::is_same<VisitorAll2, VisitorList<Visitor1, Visitor2, Visitor3>>(), "");
+        static_assert(std::is_same<VisitorAll1, TypeList<>>(), "");
+        static_assert(std::is_same<VisitorAll2, TypeList<Visitor1, Visitor2, Visitor3>>(), "");
 
     }
 
