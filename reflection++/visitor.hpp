@@ -18,7 +18,7 @@ struct VisitorReturnBase: public VisitorBase<> {
 template <class Return = void>
 struct VisitorIgnoreBase: public VisitorReturnBase<Return> {
     Return visit(...) {
-        return Return();
+        return Return(); // notice: void is not constructable
     }
 };
 

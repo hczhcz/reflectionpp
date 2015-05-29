@@ -58,6 +58,8 @@ struct MetaImpl<
 
     #include <typeinfo>
     #include <iostream>
+    #include <string>
+    #include <vector>
     #include "visitor_chain.hpp"
     #include "accessor.hpp"
 
@@ -65,23 +67,24 @@ struct MetaImpl<
 
         struct Visitor4: public VisitorBase<> {
             void visit(int &value) {
-                std::cerr << "Visitor4: int, " << value << std::endl;
+                std::cerr << "Visitor4: int, " << value;
             }
 
             void visit(char &value) {
-                std::cerr << "Visitor4: char, " << value << std::endl;
+                std::cerr << "Visitor4: char, " << value;
                 value += 1;
             }
 
             void visit(bool &value) {
-                std::cerr << "Visitor4: bool, " << value << std::endl;
+                std::cerr << "Visitor4: bool, " << value;
             }
         };
 
-        struct Visitor5: public VisitorBase<> {
+        struct Visitor5: public VisitorReturnBase<int> {
             template <class T>
-            void visit(T &value) {
-                std::cerr << "Visitor5: " << typeid(T).name() << ", " << value << std::endl;
+            int visit(T &value) {
+                std::cerr << "Visitor5: " << typeid(T).name() << ", " << value;
+                return 42;
             }
         };
 
@@ -128,22 +131,19 @@ struct MetaImpl<
             MetaImpl<VisitorAll3, Accessor2> meta2{'A'};
             MetaImpl<VisitorAll3, Accessor3> meta3;
             MetaImpl<VisitorAll3, Accessor4> meta4{accessor_value};
+            std::vector<MetaBase<VisitorAll3> *> metalist{
+                &meta1, &meta2, &meta3, &meta4
+            };
 
             Visitor4 v4;
             Visitor5 v5;
 
-            std::cerr << "Meta1: " << meta1.getName() << std::endl;
-            meta1.visit(v4);
-            meta1.visit(v5);
-            std::cerr << "Meta2: " << meta2.getName() << std::endl;
-            meta2.visit(v4);
-            meta2.visit(v5);
-            std::cerr << "Meta3: " << meta3.getName() << std::endl;
-            meta3.visit(v4);
-            meta3.visit(v5);
-            std::cerr << "Meta4: " << meta4.getName() << std::endl;
-            meta4.visit(v4);
-            meta4.visit(v5);
+            for (MetaBase<VisitorAll3> *meta: metalist) {
+                std::cerr << meta->getName() << " - ";
+                meta->visit(v4);
+                std::cerr << " - " << ", return " + std::to_string(meta->visit(v5));
+                std::cerr << std::endl;
+            }
 
             return 0;
         }();
