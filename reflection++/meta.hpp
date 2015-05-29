@@ -12,7 +12,7 @@ template <>
 struct MetaBase<TypeList<>> {
     virtual const char *getName() = 0;
 
-    virtual void visit(void) {};
+    virtual void visit() {};
 };
 
 template <class Visitor, class... Args>
@@ -80,7 +80,7 @@ struct MetaImpl<
             }
         };
 
-        struct Visitor5: public VisitorReturnBase<int> {
+        struct Visitor5: public VisitorBase<int> {
             template <class T>
             int visit(T &value) {
                 std::cerr << "Visitor5: " << typeid(T).name() << ", " << value;

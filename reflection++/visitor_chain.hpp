@@ -18,7 +18,8 @@ struct VisitorTail final {
 VisitorTail visitor_next(...);
 
 // verify if the argument is a VisitorBase
-void visitor_verify(const VisitorBase<> &);
+template <class Return = void>
+void visitor_verify(const VisitorBase<Return> &);
 
 // register a visitor class into the visitor chain
 #define RPP_VISITOR_REG(Type) \
