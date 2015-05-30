@@ -11,6 +11,8 @@ struct MetaBase;
 template <>
 struct MetaBase<TypeList<>> {
     virtual const char *getName() = 0;
+    virtual const decltype(typeid(void)) &getTypeInfo() = 0;
+    virtual void *getPointer() = 0;
 
     virtual void doVisit() {};
 };
@@ -33,8 +35,16 @@ struct MetaImpl<
     using Accessor::Accessor;
     using Base::doVisit;
 
-    virtual const char *getName() {
+    virtual const char *getName() override {
         return Accessor::getRealName();
+    }
+
+    virtual const decltype(typeid(void)) &getTypeInfo() override {
+        return typeid(Accessor::access());
+    }
+
+    virtual void *getPointer() override {
+        return &Accessor::access();
     }
 };
 
@@ -143,7 +153,9 @@ struct MetaImpl<
             Visitor5 v5;
 
             for (MetaBase<VisitorAll3> *meta: metalist) {
-                std::cerr << meta->getName() << " - ";
+                std::cerr << meta->getName() << ": ";
+                std::cerr << meta->getTypeInfo().name() << ", ";
+                std::cerr << meta->getPointer() << " - ";
                 meta->doVisit(v4);
                 std::cerr << " - " << ", return " + std::to_string(meta->doVisit(v5));
                 std::cerr << std::endl;
