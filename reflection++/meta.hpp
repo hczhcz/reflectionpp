@@ -14,7 +14,8 @@ struct MetaBase<TypeList<>> {
     virtual const decltype(typeid(void)) &getTypeInfo() = 0;
     virtual void *getPointer() = 0;
 
-    virtual void doVisit() {};
+    // see: using MetaBase<TypeList<Args...>>::doVisit
+    void doVisit() = delete;
 };
 
 template <class Visitor, class... Args>
@@ -81,23 +82,23 @@ struct MetaImpl<
 
         struct Visitor4: public VisitorBase<> {
             void visit(int &value) {
-                std::cerr << "Visitor4: int, " << value;
+                std::cerr << "visitor4: int, " << value;
             }
 
             void visit(char &value) {
-                std::cerr << "Visitor4: char, " << value;
+                std::cerr << "visitor4: char, " << value;
                 value += 1;
             }
 
             void visit(bool &value) {
-                std::cerr << "Visitor4: bool, " << value;
+                std::cerr << "visitor4: bool, " << value;
             }
         };
 
         struct Visitor5: public VisitorBase<int> {
             template <class T>
             int visit(T &value) {
-                std::cerr << "Visitor5: " << typeid(T).name() << ", " << value;
+                std::cerr << "visitor5: " << typeid(T).name() << ", " << value;
                 return 42;
             }
         };
@@ -160,6 +161,18 @@ struct MetaImpl<
                 std::cerr << " - " << ", return " + std::to_string(meta->doVisit(v5));
                 std::cerr << std::endl;
             }
+
+            std::cerr << "sizeof(...):";
+            std::cerr << " " << sizeof(Accessor1);
+            std::cerr << " " << sizeof(Accessor2);
+            std::cerr << " " << sizeof(Accessor3);
+            std::cerr << " " << sizeof(Accessor4);
+            std::cerr << " " << sizeof(meta1);
+            std::cerr << " " << sizeof(meta2);
+            std::cerr << " " << sizeof(meta3);
+            std::cerr << " " << sizeof(meta4);
+            // std::cerr << sizeof(meta12) << std::endl;
+            std::cerr << std::endl;
 
             return 0;
         }();
