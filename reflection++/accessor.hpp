@@ -13,15 +13,17 @@ struct AccessorLocal: public AccessorBase<> {
     AccessorLocal(T &&_value): value(_value) {}
     AccessorLocal(const T &_value): value(_value) {}
 
-    T &access() {
-        return value;
+    template <class Visitor>
+    typename Visitor::ReturnValue doRealVisit(Visitor &visitor) {
+        return visitor.visit(value);
     }
 };
 
 template <class T, T &value>
 struct AccessorStatic: public AccessorBase<> {
-    T &access() {
-        return value;
+    template <class Visitor>
+    typename Visitor::ReturnValue doRealVisit(Visitor &visitor) {
+        return visitor.visit(value);
     }
 };
 
@@ -31,8 +33,9 @@ struct AccessorDynamic: public AccessorBase<> {
 
     AccessorDynamic(T &_value): value(_value) {}
 
-    T &access() {
-        return value;
+    template <class Visitor>
+    typename Visitor::ReturnValue doRealVisit(Visitor &visitor) {
+        return visitor.visit(value);
     }
 };
 
@@ -42,8 +45,9 @@ struct AccessorMember: public AccessorBase<> {
 
     AccessorMember(T &_object): object(_object) {}
 
-    T &access() {
-        return object.member;
+    template <class Visitor>
+    typename Visitor::ReturnValue doRealVisit(Visitor &visitor) {
+        return visitor.visit(object.member);
     }
 };
 

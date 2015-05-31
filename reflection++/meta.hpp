@@ -1,6 +1,6 @@
 #pragma once
 
-#include <typeinfo>
+// #include <typeinfo>
 
 #include "type_list.hpp"
 
@@ -11,17 +11,21 @@ template <class Visitors>
 struct MetaBase;
 
 template <>
-struct MetaBase<TypeList<>> {
+struct MetaBase<
+    TypeList<>
+> {
     virtual const char *getName() = 0;
-    virtual const std::type_info &getTypeInfo() = 0;
-    virtual void *getPointer() = 0;
+    // virtual const std::type_info &getTypeInfo() = 0;
+    // virtual void *getPointer() = 0;
 
     // see: using MetaBase<TypeList<Args...>>::doVisit
     void doVisit() = delete;
 };
 
 template <class Visitor, class... Args>
-struct MetaBase<TypeList<Visitor, Args...>>: public MetaBase<TypeList<Args...>> {
+struct MetaBase<
+    TypeList<Visitor, Args...>
+>: public MetaBase<TypeList<Args...>> {
     using MetaBase<TypeList<Args...>>::doVisit;
 
     virtual typename Visitor::ReturnValue doVisit(Visitor &visitor) = 0;
@@ -42,13 +46,13 @@ struct MetaImpl<
         return Accessor::getRealName();
     }
 
-    virtual const std::type_info &getTypeInfo() override {
-        return typeid(Accessor::access());
-    }
+    // virtual const std::type_info &getTypeInfo() override {
+    //     return typeid(Accessor::access());
+    // }
 
-    virtual void *getPointer() override {
-        return &Accessor::access();
-    }
+    // virtual void *getPointer() override {
+    //     return &Accessor::access();
+    // }
 };
 
 template <class Visitor, class... Args, class Accessor, class Base>
@@ -58,12 +62,8 @@ struct MetaImpl<
     using MetaImpl<TypeList<Args...>, Accessor, Base>::MetaImpl;
     using MetaImpl<TypeList<Args...>, Accessor, Base>::doVisit;
 
-    typename Visitor::ReturnValue doRealVisit(Visitor &visitor) {
-        return visitor.visit(Accessor::access());
-    }
-
     virtual typename Visitor::ReturnValue doVisit(Visitor &visitor) override {
-        return doRealVisit(visitor);
+        return Accessor::doRealVisit(visitor);
     }
 };
 
@@ -157,8 +157,8 @@ struct MetaImpl<
 
             for (MetaBase<VisitorAll3> *meta: metalist) {
                 std::cerr << meta->getName() << ": ";
-                std::cerr << meta->getTypeInfo().name() << ", ";
-                std::cerr << meta->getPointer() << " - ";
+                // std::cerr << meta->getTypeInfo().name() << ", ";
+                // std::cerr << meta->getPointer() << " - ";
                 meta->doVisit(v4);
                 std::cerr << " - " << ", return " + std::to_string(meta->doVisit(v5));
                 std::cerr << std::endl;
