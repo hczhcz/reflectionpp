@@ -1,7 +1,5 @@
 #pragma once
 
-// #include <typeinfo>
-
 #include "type_list.hpp"
 
 namespace rpp {
@@ -15,6 +13,8 @@ struct MetaBase<
     TypeList<>
 > {
     virtual const char *getName() = 0;
+
+    // TODO: add common visitors
     // virtual const std::type_info &getTypeInfo() = 0;
     // virtual void *getPointer() = 0;
 
@@ -45,14 +45,6 @@ struct MetaImpl<
     virtual const char *getName() override {
         return Accessor::getRealName();
     }
-
-    // virtual const std::type_info &getTypeInfo() override {
-    //     return typeid(Accessor::access());
-    // }
-
-    // virtual void *getPointer() override {
-    //     return &Accessor::access();
-    // }
 };
 
 template <class Visitor, class... Args, class Accessor, class Base>
