@@ -17,9 +17,8 @@ struct VisitorTail final {
 // an abstract function to get the next member of the visitor chain
 VisitorTail visitor_next(...);
 
-// verify if the argument is a VisitorBase
-template <class Return = void>
-void visitor_verify(const VisitorBase<Return> &);
+// call visitor_next with VisitorTail is not allowed
+void visitor_next(VisitorTail) = delete;
 
 // register a visitor class into the visitor chain
 #define RPP_VISITOR_REG(Type) \
@@ -28,7 +27,6 @@ void visitor_verify(const VisitorBase<Return> &);
     \
     template <class T, class Last> \
     auto visitor_trace_##Type(T value, Last last) -> decltype( \
-        visitor_verify(value), \
         visitor_trace_##Type(visitor_next(value), value) \
     ); \
     \
@@ -44,7 +42,6 @@ void visitor_verify(const VisitorBase<Return> &);
     \
     template <class T, class... Args> \
     auto visitor_trace2_##Type(T value, Args... args) -> decltype( \
-        visitor_verify(value), \
         visitor_trace2_##Type(visitor_next(value), args..., value) \
     ); \
     \
