@@ -32,6 +32,7 @@ struct MetaBase<
 };
 
 // the implementation of MetaBase
+// implemented vitrual functions
 template <class Visitors, class Accessor, class Base = MetaBase<Visitors>>
 struct MetaImpl;
 
@@ -156,16 +157,18 @@ struct MetaImpl<
                 std::cerr << std::endl;
             }
 
-            std::cerr << "sizeof(...):";
+            std::cerr << "sizeof(Accessor):";
             std::cerr << " " << sizeof(Accessor1);
             std::cerr << " " << sizeof(Accessor2);
             std::cerr << " " << sizeof(Accessor3);
             std::cerr << " " << sizeof(Accessor4);
+            std::cerr << std::endl;
+
+            std::cerr << "sizeof(meta):";
             std::cerr << " " << sizeof(meta1);
             std::cerr << " " << sizeof(meta2);
             std::cerr << " " << sizeof(meta3);
             std::cerr << " " << sizeof(meta4);
-            // std::cerr << sizeof(meta12) << std::endl;
             std::cerr << std::endl;
 
             return 0;
