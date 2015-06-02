@@ -140,6 +140,41 @@ struct MetaImpl<
             }
         };
 
+        struct TestStruct {
+            int member1;
+            float member2;
+        };
+
+        struct Accessor5m1: public AccessorMember<
+            TestStruct, int, &TestStruct::member1
+        > {
+            using AccessorMember::AccessorMember;
+
+            const char *getRealName() {
+                return "value5.member1";
+            }
+        };
+
+        struct Accessor5m2: public AccessorMember<
+            TestStruct, float, &TestStruct::member2
+        > {
+            using AccessorMember::AccessorMember;
+
+            const char *getRealName() {
+                return "value5.member2";
+            }
+        };
+
+        struct Accessor5: public AccessorObject<
+            AccessorLocal<TestStruct>, Accessor5m1, Accessor5m2
+        > {
+            using AccessorObject::AccessorObject;
+
+            const char *getRealName() {
+                return "value5";
+            }
+        };
+
         RPP_VISITOR_REG(Visitor4)
         RPP_VISITOR_REG(Visitor5)
         RPP_VISITOR_COLLECT(VisitorAll3)
@@ -149,8 +184,10 @@ struct MetaImpl<
             MetaImpl<VisitorAll3, Accessor2> meta2{'A'};
             MetaImpl<VisitorAll3, Accessor3> meta3;
             MetaImpl<VisitorAll3, Accessor4> meta4{accessor_value};
+            MetaImpl<VisitorAll3, Accessor5> meta5{TestStruct{1, 1.5}};
+
             std::vector<MetaBase<VisitorAll3> *> metalist{
-                &meta1, &meta2, &meta3, &meta4
+                &meta1, &meta2, &meta3, &meta4, &meta5
             };
 
             Visitor4 v4;
@@ -170,6 +207,7 @@ struct MetaImpl<
             std::cerr << " " << sizeof(Accessor2);
             std::cerr << " " << sizeof(Accessor3);
             std::cerr << " " << sizeof(Accessor4);
+            std::cerr << " " << sizeof(Accessor5);
             std::cerr << std::endl;
 
             std::cerr << "sizeof(meta):";
@@ -177,6 +215,7 @@ struct MetaImpl<
             std::cerr << " " << sizeof(meta2);
             std::cerr << " " << sizeof(meta3);
             std::cerr << " " << sizeof(meta4);
+            std::cerr << " " << sizeof(meta5);
             std::cerr << std::endl;
 
             return 0;
