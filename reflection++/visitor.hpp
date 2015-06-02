@@ -14,6 +14,10 @@ struct VisitorIgnoreBase: public VisitorBase<Return> {
     Return visit(...) {
         return Return(); // notice: void is not constructable
     }
+
+    Return into(...) {
+        return Return(); // notice: void is not constructable
+    }
 };
 
 }

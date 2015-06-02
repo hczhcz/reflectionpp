@@ -88,6 +88,10 @@ struct MetaImpl<
             void visit(bool &value) {
                 std::cerr << "visitor4: bool, " << value;
             }
+
+            void into(...) {
+                return; // not support
+            }
         };
 
         struct Visitor5: public VisitorBase<int> {
@@ -95,6 +99,10 @@ struct MetaImpl<
             int visit(T &value) {
                 std::cerr << "visitor5: " << typeid(T).name() << ", " << value;
                 return 42;
+            }
+
+            int into(...) {
+                return 0; // not support
             }
         };
 
