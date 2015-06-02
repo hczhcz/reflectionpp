@@ -59,4 +59,37 @@ struct AccessorMember: public AccessorBase<> {
     }
 };
 
+// TODO: write comments
+template <class Base, class... Members>
+struct AccessorObjectHelper;
+
+template <class Base>
+struct AccessorObjectHelper<Base>: public Base {
+    using Base::Base;
+
+    static constexpr auto size = 0;
+};
+
+template <class Base, class Member, class... Args>
+struct AccessorObjectHelper<
+    Base, Member, Args...
+>: public AccessorObjectHelper<Base, Args...> {
+    using AccessorObjectHelper<Base, Args...>::AccessorObjectHelper;
+
+    static constexpr auto size = 1 + sizeof...(Args);
+};
+
+// TODO: write comments
+template <class Base, class... Members>
+struct AccessorObject: public AccessorBase<> {
+    AccessorObjectHelper<Base, Members...> self;
+
+    AccessorObject(decltype(self) &&_self): self{_self} {}
+
+    template <class Visitor>
+    typename Visitor::ReturnValue doRealVisit(Visitor &visitor) {
+        return visitor.into(self);
+    }
+};
+
 }
