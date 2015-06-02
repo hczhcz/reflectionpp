@@ -89,7 +89,17 @@ struct MetaImpl<
                 std::cerr << "visitor4: bool, " << value;
             }
 
-            void into(...) {
+            void visit(float &value) {
+                std::cerr << "visitor4: float, " << value;
+            }
+
+            template <class Accessor>
+            void into(Accessor &accessor) {
+                // accessor.doObjectVisit(*this);
+                for (rpp_size_t i = 0; i < accessor.size(); ++i) {
+                    std::cerr << " << ";
+                    accessor.doMemberVisit(*this, i);
+                }
                 return; // not support
             }
         };
@@ -102,7 +112,7 @@ struct MetaImpl<
             }
 
             int into(...) {
-                return 0; // not support
+                return 0; // ignore
             }
         };
 
