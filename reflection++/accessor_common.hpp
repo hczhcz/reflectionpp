@@ -1,6 +1,7 @@
 #pragma once
 
 #include "accessor.hpp"
+#include "accessor_object.hpp"
 
 namespace rpp {
 
@@ -73,78 +74,15 @@ struct AccessorMember: public AccessorBase<> {
     }
 };
 
-// data accessors associated with members (mixin)
-template <class Base, class... Members>
-struct AccessorObjectHelper;
-
-template <class Base>
-struct AccessorObjectHelper<Base>: protected Base {
-    using Base::Base;
-
-    rpp_size_t size() {
-        return 0;
-    }
-
-    template <class Visitor>
-    typename Visitor::ReturnValue doObjectVisit(Visitor &visitor) {
-        return Base::doRealVisit(visitor);
-    }
-
-    template <class Visitor>
-    typename Visitor::ReturnValue doMemberVisit(Visitor &visitor, rpp_size_t index) {
-        (void) visitor;
-        (void) index;
-
-        throw 1; // TODO
-    }
-};
-
-template <class Base, class Member, class... Args>
-struct AccessorObjectHelper<
-    Base, Member, Args...
->: protected AccessorObjectHelper<Base, Args...> {
-    using AccessorObjectHelper<Base, Args...>::AccessorObjectHelper;
-
-    rpp_size_t size() {
-        return 1 + sizeof...(Args);
-    }
-
-    template <class Visitor>
-    typename Visitor::ReturnValue doObjectVisit(Visitor &visitor) {
-        return Base::doRealVisit(visitor);
-    }
-
-    template <class Visitor, rpp_size_t index>
-    typename Visitor::ReturnValue doMemberVisit(Visitor &visitor) {
-        if (index == 0) {
-            Member member{Base::get()};
-            return member.doRealVisit(visitor);
-        } else {
-            AccessorObjectHelper<Base, Args...>
-                ::template doMemberVisit<Visitor, index - 1>(visitor);
-        }
-    }
-
-    template <class Visitor>
-    typename Visitor::ReturnValue doMemberVisit(Visitor &visitor, rpp_size_t index) {
-        if (index == 0) {
-            Member member{Base::get()};
-            return member.doRealVisit(visitor);
-        } else {
-            AccessorObjectHelper<Base, Args...>
-                ::template doMemberVisit<Visitor>(visitor, index - 1);
-        }
-    }
-};
-
-template <class Base, class... Args>
-struct AccessorObject: protected AccessorObjectHelper<Base, Args...> {
-    using AccessorObjectHelper<Base, Args...>::AccessorObjectHelper;
+// data accessors associated with members
+template <class Self, class... Args>
+struct AccessorObject: protected AccessorObjectHelper<Self, Args...> {
+    using AccessorObjectHelper<Self, Args...>::AccessorObjectHelper;
 
     template <class Visitor>
     typename Visitor::ReturnValue doRealVisit(Visitor &visitor) {
         return visitor.into(
-            *static_cast<AccessorObjectHelper<Base, Args...> *>(this)
+            *static_cast<AccessorObjectHelper<Self, Args...> *>(this)
         );
     }
 };

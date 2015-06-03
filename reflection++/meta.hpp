@@ -39,7 +39,7 @@ struct MetaImpl;
 template <class Accessor, class Base>
 struct MetaImpl<
     TypeList<>, Accessor, Base
->: public Base, Accessor {
+>: public Base, protected Accessor {
     using Accessor::Accessor;
     using Base::doVisit;
 
