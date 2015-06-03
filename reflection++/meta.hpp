@@ -71,6 +71,7 @@ struct MetaImpl<
     #include <string>
     #include <vector>
     #include "visitor_chain.hpp"
+    #include "holder.hpp"
     #include "accessor.hpp"
 
     namespace rpp {
@@ -116,16 +117,16 @@ struct MetaImpl<
             }
         };
 
-        struct Accessor1: public AccessorLocal<int> {
-            using AccessorLocal::AccessorLocal;
+        struct Accessor1: public AccessorSimple<HolderLocal<int>> {
+            using AccessorSimple::AccessorSimple;
 
             const char *getRealName() {
                 return "value1";
             }
         };
 
-        struct Accessor2: public AccessorLocal<char> {
-            using AccessorLocal::AccessorLocal;
+        struct Accessor2: public AccessorSimple<HolderLocal<char>> {
+            using AccessorSimple::AccessorSimple;
 
             const char *getRealName() {
                 return "value2";
@@ -134,16 +135,16 @@ struct MetaImpl<
 
         static char accessor_value = 'C';
 
-        struct Accessor3: public AccessorStatic<char, accessor_value> {
-            using AccessorStatic::AccessorStatic;
+        struct Accessor3: public AccessorSimple<HolderStatic<char, accessor_value>> {
+            using AccessorSimple::AccessorSimple;
 
             const char *getRealName() {
                 return "value3";
             }
         };
 
-        struct Accessor4: public AccessorDynamic<char> {
-            using AccessorDynamic::AccessorDynamic;
+        struct Accessor4: public AccessorSimple<HolderDynamic<char>> {
+            using AccessorSimple::AccessorSimple;
 
             const char *getRealName() {
                 return "value4";
@@ -155,20 +156,20 @@ struct MetaImpl<
             float member2;
         };
 
-        struct Accessor5m1: public AccessorMember<
+        struct Accessor5m1: public AccessorSimple<HolderMember<
             TestStruct, int, &TestStruct::member1
-        > {
-            using AccessorMember::AccessorMember;
+        >> {
+            using AccessorSimple::AccessorSimple;
 
             const char *getRealName() {
                 return "value5.member1";
             }
         };
 
-        struct Accessor5m2: public AccessorMember<
+        struct Accessor5m2: public AccessorSimple<HolderMember<
             TestStruct, float, &TestStruct::member2
-        > {
-            using AccessorMember::AccessorMember;
+        >> {
+            using AccessorSimple::AccessorSimple;
 
             const char *getRealName() {
                 return "value5.member2";
@@ -176,7 +177,7 @@ struct MetaImpl<
         };
 
         struct Accessor5: public AccessorObject<
-            AccessorLocal<TestStruct>, Accessor5m1, Accessor5m2
+            HolderLocal<TestStruct>, Accessor5m1, Accessor5m2
         > {
             using AccessorObject::AccessorObject;
 
