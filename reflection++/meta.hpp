@@ -77,42 +77,42 @@ struct MetaImpl<
 
         struct Visitor4: public VisitorBase<> {
             void visit(int &value) {
-                std::cerr << "visitor4: int, " << value;
+                std::cerr << "int, " << value;
             }
 
             void visit(char &value) {
-                std::cerr << "visitor4: char, " << value;
+                std::cerr << "char, " << value;
                 value += 1;
             }
 
             void visit(bool &value) {
-                std::cerr << "visitor4: bool, " << value;
+                std::cerr << "bool, " << value;
             }
 
             void visit(float &value) {
-                std::cerr << "visitor4: float, " << value;
+                std::cerr << "float, " << value;
             }
 
             template <class Accessor>
             void into(Accessor &accessor) {
-                // accessor.doObjectVisit(*this);
+                std::cerr << "object";
+
                 for (rpp_size_t i = 0; i < accessor.size(); ++i) {
                     std::cerr << " << ";
                     accessor.doMemberVisit(*this, i);
                 }
-                return; // not support
             }
         };
 
-        struct Visitor5: public VisitorBase<int> {
+        struct Visitor5: public VisitorBase<const char *> {
             template <class T>
-            int visit(T &value) {
-                std::cerr << "visitor5: " << typeid(T).name() << ", " << value;
-                return 42;
+            const char *visit(T &value) {
+                return typeid(value).name();
             }
 
-            int into(...) {
-                return 0; // ignore
+            template <class Accessor>
+            const char *into(Accessor &accessor) {
+                return accessor.doObjectVisit(*this);
             }
         };
 
@@ -208,7 +208,7 @@ struct MetaImpl<
                 // std::cerr << meta->getTypeInfo().name() << ", ";
                 // std::cerr << meta->getPointer() << " - ";
                 meta->doVisit(v4);
-                std::cerr << " - " << ", return " + std::to_string(meta->doVisit(v5));
+                std::cerr << " - type " << meta->doVisit(v5);
                 std::cerr << std::endl;
             }
 
