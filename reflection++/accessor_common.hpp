@@ -7,7 +7,7 @@ namespace rpp {
 
 // data accessors that hold data by themselves
 template <class T>
-struct AccessorLocal: public AccessorBase<> {
+struct AccessorLocal {
     T value;
 
     AccessorLocal(T &&_value): value(static_cast<T &&>(_value)) {}
@@ -27,7 +27,7 @@ struct AccessorLocal: public AccessorBase<> {
 
 // data accessors point to a specified variable
 template <class T, T &value>
-struct AccessorStatic: public AccessorBase<> {
+struct AccessorStatic {
     AccessorStatic() {}
 
     T &get() {
@@ -42,7 +42,7 @@ struct AccessorStatic: public AccessorBase<> {
 
 // data accessors point to a run-time variable
 template <class T>
-struct AccessorDynamic: public AccessorBase<> {
+struct AccessorDynamic {
     T &value;
 
     AccessorDynamic(T &_value): value{_value} {}
@@ -59,7 +59,7 @@ struct AccessorDynamic: public AccessorBase<> {
 
 // data accessors point to a specified member of a class
 template <class Object, class T, T Object::*member>
-struct AccessorMember: public AccessorBase<> {
+struct AccessorMember {
     Object &object;
 
     AccessorMember(Object &_object): object{_object} {}

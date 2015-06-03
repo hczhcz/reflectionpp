@@ -35,14 +35,10 @@ struct AccessorObjectHelper<
     Self, Member, Args...
 >: protected AccessorObjectHelper<Self, Args...> {
     using AccessorObjectHelper<Self, Args...>::AccessorObjectHelper;
+    using AccessorObjectHelper<Self, Args...>::doObjectVisit;
 
     rpp_size_t size() {
         return 1 + sizeof...(Args);
-    }
-
-    template <class Visitor>
-    typename Visitor::ReturnValue doObjectVisit(Visitor &visitor) {
-        return Self::doRealVisit(visitor);
     }
 
     template <class Visitor, rpp_size_t index>
