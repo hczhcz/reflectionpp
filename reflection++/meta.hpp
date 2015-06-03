@@ -28,7 +28,7 @@ struct MetaBase<
 >: public MetaBase<TypeList<Args...>> {
     using MetaBase<TypeList<Args...>>::doVisit;
 
-    virtual typename Visitor::ReturnValue doVisit(Visitor &visitor) = 0;
+    virtual typename Visitor::ReturnType doVisit(Visitor &visitor) = 0;
 };
 
 // the implementation of MetaBase
@@ -55,7 +55,7 @@ struct MetaImpl<
     using MetaImpl<TypeList<Args...>, Accessor, Base>::MetaImpl;
     using MetaImpl<TypeList<Args...>, Accessor, Base>::doVisit;
 
-    virtual typename Visitor::ReturnValue doVisit(Visitor &visitor) override {
+    virtual typename Visitor::ReturnType doVisit(Visitor &visitor) override {
         return Accessor::doRealVisit(visitor);
     }
 };

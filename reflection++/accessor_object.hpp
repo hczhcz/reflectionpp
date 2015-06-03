@@ -17,12 +17,12 @@ struct AccessorObjectHelper<Self>: protected Self {
     }
 
     template <class Visitor>
-    typename Visitor::ReturnValue doObjectVisit(Visitor &visitor) {
+    typename Visitor::ReturnType doObjectVisit(Visitor &visitor) {
         return Self::doRealVisit(visitor);
     }
 
     template <class Visitor>
-    typename Visitor::ReturnValue doMemberVisit(Visitor &visitor, rpp_size_t index) {
+    typename Visitor::ReturnType doMemberVisit(Visitor &visitor, rpp_size_t index) {
         (void) visitor;
         (void) index;
 
@@ -42,7 +42,7 @@ struct AccessorObjectHelper<
     }
 
     template <class Visitor, rpp_size_t index>
-    typename Visitor::ReturnValue doMemberVisit(Visitor &visitor) {
+    typename Visitor::ReturnType doMemberVisit(Visitor &visitor) {
         if (index == 0) {
             Member member{Self::get()};
             return member.doRealVisit(visitor);
@@ -53,7 +53,7 @@ struct AccessorObjectHelper<
     }
 
     template <class Visitor>
-    typename Visitor::ReturnValue doMemberVisit(Visitor &visitor, rpp_size_t index) {
+    typename Visitor::ReturnType doMemberVisit(Visitor &visitor, rpp_size_t index) {
         if (index == 0) {
             Member member{Self::get()};
             return member.doRealVisit(visitor);

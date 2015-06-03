@@ -20,7 +20,7 @@ struct AccessorLocal {
     }
 
     template <class Visitor>
-    typename Visitor::ReturnValue doRealVisit(Visitor &visitor) {
+    typename Visitor::ReturnType doRealVisit(Visitor &visitor) {
         return visitor.visit(value);
     }
 };
@@ -35,7 +35,7 @@ struct AccessorStatic {
     }
 
     template <class Visitor>
-    typename Visitor::ReturnValue doRealVisit(Visitor &visitor) {
+    typename Visitor::ReturnType doRealVisit(Visitor &visitor) {
         return visitor.visit(value);
     }
 };
@@ -52,7 +52,7 @@ struct AccessorDynamic {
     }
 
     template <class Visitor>
-    typename Visitor::ReturnValue doRealVisit(Visitor &visitor) {
+    typename Visitor::ReturnType doRealVisit(Visitor &visitor) {
         return visitor.visit(value);
     }
 };
@@ -69,7 +69,7 @@ struct AccessorMember {
     }
 
     template <class Visitor>
-    typename Visitor::ReturnValue doRealVisit(Visitor &visitor) {
+    typename Visitor::ReturnType doRealVisit(Visitor &visitor) {
         return visitor.visit(object.*member);
     }
 };
@@ -80,7 +80,7 @@ struct AccessorObject: protected AccessorObjectHelper<Self, Args...> {
     using AccessorObjectHelper<Self, Args...>::AccessorObjectHelper;
 
     template <class Visitor>
-    typename Visitor::ReturnValue doRealVisit(Visitor &visitor) {
+    typename Visitor::ReturnType doRealVisit(Visitor &visitor) {
         return visitor.into(
             *static_cast<AccessorObjectHelper<Self, Args...> *>(this)
         );

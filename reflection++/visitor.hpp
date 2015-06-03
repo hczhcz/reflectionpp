@@ -5,7 +5,7 @@ namespace rpp {
 // the base class of meta information visitors
 template <class Return = void>
 struct VisitorBase {
-    using ReturnValue = Return;
+    using ReturnType = Return;
 };
 
 // visitors that ignore unknown values
