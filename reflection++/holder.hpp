@@ -2,6 +2,16 @@
 
 namespace rpp {
 
+// data holders that hold constant data
+template <class T, T value>
+struct HolderConst {
+    HolderConst() {}
+
+    const T operator()() {
+        return value;
+    }
+};
+
 // data holders that hold data by themselves
 template <class T>
 struct HolderLocal {
