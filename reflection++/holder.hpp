@@ -2,12 +2,15 @@
 
 namespace rpp {
 
-// data holders that hold constant data
-template <class T, T value>
+// data holders that hold data as a static variable in a function
+// allow constant only
+template <class T, T _value>
 struct HolderConst {
     HolderConst() {}
 
-    const T operator()() {
+    const T &operator()() {
+        static const T value{_value};
+
         return value;
     }
 };
@@ -29,8 +32,8 @@ struct HolderLocal {
 
 // data holders point to a specified variable
 template <class T, T &value>
-struct HolderStatic {
-    HolderStatic() {}
+struct HolderRef {
+    HolderRef() {}
 
     T &operator()() {
         return value;

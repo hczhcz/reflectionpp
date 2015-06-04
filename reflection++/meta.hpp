@@ -134,7 +134,7 @@ struct MetaImpl<
         const char name3[] = "value3";
         using Accessor3 = AccessorSimple<
             HolderConst<const char *, name3>,
-            HolderStatic<char, accessor_value>
+            HolderRef<char, accessor_value>
         >;
 
         const char name4[] = "value4";

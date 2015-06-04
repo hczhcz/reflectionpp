@@ -10,7 +10,7 @@ struct AccessorSimple: protected Holder {
     using Holder::Holder;
 
     const char *getRealName() {
-        Name name;
+        Name name{};
         return name();
     }
 
@@ -87,7 +87,7 @@ struct AccessorObject: protected AccessorObjectHelper<Holder, Args...> {
     using AccessorObjectHelper<Holder, Args...>::AccessorObjectHelper;
 
     const char *getRealName() {
-        Name name;
+        Name name{};
         return name();
     }
 
