@@ -5,9 +5,14 @@ namespace rpp {
 using rpp_size_t = unsigned;
 
 // data accessors that uses one data holder
-template <class Holder>
+template <class Name, class Holder>
 struct AccessorSimple: protected Holder {
     using Holder::Holder;
+
+    const char *getRealName() {
+        Name name;
+        return name();
+    }
 
     template <class Visitor>
     typename Visitor::ReturnType doRealVisit(Visitor &visitor) {
@@ -77,9 +82,14 @@ struct AccessorObjectHelper<
 };
 
 // data accessors associated with members
-template <class Holder, class... Args>
+template <class Name, class Holder, class... Args>
 struct AccessorObject: protected AccessorObjectHelper<Holder, Args...> {
     using AccessorObjectHelper<Holder, Args...>::AccessorObjectHelper;
+
+    const char *getRealName() {
+        Name name;
+        return name();
+    }
 
     template <class Visitor>
     typename Visitor::ReturnType doRealVisit(Visitor &visitor) {

@@ -117,74 +117,56 @@ struct MetaImpl<
             }
         };
 
-        struct Accessor1: public AccessorSimple<HolderLocal<int>> {
-            using AccessorSimple::AccessorSimple;
+        const char name1[] = "value1";
+        using Accessor1 = AccessorSimple<
+            HolderConst<const char *, name1>,
+            HolderLocal<int>
+        >;
 
-            const char *getRealName() {
-                return "value1";
-            }
-        };
-
-        struct Accessor2: public AccessorSimple<HolderLocal<char>> {
-            using AccessorSimple::AccessorSimple;
-
-            const char *getRealName() {
-                return "value2";
-            }
-        };
+        const char name2[] = "value2";
+        using Accessor2 = AccessorSimple<
+            HolderConst<const char *, name2>,
+            HolderLocal<char>
+        >;
 
         static char accessor_value = 'C';
 
-        struct Accessor3: public AccessorSimple<HolderStatic<char, accessor_value>> {
-            using AccessorSimple::AccessorSimple;
+        const char name3[] = "value3";
+        using Accessor3 = AccessorSimple<
+            HolderConst<const char *, name3>,
+            HolderStatic<char, accessor_value>
+        >;
 
-            const char *getRealName() {
-                return "value3";
-            }
-        };
-
-        struct Accessor4: public AccessorSimple<HolderDynamic<char>> {
-            using AccessorSimple::AccessorSimple;
-
-            const char *getRealName() {
-                return "value4";
-            }
-        };
+        const char name4[] = "value4";
+        using Accessor4 = AccessorSimple<
+            HolderConst<const char *, name4>,
+            HolderDynamic<char>
+        >;
 
         struct TestStruct {
             int member1;
             float member2;
         };
 
-        struct Accessor5m1: public AccessorSimple<HolderMember<
-            TestStruct, int, &TestStruct::member1
-        >> {
-            using AccessorSimple::AccessorSimple;
+        const char name5m1[] = "value5.member1";
+        using Accessor5m1 = AccessorSimple<
+            HolderConst<const char *, name5m1>,
+            HolderMember<TestStruct, int, &TestStruct::member1>
+        >;
 
-            const char *getRealName() {
-                return "value5.member1";
-            }
-        };
+        const char name5m2[] = "value5.member2";
+        using Accessor5m2 = AccessorSimple<
+            HolderConst<const char *, name5m2>,
+            HolderMember<TestStruct, float, &TestStruct::member2>
+        >;
 
-        struct Accessor5m2: public AccessorSimple<HolderMember<
-            TestStruct, float, &TestStruct::member2
-        >> {
-            using AccessorSimple::AccessorSimple;
-
-            const char *getRealName() {
-                return "value5.member2";
-            }
-        };
-
-        struct Accessor5: public AccessorObject<
-            HolderLocal<TestStruct>, Accessor5m1, Accessor5m2
-        > {
-            using AccessorObject::AccessorObject;
-
-            const char *getRealName() {
-                return "value5";
-            }
-        };
+        const char name5[] = "value5";
+        using Accessor5 = AccessorObject<
+            HolderConst<const char *, name5>,
+            HolderLocal<TestStruct>,
+            Accessor5m1,
+            Accessor5m2
+        >;
 
         RPP_VISITOR_REG(Visitor4)
         RPP_VISITOR_REG(Visitor5)
