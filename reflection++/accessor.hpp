@@ -97,15 +97,14 @@ struct AccessorObjectHelper<
 };
 
 // data accessors associated with members
-template <class Name, class Value, class... Args>
-struct AccessorObject: protected AccessorObjectHelper<Value, TypeList<Args...>> {
-    using AccessorObjectHelper<Value, TypeList<Args...>>::AccessorObjectHelper;
+template <class Name, class Value, class Members>
+struct AccessorObject: protected AccessorObjectHelper<Value, Members> {
+    using AccessorObjectHelper<Value, Members>::AccessorObjectHelper;
 
-    using Meta = typename AccessorObjectHelper<Value, TypeList<Args...>>
-        ::MetaList
-        ::template Push<HolderType<decltype((*static_cast<Value *>(nullptr))())>>
-        ::template Push<Name>
-        ::template Head<rpp::AccessorObject>;
+    using Meta = AccessorObject<
+        Name, HolderType<decltype((*static_cast<Value *>(nullptr))())>,
+        typename AccessorObjectHelper<Value, Members>::MetaList
+    >;
 
     static const char *getRealName() {
         Name name{};
@@ -115,7 +114,7 @@ struct AccessorObject: protected AccessorObjectHelper<Value, TypeList<Args...>> 
     template <class Visitor>
     typename Visitor::ReturnType doRealVisit(Visitor &visitor) {
         return visitor.into(
-            *static_cast<AccessorObjectHelper<Value, TypeList<Args...>> *>(this)
+            *static_cast<AccessorObjectHelper<Value, Members> *>(this)
         );
     }
 };

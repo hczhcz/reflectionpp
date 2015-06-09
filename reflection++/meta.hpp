@@ -172,8 +172,7 @@ struct MetaImpl<
         using Accessor5 = AccessorObject<
             HolderConst<const char *, name5>,
             HolderLocal<TestStruct>,
-            Accessor5m1,
-            Accessor5m2
+            TypeList<Accessor5m1, Accessor5m2>
         >;
 
         static_assert(
@@ -192,8 +191,7 @@ struct MetaImpl<
                 AccessorObject<
                     HolderConst<const char *, name5>,
                     HolderType<TestStruct &>,
-                    Accessor5m1::Meta,
-                    Accessor5m2::Meta
+                    TypeList<Accessor5m1::Meta, Accessor5m2::Meta>
                 >
             >(), ""
         );
