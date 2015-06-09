@@ -4,10 +4,10 @@ namespace rpp {
 
 using rpp_size_t = unsigned;
 
-// data accessors that uses one data holder
-template <class Name, class Holder>
-struct AccessorSimple: protected Holder {
-    using Holder::Holder;
+// data accessors of simple data
+template <class Name, class Value>
+struct AccessorSimple: protected Value {
+    using Value::Value;
 
     static const char *getRealName() {
         Name name{};
@@ -22,12 +22,12 @@ struct AccessorSimple: protected Holder {
 
 // helper class of AccessObject
 // add information of object members to an accessor
-template <class Holder, class... Args>
+template <class Value, class... Args>
 struct AccessorObjectHelper;
 
-template <class Holder>
-struct AccessorObjectHelper<Holder>: protected Holder {
-    using Holder::Holder;
+template <class Value>
+struct AccessorObjectHelper<Value>: protected Value {
+    using Value::Value;
 
     rpp_size_t size() {
         return 0;
@@ -47,12 +47,12 @@ struct AccessorObjectHelper<Holder>: protected Holder {
     }
 };
 
-template <class Holder, class Member, class... Args>
+template <class Value, class Member, class... Args>
 struct AccessorObjectHelper<
-    Holder, Member, Args...
->: protected AccessorObjectHelper<Holder, Args...> {
-    using AccessorObjectHelper<Holder, Args...>::AccessorObjectHelper;
-    using AccessorObjectHelper<Holder, Args...>::doObjectVisit;
+    Value, Member, Args...
+>: protected AccessorObjectHelper<Value, Args...> {
+    using AccessorObjectHelper<Value, Args...>::AccessorObjectHelper;
+    using AccessorObjectHelper<Value, Args...>::doObjectVisit;
 
     rpp_size_t size() {
         return 1 + sizeof...(Args);
@@ -64,7 +64,7 @@ struct AccessorObjectHelper<
             Member member{(*this)()}; // TODO
             return member.doRealVisit(visitor);
         } else {
-            AccessorObjectHelper<Holder, Args...>
+            AccessorObjectHelper<Value, Args...>
                 ::template doMemberVisit<Visitor, index - 1>(visitor);
         }
     }
@@ -75,16 +75,16 @@ struct AccessorObjectHelper<
             Member member{(*this)()}; // TODO
             return member.doRealVisit(visitor);
         } else {
-            AccessorObjectHelper<Holder, Args...>
+            AccessorObjectHelper<Value, Args...>
                 ::template doMemberVisit<Visitor>(visitor, index - 1);
         }
     }
 };
 
 // data accessors associated with members
-template <class Name, class Holder, class... Args>
-struct AccessorObject: protected AccessorObjectHelper<Holder, Args...> {
-    using AccessorObjectHelper<Holder, Args...>::AccessorObjectHelper;
+template <class Name, class Value, class... Args>
+struct AccessorObject: protected AccessorObjectHelper<Value, Args...> {
+    using AccessorObjectHelper<Value, Args...>::AccessorObjectHelper;
 
     static const char *getRealName() {
         Name name{};
@@ -94,7 +94,7 @@ struct AccessorObject: protected AccessorObjectHelper<Holder, Args...> {
     template <class Visitor>
     typename Visitor::ReturnType doRealVisit(Visitor &visitor) {
         return visitor.into(
-            *static_cast<AccessorObjectHelper<Holder, Args...> *>(this)
+            *static_cast<AccessorObjectHelper<Value, Args...> *>(this)
         );
     }
 };
