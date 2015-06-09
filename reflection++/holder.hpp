@@ -2,6 +2,16 @@
 
 namespace rpp {
 
+// data holders that hold types
+template <class T>
+struct HolderType {
+    HolderType() {}
+
+    const HolderType<T> &operator()() {
+        return *this;
+    }
+};
+
 // data holders that hold data as a static variable in a function
 // allow constant only
 template <class T, T _value>
@@ -67,8 +77,9 @@ struct HolderMember {
 // // data holders that use "this" pointer directly
 // template <class T>
 // struct HolderThis: public T {
-//     using RealType = T;
 //     using T::T;
+
+//     using RealType = T;
 
 //     T &operator()() {
 //         return *this;
