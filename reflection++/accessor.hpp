@@ -9,7 +9,7 @@ template <class Name, class Holder>
 struct AccessorSimple: protected Holder {
     using Holder::Holder;
 
-    const char *getRealName() {
+    static const char *getRealName() {
         Name name{};
         return name();
     }
@@ -86,7 +86,7 @@ template <class Name, class Holder, class... Args>
 struct AccessorObject: protected AccessorObjectHelper<Holder, Args...> {
     using AccessorObjectHelper<Holder, Args...>::AccessorObjectHelper;
 
-    const char *getRealName() {
+    static const char *getRealName() {
         Name name{};
         return name();
     }
