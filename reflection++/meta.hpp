@@ -1,6 +1,7 @@
 #pragma once
 
 #include "type_list.hpp"
+#include "static_str.hpp"
 
 namespace rpp {
 
@@ -123,15 +124,13 @@ struct MetaImpl<
             }
         };
 
-        constexpr const char name1[] = "value1";
         using Accessor1 = AccessorSimple<
-            HolderConst<const char *, name1>,
+            HolderConst<const char *, RPP_STATIC_STR("value1")>,
             HolderLocal<int>
         >;
 
-        constexpr const char name2[] = "value2";
         using Accessor2 = AccessorSimple<
-            HolderConst<const char *, name2>,
+            HolderConst<const char *, RPP_STATIC_STR("value2")>,
             HolderLocal<char>
         >;
 
@@ -139,15 +138,13 @@ struct MetaImpl<
             char accessor_value = 'C';
         }
 
-        constexpr const char name3[] = "value3";
         using Accessor3 = AccessorSimple<
-            HolderConst<const char *, name3>,
+            HolderConst<const char *, RPP_STATIC_STR("value3")>,
             HolderRef<char, accessor_value>
         >;
 
-        constexpr const char name4[] = "value4";
         using Accessor4 = AccessorSimple<
-            HolderConst<const char *, name4>,
+            HolderConst<const char *, RPP_STATIC_STR("value4")>,
             HolderDynamic<char>
         >;
 
@@ -156,21 +153,18 @@ struct MetaImpl<
             float member2;
         };
 
-        constexpr const char name5m1[] = "value5.member1";
         using Accessor5m1 = AccessorSimple<
-            HolderConst<const char *, name5m1>,
+            HolderConst<const char *, RPP_STATIC_STR("member1")>,
             HolderMember<TestStruct, int, &TestStruct::member1>
         >;
 
-        constexpr const char name5m2[] = "value5.member2";
         using Accessor5m2 = AccessorSimple<
-            HolderConst<const char *, name5m2>,
+            HolderConst<const char *, RPP_STATIC_STR("member2")>,
             HolderMember<TestStruct, float, &TestStruct::member2>
         >;
 
-        constexpr const char name5[] = "value5";
         using Accessor5 = AccessorObject<
-            HolderConst<const char *, name5>,
+            HolderConst<const char *, RPP_STATIC_STR("value5")>,
             HolderLocal<TestStruct>,
             TypeList<Accessor5m1, Accessor5m2>
         >;
@@ -179,7 +173,7 @@ struct MetaImpl<
             std::is_same<
                 Accessor5m1::Meta,
                 AccessorSimple<
-                    HolderConst<const char *, name5m1>,
+                    HolderConst<const char *, RPP_STATIC_STR("member1")>,
                     HolderType<int &>
                 >
             >(), ""
@@ -189,7 +183,7 @@ struct MetaImpl<
             std::is_same<
                 Accessor5::Meta,
                 AccessorObject<
-                    HolderConst<const char *, name5>,
+                    HolderConst<const char *, RPP_STATIC_STR("value5")>,
                     HolderType<TestStruct &>,
                     TypeList<Accessor5m1::Meta, Accessor5m2::Meta>
                 >
