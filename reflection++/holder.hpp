@@ -7,6 +7,9 @@ template <class T>
 struct HolderType {
     HolderType() {}
 
+    template <class Object>
+    HolderType(Object &) {} // as object member
+
     const HolderType<T> &operator()() {
         return *this;
     }
@@ -17,6 +20,9 @@ struct HolderType {
 template <class T, T _value>
 struct HolderConst {
     HolderConst() {}
+
+    template <class Object>
+    HolderConst(Object &) {} // as object member
 
     const T &operator()() {
         static const T value{_value};
@@ -44,6 +50,9 @@ struct HolderLocal {
 template <class T, T &value>
 struct HolderRef {
     HolderRef() {}
+
+    template <class Object>
+    HolderRef(Object &) {} // as object member
 
     T &operator()() {
         return value;

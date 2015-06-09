@@ -95,6 +95,11 @@ struct MetaImpl<
                 std::cerr << "float, " << value;
             }
 
+            template <class T>
+            void visit(const HolderType<T> &) {
+                std::cerr << "type, " << typeid(T).name();
+            }
+
             template <class Accessor>
             void into(Accessor &accessor) {
                 std::cerr << "object";
@@ -193,6 +198,8 @@ struct MetaImpl<
             >(), ""
         );
 
+        using Accessor6 = Accessor5::Meta;
+
         RPP_VISITOR_REG(Visitor4)
         RPP_VISITOR_REG(Visitor5)
         RPP_VISITOR_COLLECT(VisitorAll3)
@@ -203,9 +210,10 @@ struct MetaImpl<
             MetaImpl<VisitorAll3, Accessor3> meta3;
             MetaImpl<VisitorAll3, Accessor4> meta4{accessor_value};
             MetaImpl<VisitorAll3, Accessor5> meta5{TestStruct{1, 1.5}};
+            MetaImpl<VisitorAll3, Accessor6> meta6;
 
             std::vector<MetaBase<VisitorAll3> *> metalist{
-                &meta1, &meta2, &meta3, &meta4, &meta5
+                &meta1, &meta2, &meta3, &meta4, &meta5, &meta6
             };
 
             Visitor4 v4;
@@ -226,6 +234,7 @@ struct MetaImpl<
             std::cerr << " " << sizeof(Accessor3);
             std::cerr << " " << sizeof(Accessor4);
             std::cerr << " " << sizeof(Accessor5);
+            std::cerr << " " << sizeof(Accessor6);
             std::cerr << std::endl;
 
             std::cerr << "sizeof(meta):";
@@ -234,6 +243,7 @@ struct MetaImpl<
             std::cerr << " " << sizeof(meta3);
             std::cerr << " " << sizeof(meta4);
             std::cerr << " " << sizeof(meta5);
+            std::cerr << " " << sizeof(meta6);
             std::cerr << std::endl;
 
             return 0;
