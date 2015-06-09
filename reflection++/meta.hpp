@@ -67,6 +67,7 @@ struct MetaImpl<
 #ifdef RPP_DEBUG
 
     #include <typeinfo>
+    #include <type_traits>
     #include <iostream>
     #include <string>
     #include <vector>
@@ -169,6 +170,28 @@ struct MetaImpl<
             Accessor5m1,
             Accessor5m2
         >;
+
+        static_assert(
+            std::is_same<
+                Accessor5m1::Meta,
+                AccessorSimple<
+                    HolderConst<const char *, name5m1>,
+                    HolderType<int &>
+                >
+            >(), ""
+        );
+
+        static_assert(
+            std::is_same<
+                Accessor5::Meta,
+                AccessorObject<
+                    HolderConst<const char *, name5>,
+                    HolderType<TestStruct &>,
+                    Accessor5m1::Meta,
+                    Accessor5m2::Meta
+                >
+            >(), ""
+        );
 
         RPP_VISITOR_REG(Visitor4)
         RPP_VISITOR_REG(Visitor5)
