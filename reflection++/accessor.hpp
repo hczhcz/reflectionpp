@@ -1,5 +1,8 @@
 #pragma once
 
+#include "type_list.hpp"
+#include "holder.hpp"
+
 namespace rpp {
 
 using rpp_size_t = unsigned;
@@ -8,6 +11,10 @@ using rpp_size_t = unsigned;
 template <class Name, class Value>
 struct AccessorSimple: protected Value {
     using Value::Value;
+
+    using Meta = AccessorSimple<
+        Name, HolderType<decltype((*static_cast<Value *>(nullptr))())>
+    >;
 
     static const char *getRealName() {
         Name name{};
@@ -22,12 +29,16 @@ struct AccessorSimple: protected Value {
 
 // helper class of AccessObject
 // add information of object members to an accessor
-template <class Value, class... Args>
+template <class Value, class Members>
 struct AccessorObjectHelper;
 
 template <class Value>
-struct AccessorObjectHelper<Value>: protected Value {
+struct AccessorObjectHelper<
+    Value, TypeList<>
+>: protected Value {
     using Value::Value;
+
+    using MetaList = TypeList<>;
 
     rpp_size_t size() {
         return 0;
@@ -49,10 +60,14 @@ struct AccessorObjectHelper<Value>: protected Value {
 
 template <class Value, class Member, class... Args>
 struct AccessorObjectHelper<
-    Value, Member, Args...
->: protected AccessorObjectHelper<Value, Args...> {
-    using AccessorObjectHelper<Value, Args...>::AccessorObjectHelper;
-    using AccessorObjectHelper<Value, Args...>::doObjectVisit;
+    Value, TypeList<Member, Args...>
+>: protected AccessorObjectHelper<Value, TypeList<Args...>> {
+    using AccessorObjectHelper<Value, TypeList<Args...>>::AccessorObjectHelper;
+    using AccessorObjectHelper<Value, TypeList<Args...>>::doObjectVisit;
+
+    using MetaList = typename AccessorObjectHelper<Value, TypeList<Args...>>
+        ::MetaList
+        ::template Push<typename Member::Meta>;
 
     rpp_size_t size() {
         return 1 + sizeof...(Args);
@@ -64,7 +79,7 @@ struct AccessorObjectHelper<
             Member member{(*this)()}; // TODO
             return member.doRealVisit(visitor);
         } else {
-            AccessorObjectHelper<Value, Args...>
+            AccessorObjectHelper<Value, TypeList<Args...>>
                 ::template doMemberVisit<Visitor, index - 1>(visitor);
         }
     }
@@ -75,7 +90,7 @@ struct AccessorObjectHelper<
             Member member{(*this)()}; // TODO
             return member.doRealVisit(visitor);
         } else {
-            AccessorObjectHelper<Value, Args...>
+            AccessorObjectHelper<Value, TypeList<Args...>>
                 ::template doMemberVisit<Visitor>(visitor, index - 1);
         }
     }
@@ -83,8 +98,14 @@ struct AccessorObjectHelper<
 
 // data accessors associated with members
 template <class Name, class Value, class... Args>
-struct AccessorObject: protected AccessorObjectHelper<Value, Args...> {
-    using AccessorObjectHelper<Value, Args...>::AccessorObjectHelper;
+struct AccessorObject: protected AccessorObjectHelper<Value, TypeList<Args...>> {
+    using AccessorObjectHelper<Value, TypeList<Args...>>::AccessorObjectHelper;
+
+    using Meta = typename AccessorObjectHelper<Value, TypeList<Args...>>
+        ::MetaList
+        ::template Push<HolderType<decltype((*static_cast<Value *>(nullptr))())>>
+        ::template Push<Name>
+        ::template Head<rpp::AccessorObject>;
 
     static const char *getRealName() {
         Name name{};
@@ -94,7 +115,7 @@ struct AccessorObject: protected AccessorObjectHelper<Value, Args...> {
     template <class Visitor>
     typename Visitor::ReturnType doRealVisit(Visitor &visitor) {
         return visitor.into(
-            *static_cast<AccessorObjectHelper<Value, Args...> *>(this)
+            *static_cast<AccessorObjectHelper<Value, TypeList<Args...>> *>(this)
         );
     }
 };
