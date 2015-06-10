@@ -135,7 +135,7 @@ struct MetaImpl<
         >;
 
         namespace {
-            char accessor_value = 'C';
+            char accessor_value{'C'};
         }
 
         using Accessor3 = AccessorSimple<

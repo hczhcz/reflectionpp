@@ -25,25 +25,41 @@ template <char... c>
 const char StaticStr<c...>::str[]{c...};
 
 #define RPP_STATIC_STR(Str) \
-    StaticStr< \
-        str_index(Str, 0), str_index(Str, 1), str_index(Str, 2), str_index(Str, 3), \
-        str_index(Str, 4), str_index(Str, 5), str_index(Str, 6), str_index(Str, 7), \
-        str_index(Str, 8), str_index(Str, 9), str_index(Str, 10), str_index(Str, 11), \
-        str_index(Str, 12), str_index(Str, 13), str_index(Str, 14), str_index(Str, 15), \
-        str_index(Str, 16), str_index(Str, 17), str_index(Str, 18), str_index(Str, 19), \
-        str_index(Str, 20), str_index(Str, 21), str_index(Str, 22), str_index(Str, 23), \
-        str_index(Str, 24), str_index(Str, 25), str_index(Str, 26), str_index(Str, 27), \
-        str_index(Str, 28), str_index(Str, 29), str_index(Str, 30), str_index(Str, 31), \
-        str_index(Str, 32), str_index(Str, 33), str_index(Str, 34), str_index(Str, 35), \
-        str_index(Str, 36), str_index(Str, 37), str_index(Str, 38), str_index(Str, 39), \
-        str_index(Str, 40), str_index(Str, 41), str_index(Str, 42), str_index(Str, 43), \
-        str_index(Str, 44), str_index(Str, 45), str_index(Str, 46), str_index(Str, 47), \
-        str_index(Str, 48), str_index(Str, 49), str_index(Str, 50), str_index(Str, 51), \
-        str_index(Str, 52), str_index(Str, 53), str_index(Str, 54), str_index(Str, 55), \
-        str_index(Str, 56), str_index(Str, 57), str_index(Str, 58), str_index(Str, 59), \
-        str_index(Str, 60), str_index(Str, 61), str_index(Str, 62), str_index(Str, 63), \
+    (rpp::StaticStr< \
+        rpp::str_index(Str, 0), rpp::str_index(Str, 1), \
+        rpp::str_index(Str, 2), rpp::str_index(Str, 3), \
+        rpp::str_index(Str, 4), rpp::str_index(Str, 5), \
+        rpp::str_index(Str, 6), rpp::str_index(Str, 7), \
+        rpp::str_index(Str, 8), rpp::str_index(Str, 9), \
+        rpp::str_index(Str, 10), rpp::str_index(Str, 11), \
+        rpp::str_index(Str, 12), rpp::str_index(Str, 13), \
+        rpp::str_index(Str, 14), rpp::str_index(Str, 15), \
+        rpp::str_index(Str, 16), rpp::str_index(Str, 17), \
+        rpp::str_index(Str, 18), rpp::str_index(Str, 19), \
+        rpp::str_index(Str, 20), rpp::str_index(Str, 21), \
+        rpp::str_index(Str, 22), rpp::str_index(Str, 23), \
+        rpp::str_index(Str, 24), rpp::str_index(Str, 25), \
+        rpp::str_index(Str, 26), rpp::str_index(Str, 27), \
+        rpp::str_index(Str, 28), rpp::str_index(Str, 29), \
+        rpp::str_index(Str, 30), rpp::str_index(Str, 31), \
+        rpp::str_index(Str, 32), rpp::str_index(Str, 33), \
+        rpp::str_index(Str, 34), rpp::str_index(Str, 35), \
+        rpp::str_index(Str, 36), rpp::str_index(Str, 37), \
+        rpp::str_index(Str, 38), rpp::str_index(Str, 39), \
+        rpp::str_index(Str, 40), rpp::str_index(Str, 41), \
+        rpp::str_index(Str, 42), rpp::str_index(Str, 43), \
+        rpp::str_index(Str, 44), rpp::str_index(Str, 45), \
+        rpp::str_index(Str, 46), rpp::str_index(Str, 47), \
+        rpp::str_index(Str, 48), rpp::str_index(Str, 49), \
+        rpp::str_index(Str, 50), rpp::str_index(Str, 51), \
+        rpp::str_index(Str, 52), rpp::str_index(Str, 53), \
+        rpp::str_index(Str, 54), rpp::str_index(Str, 55), \
+        rpp::str_index(Str, 56), rpp::str_index(Str, 57), \
+        rpp::str_index(Str, 58), rpp::str_index(Str, 59), \
+        rpp::str_index(Str, 60), rpp::str_index(Str, 61), \
+        rpp::str_index(Str, 62), rpp::str_index(Str, 63), \
         '\0' \
-    >::str
+    >::str)
 
 }
 
@@ -51,11 +67,20 @@ const char StaticStr<c...>::str[]{c...};
 
 #ifdef RPP_DEBUG
 
+    #include <type_traits>
+
     namespace rpp {
 
         static_assert(str_index("abc", 1) == 'b', "");
         static_assert(str_index("abc", 3) == '\0', "");
         static_assert(str_index("abc", 5) == '\0', "");
+
+        template <const char *str>
+        struct SomeStrClass {};
+
+        namespace {
+            SomeStrClass<RPP_STATIC_STR("abc")> some_str_object;
+        }
 
     }
 
