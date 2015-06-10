@@ -5,9 +5,6 @@
 
 namespace rpp {
 
-// the abstract head of the visitor chain
-static constexpr struct {} visitor_head{};
-
 // the abstract tail of the visitor chain
 struct VisitorTail final {
     // compile-time only
@@ -17,7 +14,11 @@ struct VisitorTail final {
 // enable the visitor chain in the current namespace
 #define RPP_VISITOR_CHAIN_INIT() \
     namespace visitor_chain { \
-        static constexpr struct Here final {} here{}; \
+        /* an empty object to control argument-dependent lookup */ \
+        /* and provide a head of the visitor chain */ \
+        static constexpr struct Here final { \
+            Here() = delete; \
+        } here{}; \
         \
         /* an abstract function to get the next member of the visitor chain */ \
         rpp::VisitorTail visitor_next(...); \
@@ -41,7 +42,7 @@ RPP_VISITOR_CHAIN_INIT()
         \
         Type visitor_next( \
             Here, decltype(visitor_trace_##Type( \
-                here, visitor_next(here, rpp::visitor_head), rpp::visitor_head) \
+                here, visitor_next(here, here), here) \
             ) \
         ); \
     }
@@ -60,7 +61,7 @@ RPP_VISITOR_CHAIN_INIT()
         \
         using Type = \
             decltype(visitor_trace2_##Type( \
-                here, visitor_next(here, rpp::visitor_head)) \
+                here, visitor_next(here, here)) \
             ); \
     } \
     \
