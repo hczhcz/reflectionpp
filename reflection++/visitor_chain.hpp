@@ -21,10 +21,10 @@ struct VisitorTail final {
         } here{}; \
         \
         /* an abstract function to get the next member of the visitor chain */ \
-        rpp::VisitorTail visitor_next(...); \
+        rpp::VisitorTail next(...); \
         \
-        /* call visitor_next with VisitorTail is not allowed */ \
-        void visitor_next(Here, rpp::VisitorTail) = delete; \
+        /* call next with VisitorTail is not allowed */ \
+        void next(Here, rpp::VisitorTail) = delete; \
     }
 
 RPP_VISITOR_CHAIN_INIT()
@@ -33,16 +33,16 @@ RPP_VISITOR_CHAIN_INIT()
 #define RPP_VISITOR_REG(Type) \
     namespace visitor_chain { \
         template <class Last> \
-        Last visitor_trace_##Type(Here, rpp::VisitorTail, Last); \
+        Last trace_##Type(Here, rpp::VisitorTail, Last); \
         \
         template <class T, class Last> \
-        auto visitor_trace_##Type(Here, T value, Last last) -> decltype( \
-            visitor_trace_##Type(here, visitor_next(here, value), value) \
+        auto trace_##Type(Here, T value, Last last) -> decltype( \
+            trace_##Type(here, next(here, value), value) \
         ); \
         \
-        Type visitor_next( \
-            Here, decltype(visitor_trace_##Type( \
-                here, visitor_next(here, here), here) \
+        Type next( \
+            Here, decltype(trace_##Type( \
+                here, next(here, here), here) \
             ) \
         ); \
     }
@@ -52,16 +52,16 @@ RPP_VISITOR_CHAIN_INIT()
 #define RPP_VISITOR_COLLECT(Type) \
     namespace visitor_chain { \
         template <class... Args> \
-        rpp::TypeList<Args...> visitor_trace2_##Type(Here, rpp::VisitorTail, Args...); \
+        rpp::TypeList<Args...> trace2_##Type(Here, rpp::VisitorTail, Args...); \
         \
         template <class T, class... Args> \
-        auto visitor_trace2_##Type(Here, T value, Args... args) -> decltype( \
-            visitor_trace2_##Type(here, visitor_next(here, value), args..., value) \
+        auto trace2_##Type(Here, T value, Args... args) -> decltype( \
+            trace2_##Type(here, next(here, value), args..., value) \
         ); \
         \
         using Type = \
-            decltype(visitor_trace2_##Type( \
-                here, visitor_next(here, here)) \
+            decltype(trace2_##Type( \
+                here, next(here, here)) \
             ); \
     } \
     \
