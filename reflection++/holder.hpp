@@ -1,5 +1,7 @@
 #pragma once
 
+#include "static_str.hpp"
+
 namespace rpp {
 
 // data holders that hold types
@@ -104,5 +106,10 @@ struct HolderMember {
 //         return this->*member;
 //     }
 // };
+
+#define RPP_HOLDER_STR(Str) HolderConst<const char (&)[], RPP_STATIC_STR(Str)>
+#define RPP_HOLDER_CONST(Value) HolderConst<decltype(Value), Value>
+#define RPP_HOLDER_REF(Value) HolderRef<decltype(Value), Value>
+#define RPP_HOLDER_MEMBER(Object, Value) HolderMember<Object, decltype(Object::Value), &Object::Value> // TODO
 
 }
