@@ -107,9 +107,19 @@ struct HolderMember {
 //     }
 // };
 
-#define RPP_HOLDER_STR(Str) HolderConst<const char (&)[], RPP_STATIC_STR(Str)>
-#define RPP_HOLDER_CONST(Value) HolderConst<decltype(Value), Value>
-#define RPP_HOLDER_REF(Value) HolderRef<decltype(Value), Value>
-#define RPP_HOLDER_MEMBER(Object, Value) HolderMember<Object, decltype(Object::Value), &Object::Value> // TODO
+#define RPP_HOLDER_TYPE(Type) \
+    rpp::HolderType<Type>
+#define RPP_HOLDER_CONST(Value) \
+    rpp::HolderConst<decltype(Value), Value>
+#define RPP_HOLDER_STR(Str) \
+    rpp::HolderConst<const char (&)[], RPP_STATIC_STR(Str)>
+#define RPP_HOLDER_LOCAL(Type) \
+    rpp::HolderLocal<Type>
+#define RPP_HOLDER_REF(Value) \
+    rpp::HolderRef<decltype(Value), Value>
+#define RPP_HOLDER_DYNAMIC(Type) \
+    rpp::HolderDynamic<Type>
+#define RPP_HOLDER_MEMBER(Object, Value) \
+    rpp::HolderMember<Object, decltype((Object)::Value), &(Object)::Value>
 
 }

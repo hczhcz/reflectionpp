@@ -119,4 +119,9 @@ struct AccessorObject: protected AccessorObjectHelper<Value, Members> {
     }
 };
 
+#define RPP_ACCESSOR_REF(Value) \
+    rpp::AccessorSimple<RPP_HOLDER_STR(#Value), RPP_HOLDER_REF(Value)>
+#define RPP_ACCESSOR_MEMBER(Object, Value) \
+    rpp::AccessorSimple<RPP_HOLDER_STR(#Value), RPP_HOLDER_MEMBER(Object, Value)>
+
 }
