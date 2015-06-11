@@ -8,6 +8,9 @@ struct TypeList final {
     template <class T>
     using Push = TypeList<T, Args...>;
 
+    template <class T>
+    using Append = TypeList<Args..., T>;
+
     template <template <class...> class Template>
     using Head = Template<Args...>;
 

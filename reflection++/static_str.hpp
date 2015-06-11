@@ -15,6 +15,9 @@ constexpr char str_index(const char *str, rpp_strlen_t index) {
 // a compile-time string
 template <char... c>
 struct StaticStr {
+    template <char tail>
+    using Append = StaticStr<c..., tail>;
+
     static const char str[];
 
     // compile-time only
@@ -25,40 +28,40 @@ template <char... c>
 const char StaticStr<c...>::str[]{c...};
 
 #define RPP_STATIC_STR(Str) \
-    (rpp::StaticStr< \
-        rpp::str_index(Str, 0), rpp::str_index(Str, 1), \
-        rpp::str_index(Str, 2), rpp::str_index(Str, 3), \
-        rpp::str_index(Str, 4), rpp::str_index(Str, 5), \
-        rpp::str_index(Str, 6), rpp::str_index(Str, 7), \
-        rpp::str_index(Str, 8), rpp::str_index(Str, 9), \
-        rpp::str_index(Str, 10), rpp::str_index(Str, 11), \
-        rpp::str_index(Str, 12), rpp::str_index(Str, 13), \
-        rpp::str_index(Str, 14), rpp::str_index(Str, 15), \
-        rpp::str_index(Str, 16), rpp::str_index(Str, 17), \
-        rpp::str_index(Str, 18), rpp::str_index(Str, 19), \
-        rpp::str_index(Str, 20), rpp::str_index(Str, 21), \
-        rpp::str_index(Str, 22), rpp::str_index(Str, 23), \
-        rpp::str_index(Str, 24), rpp::str_index(Str, 25), \
-        rpp::str_index(Str, 26), rpp::str_index(Str, 27), \
-        rpp::str_index(Str, 28), rpp::str_index(Str, 29), \
-        rpp::str_index(Str, 30), rpp::str_index(Str, 31), \
-        rpp::str_index(Str, 32), rpp::str_index(Str, 33), \
-        rpp::str_index(Str, 34), rpp::str_index(Str, 35), \
-        rpp::str_index(Str, 36), rpp::str_index(Str, 37), \
-        rpp::str_index(Str, 38), rpp::str_index(Str, 39), \
-        rpp::str_index(Str, 40), rpp::str_index(Str, 41), \
-        rpp::str_index(Str, 42), rpp::str_index(Str, 43), \
-        rpp::str_index(Str, 44), rpp::str_index(Str, 45), \
-        rpp::str_index(Str, 46), rpp::str_index(Str, 47), \
-        rpp::str_index(Str, 48), rpp::str_index(Str, 49), \
-        rpp::str_index(Str, 50), rpp::str_index(Str, 51), \
-        rpp::str_index(Str, 52), rpp::str_index(Str, 53), \
-        rpp::str_index(Str, 54), rpp::str_index(Str, 55), \
-        rpp::str_index(Str, 56), rpp::str_index(Str, 57), \
-        rpp::str_index(Str, 58), rpp::str_index(Str, 59), \
-        rpp::str_index(Str, 60), rpp::str_index(Str, 61), \
-        rpp::str_index(Str, 62), rpp::str_index(Str, 63), \
-        '\0' \
-    >::str)
+    (rpp::StaticStr<> \
+        ::Append<rpp::str_index(Str, 0)>::Append<rpp::str_index(Str, 1)> \
+        ::Append<rpp::str_index(Str, 2)>::Append<rpp::str_index(Str, 3)> \
+        ::Append<rpp::str_index(Str, 4)>::Append<rpp::str_index(Str, 5)> \
+        ::Append<rpp::str_index(Str, 6)>::Append<rpp::str_index(Str, 7)> \
+        ::Append<rpp::str_index(Str, 8)>::Append<rpp::str_index(Str, 9)> \
+        ::Append<rpp::str_index(Str, 10)>::Append<rpp::str_index(Str, 11)> \
+        ::Append<rpp::str_index(Str, 12)>::Append<rpp::str_index(Str, 13)> \
+        ::Append<rpp::str_index(Str, 14)>::Append<rpp::str_index(Str, 15)> \
+        ::Append<rpp::str_index(Str, 16)>::Append<rpp::str_index(Str, 17)> \
+        ::Append<rpp::str_index(Str, 18)>::Append<rpp::str_index(Str, 19)> \
+        ::Append<rpp::str_index(Str, 20)>::Append<rpp::str_index(Str, 21)> \
+        ::Append<rpp::str_index(Str, 22)>::Append<rpp::str_index(Str, 23)> \
+        ::Append<rpp::str_index(Str, 24)>::Append<rpp::str_index(Str, 25)> \
+        ::Append<rpp::str_index(Str, 26)>::Append<rpp::str_index(Str, 27)> \
+        ::Append<rpp::str_index(Str, 28)>::Append<rpp::str_index(Str, 29)> \
+        ::Append<rpp::str_index(Str, 30)>::Append<rpp::str_index(Str, 31)> \
+        ::Append<rpp::str_index(Str, 32)>::Append<rpp::str_index(Str, 33)> \
+        ::Append<rpp::str_index(Str, 34)>::Append<rpp::str_index(Str, 35)> \
+        ::Append<rpp::str_index(Str, 36)>::Append<rpp::str_index(Str, 37)> \
+        ::Append<rpp::str_index(Str, 38)>::Append<rpp::str_index(Str, 39)> \
+        ::Append<rpp::str_index(Str, 40)>::Append<rpp::str_index(Str, 41)> \
+        ::Append<rpp::str_index(Str, 42)>::Append<rpp::str_index(Str, 43)> \
+        ::Append<rpp::str_index(Str, 44)>::Append<rpp::str_index(Str, 45)> \
+        ::Append<rpp::str_index(Str, 46)>::Append<rpp::str_index(Str, 47)> \
+        ::Append<rpp::str_index(Str, 48)>::Append<rpp::str_index(Str, 49)> \
+        ::Append<rpp::str_index(Str, 50)>::Append<rpp::str_index(Str, 51)> \
+        ::Append<rpp::str_index(Str, 52)>::Append<rpp::str_index(Str, 53)> \
+        ::Append<rpp::str_index(Str, 54)>::Append<rpp::str_index(Str, 55)> \
+        ::Append<rpp::str_index(Str, 56)>::Append<rpp::str_index(Str, 57)> \
+        ::Append<rpp::str_index(Str, 58)>::Append<rpp::str_index(Str, 59)> \
+        ::Append<rpp::str_index(Str, 60)>::Append<rpp::str_index(Str, 61)> \
+        ::Append<rpp::str_index(Str, 62)>::Append<rpp::str_index(Str, 63)> \
+        ::Append<'\0'>::str \
+    )
 
 }
