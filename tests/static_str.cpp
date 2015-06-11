@@ -15,15 +15,7 @@ namespace rpp_another_namespace {
     static_assert(std::is_same<
         decltype(some_str_object),
         SomeStrClass<rpp::StaticStr<
-            'a', 'b', 'c', 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0,
-            0
+            0, 'a', 'b', 'c'
         >::str>
     >(), "");
 
