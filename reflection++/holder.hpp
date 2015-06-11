@@ -120,6 +120,6 @@ struct HolderMember {
 #define RPP_HOLDER_DYNAMIC(Type) \
     rpp::HolderDynamic<Type>
 #define RPP_HOLDER_MEMBER(Object, Value) \
-    rpp::HolderMember<Object, decltype((Object)::Value), &(Object)::Value>
+    rpp::HolderMember<Object, decltype(Object::Value), &Object::Value>
 
 }
