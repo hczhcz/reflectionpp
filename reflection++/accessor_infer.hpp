@@ -31,19 +31,21 @@ struct AccessorObjectWrap {
 RPP_ACCESSOR_INFER_INIT()
 
 // set the default accessor to AccessorObject and bind a TypeList
-#define RPP_ACCESSOR_INFER_BIND(Type, ...) \
+#define RPP_ACCESSOR_BIND(Type, ...) \
     rpp::AccessorObjectWrap<rpp::TypeList<__VA_ARGS__>> accessor_infer(Type);
 
 // get the default accessor
-#define RPP_ACCESSOR_INFER_GET(Name, Value) \
+#define RPP_ACCESSOR_GET(Name, Value) \
     decltype( \
         accessor_infer((*static_cast<Value *>(nullptr))()) \
     )::Target<Name, Value>
 
-// wrappers
+// wrapper of RPP_HOLDER_REF
 #define RPP_ACCESSOR_REF(Value) \
-    RPP_ACCESSOR_INFER_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_REF(Value))
+    RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_REF(Value))
+
+// wrapper of RPP_HOLDER_MEMBER
 #define RPP_ACCESSOR_MEMBER(Object, Value) \
-    RPP_ACCESSOR_INFER_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_MEMBER(Object, Value))
+    RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_MEMBER(Object, Value))
 
 }

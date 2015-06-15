@@ -82,14 +82,14 @@ namespace rpp_another_namespace {
 
     using Accessor1 = rpp::Accessor1;
 
-    using Accessor2 = RPP_ACCESSOR_INFER_GET(
+    using Accessor2 = RPP_ACCESSOR_GET(
         RPP_HOLDER_STR("value2"),
         RPP_HOLDER_LOCAL(char)
     );
 
     using Accessor3 = RPP_ACCESSOR_REF(rpp::value3);
 
-    using Accessor4 = RPP_ACCESSOR_INFER_GET(
+    using Accessor4 = RPP_ACCESSOR_GET(
         RPP_HOLDER_STR("value4"),
         RPP_HOLDER_DYNAMIC(char)
     );
@@ -103,14 +103,14 @@ namespace rpp_another_namespace {
 
     using Accessor5m2 = RPP_ACCESSOR_MEMBER(TestStruct, member2);
 
-    using Accessor5old = RPP_ACCESSOR_INFER_GET(
+    using Accessor5old = RPP_ACCESSOR_GET(
         RPP_HOLDER_STR("value5"),
         rpp::HolderLocal<TestStruct>
     );
 
-    RPP_ACCESSOR_INFER_BIND(TestStruct, Accessor5m1, Accessor5m2)
+    RPP_ACCESSOR_BIND(TestStruct, Accessor5m1, Accessor5m2)
 
-    using Accessor5 = RPP_ACCESSOR_INFER_GET(
+    using Accessor5 = RPP_ACCESSOR_GET(
         RPP_HOLDER_STR("value5"),
         rpp::HolderLocal<TestStruct>
     );
