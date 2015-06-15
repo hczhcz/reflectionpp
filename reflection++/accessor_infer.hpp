@@ -40,4 +40,10 @@ RPP_ACCESSOR_INFER_INIT()
         accessor_infer((*static_cast<Value *>(nullptr))()) \
     )::Target<Name, Value>
 
+// wrappers
+#define RPP_ACCESSOR_REF(Value) \
+    RPP_ACCESSOR_INFER_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_REF(Value))
+#define RPP_ACCESSOR_MEMBER(Object, Value) \
+    RPP_ACCESSOR_INFER_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_MEMBER(Object, Value))
+
 }

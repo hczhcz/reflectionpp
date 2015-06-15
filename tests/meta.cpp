@@ -72,7 +72,7 @@ namespace rpp {
         >
     >(), "");
 
-    char accessor_value{'C'};
+    char value3{'C'};
 
 }
 
@@ -87,10 +87,7 @@ namespace rpp_another_namespace {
         RPP_HOLDER_LOCAL(char)
     );
 
-    using Accessor3 = RPP_ACCESSOR_INFER_GET(
-        RPP_HOLDER_STR("value3"),
-        RPP_HOLDER_REF(rpp::accessor_value)
-    );
+    using Accessor3 = RPP_ACCESSOR_REF(rpp::value3);
 
     using Accessor4 = RPP_ACCESSOR_INFER_GET(
         RPP_HOLDER_STR("value4"),
@@ -102,15 +99,9 @@ namespace rpp_another_namespace {
         float member2;
     };
 
-    using Accessor5m1 = RPP_ACCESSOR_INFER_GET(
-        RPP_HOLDER_STR("member1"),
-        RPP_HOLDER_MEMBER(TestStruct, member1)
-    );
+    using Accessor5m1 = RPP_ACCESSOR_MEMBER(TestStruct, member1);
 
-    using Accessor5m2 = RPP_ACCESSOR_INFER_GET(
-        RPP_HOLDER_STR("member2"),
-        RPP_HOLDER_MEMBER(TestStruct, member2)
-    );
+    using Accessor5m2 = RPP_ACCESSOR_MEMBER(TestStruct, member2);
 
     using Accessor5old = RPP_ACCESSOR_INFER_GET(
         RPP_HOLDER_STR("value5"),
@@ -130,8 +121,8 @@ namespace rpp_another_namespace {
         std::is_same<
             Accessor3,
             rpp::AccessorSimple<
-                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("value3")>,
-                rpp::HolderRef<char, rpp::accessor_value>
+                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("rpp::value3")>,
+                rpp::HolderRef<char, rpp::value3>
             >
         >(), ""
     );
@@ -168,6 +159,16 @@ namespace rpp_another_namespace {
 
     static_assert(
         std::is_same<
+            Accessor5m2,
+            rpp::AccessorSimple<
+                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member2")>,
+                rpp::HolderMember<TestStruct, float, &TestStruct::member2>
+            >
+        >(), ""
+    );
+
+    static_assert(
+        std::is_same<
             Accessor5,
             rpp::AccessorObject<
                 rpp::HolderConst<const char (&)[], RPP_STATIC_STR("value5")>,
@@ -192,7 +193,7 @@ namespace rpp_another_namespace {
         rpp::MetaImpl<rpp::VisitorAll3, Accessor1> meta1{0};
         rpp::MetaImpl<rpp::VisitorAll3, Accessor2> meta2{'A'};
         rpp::MetaImpl<rpp::VisitorAll3, Accessor3> meta3;
-        rpp::MetaImpl<rpp::VisitorAll3, Accessor4> meta4{rpp::accessor_value};
+        rpp::MetaImpl<rpp::VisitorAll3, Accessor4> meta4{rpp::value3};
         rpp::MetaImpl<rpp::VisitorAll3, Accessor5> meta5{TestStruct{1, 1.5}};
         rpp::MetaImpl<rpp::VisitorAll3, Accessor6> meta6;
 
