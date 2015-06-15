@@ -30,9 +30,13 @@ struct AccessorObjectWrap {
 
 RPP_ACCESSOR_INFER_INIT()
 
-// set the default accessor to AccessorObject and bind a TypeList
+// set the default accessor to AccessorObject and bind members (from arguments)
 #define RPP_ACCESSOR_BIND(Type, ...) \
     rpp::AccessorObjectWrap<rpp::TypeList<__VA_ARGS__>> accessor_infer(Type);
+
+// set the default accessor to AccessorObject and bind members (pass a TypeList)
+#define RPP_ACCESSOR_BIND_LIST(Type, Members) \
+    rpp::AccessorObjectWrap<Members> accessor_infer(Type);
 
 // get the default accessor
 #define RPP_ACCESSOR_GET(Name, Value) \
