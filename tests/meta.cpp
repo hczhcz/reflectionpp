@@ -78,53 +78,51 @@ namespace rpp {
 
 namespace rpp_another_namespace {
 
+    RPP_ACCESSOR_INFER_INIT()
+
     using Accessor1 = rpp::Accessor1;
 
-    using Accessor2 = rpp::AccessorSimple<
+    using Accessor2 = RPP_ACCESSOR_INFER_GET(
         RPP_HOLDER_STR("value2"),
         RPP_HOLDER_LOCAL(char)
-    >;
+    );
 
-    using Accessor3 = rpp::AccessorDefault<
+    using Accessor3 = RPP_ACCESSOR_INFER_GET(
         RPP_HOLDER_STR("value3"),
         RPP_HOLDER_REF(rpp::accessor_value)
-    >::Target;
+    );
 
-    using Accessor4 = rpp::AccessorDefault<
+    using Accessor4 = RPP_ACCESSOR_INFER_GET(
         RPP_HOLDER_STR("value4"),
         RPP_HOLDER_DYNAMIC(char)
-    >::Target;
+    );
 
     struct TestStruct {
         int member1;
         float member2;
     };
 
-    using Accessor5m1 = rpp::AccessorDefault<
+    using Accessor5m1 = RPP_ACCESSOR_INFER_GET(
         RPP_HOLDER_STR("member1"),
         RPP_HOLDER_MEMBER(TestStruct, member1)
-    >::Target;
+    );
 
-    using Accessor5m2 = rpp::AccessorDefault<
+    using Accessor5m2 = RPP_ACCESSOR_INFER_GET(
         RPP_HOLDER_STR("member2"),
         RPP_HOLDER_MEMBER(TestStruct, member2)
-    >::Target;
+    );
 
-}
-
-namespace rpp {
-
-    // TODO: namespace?
-    RPP_ACCESSOR_OBJECT_REG(rpp_another_namespace::TestStruct, rpp_another_namespace::Accessor5m1, rpp_another_namespace::Accessor5m2)
-
-}
-
-namespace rpp_another_namespace {
-
-    using Accessor5 = rpp::AccessorDefault<
+    using Accessor5old = RPP_ACCESSOR_INFER_GET(
         RPP_HOLDER_STR("value5"),
         rpp::HolderLocal<TestStruct>
-    >::Target;
+    );
+
+    RPP_ACCESSOR_INFER_BIND(TestStruct, Accessor5m1, Accessor5m2)
+
+    using Accessor5 = RPP_ACCESSOR_INFER_GET(
+        RPP_HOLDER_STR("value5"),
+        rpp::HolderLocal<TestStruct>
+    );
 
     using Accessor6 = Accessor5::Meta;
 
@@ -134,6 +132,16 @@ namespace rpp_another_namespace {
             rpp::AccessorSimple<
                 rpp::HolderConst<const char (&)[], RPP_STATIC_STR("value3")>,
                 rpp::HolderRef<char, rpp::accessor_value>
+            >
+        >(), ""
+    );
+
+    static_assert(
+        std::is_same<
+            Accessor5old,
+            rpp::AccessorSimple<
+                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("value5")>,
+                rpp::HolderLocal<TestStruct>
             >
         >(), ""
     );
@@ -154,6 +162,17 @@ namespace rpp_another_namespace {
             rpp::AccessorSimple<
                 rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member1")>,
                 rpp::HolderType<int &>
+            >
+        >(), ""
+    );
+
+    static_assert(
+        std::is_same<
+            Accessor5,
+            rpp::AccessorObject<
+                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("value5")>,
+                rpp::HolderLocal<TestStruct>,
+                rpp::TypeList<Accessor5m1, Accessor5m2>
             >
         >(), ""
     );
