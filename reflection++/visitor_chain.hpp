@@ -20,7 +20,7 @@ struct VisitorTail final {
             Here() = delete; \
         } here{}; \
         \
-        /* an abstract function to get the next member of the visitor chain */ \
+        /* an abstract function to infer the next member of the visitor chain */ \
         rpp::VisitorTail next(...); \
         \
         /* call next with VisitorTail is not allowed */ \

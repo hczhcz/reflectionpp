@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include "../reflection++/visitor_chain.hpp"
-#include "../reflection++/accessor.hpp"
+#include "../reflection++/accessor_infer.hpp"
 #include "../reflection++/meta.hpp"
 
 namespace rpp {
@@ -85,36 +85,46 @@ namespace rpp_another_namespace {
         RPP_HOLDER_LOCAL(char)
     >;
 
-    using Accessor3 = rpp::AccessorSimple<
+    using Accessor3 = rpp::AccessorDefault<
         RPP_HOLDER_STR("value3"),
         RPP_HOLDER_REF(rpp::accessor_value)
-    >;
+    >::Target;
 
-    using Accessor4 = rpp::AccessorSimple<
+    using Accessor4 = rpp::AccessorDefault<
         RPP_HOLDER_STR("value4"),
         RPP_HOLDER_DYNAMIC(char)
-    >;
+    >::Target;
 
     struct TestStruct {
         int member1;
         float member2;
     };
 
-    using Accessor5m1 = rpp::AccessorSimple<
+    using Accessor5m1 = rpp::AccessorDefault<
         RPP_HOLDER_STR("member1"),
         RPP_HOLDER_MEMBER(TestStruct, member1)
-    >;
+    >::Target;
 
-    using Accessor5m2 = rpp::AccessorSimple<
+    using Accessor5m2 = rpp::AccessorDefault<
         RPP_HOLDER_STR("member2"),
         RPP_HOLDER_MEMBER(TestStruct, member2)
-    >;
+    >::Target;
 
-    using Accessor5 = rpp::AccessorObject<
+}
+
+namespace rpp {
+
+    // TODO: namespace?
+    RPP_ACCESSOR_OBJECT_REG(rpp_another_namespace::TestStruct, rpp_another_namespace::Accessor5m1, rpp_another_namespace::Accessor5m2)
+
+}
+
+namespace rpp_another_namespace {
+
+    using Accessor5 = rpp::AccessorDefault<
         RPP_HOLDER_STR("value5"),
-        rpp::HolderLocal<TestStruct>,
-        rpp::TypeList<Accessor5m1, Accessor5m2>
-    >;
+        rpp::HolderLocal<TestStruct>
+    >::Target;
 
     using Accessor6 = Accessor5::Meta;
 
