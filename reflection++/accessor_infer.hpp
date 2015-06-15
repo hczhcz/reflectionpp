@@ -52,4 +52,22 @@ RPP_ACCESSOR_INFER_INIT()
 #define RPP_ACCESSOR_MEMBER(Object, Value) \
     RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_MEMBER(Object, Value))
 
+// call RPP_ACCESSOR_BIND and always use HolderMember
+// some helper macros
+#define RPP_ACCESSOR_BIND_OBJECT_ALSO , RPP_ACCESSOR_BIND_OBJECT_MEMBER),
+#ifndef ___
+    #define ___ RPP_ACCESSOR_BIND_OBJECT_ALSO
+#endif
+#define RPP_ACCESSOR_BIND_OBJECT_MEMBER_1(Object, Member, Next) \
+    ::Append<RPP_ACCESSOR_MEMBER(Object, Member)> Next##_2(Object
+#define RPP_ACCESSOR_BIND_OBJECT_MEMBER_2(Object, Member, Next) \
+    ::Append<RPP_ACCESSOR_MEMBER(Object, Member)> Next##_1(Object
+#define RPP_ACCESSOR_BIND_OBJECT_END_1(Object) /* nothing */
+#define RPP_ACCESSOR_BIND_OBJECT_END_2(Object) /* nothing */
+// the main macro
+#define RPP_ACCESSOR_BIND_OBJECT(Object, Members) \
+    rpp::AccessorObjectWrap< \
+        rpp::TypeList<> RPP_ACCESSOR_BIND_OBJECT_MEMBER_1(Object, Members, RPP_ACCESSOR_BIND_OBJECT_END)) \
+    > accessor_infer(Object);
+
 }
