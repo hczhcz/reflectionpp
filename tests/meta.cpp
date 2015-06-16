@@ -119,8 +119,8 @@ namespace rpp_another_namespace {
 
     RPP_ACCESSOR_BIND_OBJECT(
         TestStruct,
-        __(MEMBER, member1)
-        __(MEMBER, member2)
+        __(member1)
+        __(member2, MEMBER) // the same as __(member2)
     )
     // RPP_ACCESSOR_BIND(TestStruct, Accessor5m1, Accessor5m2)
 

@@ -67,15 +67,17 @@ RPP_ACCESSOR_INFER_INIT()
     ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_MEMBER(Object, Value))>
 
 // append accessors fetched from AccessorObjectWrap to a TypeList
-#define RPP_ACCESSOR_APPEND_INFER(Derived, Base) \
+#define RPP_ACCESSOR_APPEND_BASE(Derived, Base) \
     ::AppendList<decltype( \
-        accessor_infer((*static_cast<Base *>(nullptr))()) \
+        accessor_infer(*static_cast<Base *>(nullptr)) \
     )::List>
 
 // build a TypeList of accessors
 // some helper macros
-#define RPP_ACCESSOR_LIST_ITEM(Method, Member) \
+#define RPP_ACCESSOR_LIST_ITEM_IMPL(Member, Method, ...) \
     , RPP_ACCESSOR_LIST), RPP_ACCESSOR_APPEND_##Method, Member
+#define RPP_ACCESSOR_LIST_ITEM(...) \
+    RPP_ACCESSOR_LIST_ITEM_IMPL(__VA_ARGS__, MEMBER, )
 #ifndef __
     #define __ RPP_ACCESSOR_LIST_ITEM
 #endif
