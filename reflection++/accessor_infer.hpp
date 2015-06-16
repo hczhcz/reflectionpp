@@ -7,7 +7,7 @@ namespace rpp {
 // a compile-time wraper class of AccessorSimple
 struct AccessorSimpleWrap {
     template <class Name, class Value>
-    using Target = AccessorSimple<Name, Value>;
+    using Build = AccessorSimple<Name, Value>;
 
     // compile-time only
     AccessorSimpleWrap() = delete;
@@ -17,7 +17,7 @@ struct AccessorSimpleWrap {
 template <class Members>
 struct AccessorObjectWrap {
     template <class Name, class Value>
-    using Target = AccessorObject<Name, Value, Members>;
+    using Build = AccessorObject<Name, Value, Members>;
 
     // compile-time only
     AccessorObjectWrap() = delete;
@@ -42,20 +42,24 @@ RPP_ACCESSOR_INFER_INIT()
 #define RPP_ACCESSOR_GET(Name, Value) \
     decltype( \
         accessor_infer((*static_cast<Value *>(nullptr))()) \
-    )::Target<Name, Value>
+    )::Build<Name, Value>
 
+// append an accessor to a TypeList
 // wrapper of RPP_HOLDER_TYPE
-#define RPP_ACCESSOR_APPEND_TYPE(Type) \
-    ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Type), RPP_HOLDER_TYPE(Type))>
+#define RPP_ACCESSOR_APPEND_TYPE(Object, Type) \
+    ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Type), RPP_HOLDER_TYPE(Object::Type))>
 
+// append an accessor to a TypeList
 // wrapper of RPP_HOLDER_CONST
-#define RPP_ACCESSOR_APPEND_CONST(Value) \
-    ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_CONST(Value))>
+#define RPP_ACCESSOR_APPEND_CONST(Object, Value) \
+    ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_CONST(Object::Value))>
 
+// append an accessor to a TypeList
 // wrapper of RPP_HOLDER_REF
-#define RPP_ACCESSOR_APPEND_REF(Value) \
-    ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_REF(Value))>
+#define RPP_ACCESSOR_APPEND_REF(Object, Value) \
+    ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_REF(Object::Value))>
 
+// append an accessor to a TypeList
 // wrapper of RPP_HOLDER_MEMBER
 #define RPP_ACCESSOR_APPEND_MEMBER(Object, Value) \
     ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_MEMBER(Object, Value))>
