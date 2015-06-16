@@ -74,16 +74,17 @@ RPP_ACCESSOR_INFER_INIT()
 
 // build a TypeList of accessors
 // some helper macros
-#define RPP_ACCESSOR_LIST_APPEND , RPP_ACCESSOR_LIST),
-#ifndef ___
-    #define ___ RPP_ACCESSOR_LIST_APPEND
+#define RPP_ACCESSOR_LIST_ITEM(Method, Member) \
+    , RPP_ACCESSOR_LIST), RPP_ACCESSOR_APPEND_##Method, Member
+#ifndef __
+    #define __ RPP_ACCESSOR_LIST_ITEM
 #endif
-#define RPP_ACCESSOR_LIST_BEGIN(Object, Method, Next) \
-    Next##_1(Object, Method
+#define RPP_ACCESSOR_LIST_BEGIN(Object, Next) \
+    Next##_1(Object
 #define RPP_ACCESSOR_LIST_1(Object, Method, Member, Next) \
-    Method(Object, Member) Next##_2(Object, Method
+    Method(Object, Member) Next##_2(Object
 #define RPP_ACCESSOR_LIST_2(Object, Method, Member, Next) \
-    Method(Object, Member) Next##_1(Object, Method
+    Method(Object, Member) Next##_1(Object
 #define RPP_ACCESSOR_LIST_END_1(...) /* nothing */
 #define RPP_ACCESSOR_LIST_END_2(...) /* nothing */
 // the main macro
@@ -91,7 +92,7 @@ RPP_ACCESSOR_INFER_INIT()
     rpp::AccessorObjectWrap< \
         rpp::TypeList<> \
         RPP_ACCESSOR_LIST_BEGIN( \
-            Object, RPP_ACCESSOR_APPEND_MEMBER \
+            Object \
             Members \
             , RPP_ACCESSOR_LIST_END) \
         ) \
