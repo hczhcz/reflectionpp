@@ -16,6 +16,8 @@ struct AccessorSimpleWrap {
 // a compile-time wraper class of AccessorObject
 template <class Members>
 struct AccessorObjectWrap {
+    using List = Members;
+
     template <class Name, class Value>
     using Build = AccessorObject<Name, Value, Members>;
 
@@ -64,7 +66,13 @@ RPP_ACCESSOR_INFER_INIT()
 #define RPP_ACCESSOR_APPEND_MEMBER(Object, Value) \
     ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_MEMBER(Object, Value))>
 
-// call RPP_ACCESSOR_BIND and always use HolderMember
+// append accessors fetched from AccessorObjectWrap to a TypeList
+#define RPP_ACCESSOR_APPEND_INFER(Derived, Base) \
+    ::AppendList<decltype( \
+        accessor_infer((*static_cast<Base *>(nullptr))()) \
+    )::List>
+
+// build a TypeList of accessors
 // some helper macros
 #define RPP_ACCESSOR_LIST_APPEND , RPP_ACCESSOR_LIST),
 #ifndef ___
