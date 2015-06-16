@@ -11,35 +11,36 @@ namespace rpp {
 
     struct Visitor4: public VisitorBase<> {
         void visit(int &value) {
-            std::cerr << "int, " << value;
+            std::cerr << "int(" << value << ") ";
         }
 
         void visit(char &value) {
-            std::cerr << "char, " << value;
+            std::cerr << "char(" << value << ") ";
             value += 1;
         }
 
         void visit(bool &value) {
-            std::cerr << "bool, " << value;
+            std::cerr << "bool(" << value << ") ";
         }
 
         void visit(float &value) {
-            std::cerr << "float, " << value;
+            std::cerr << "float(" << value << ") ";
         }
 
         template <class T>
         void visit(const HolderType<T> &) {
-            std::cerr << "type, " << typeid(T).name();
+            std::cerr << "type(" << typeid(T).name() << ") ";
         }
 
         template <class Accessor>
         void into(Accessor &accessor) {
-            std::cerr << "object";
+            std::cerr << "object( ";
 
             for (rpp_size_t i = 0; i < accessor.size(); ++i) {
-                std::cerr << " << ";
                 accessor.doMemberVisit(*this, i);
             }
+
+            std::cerr << ") ";
         }
     };
 
