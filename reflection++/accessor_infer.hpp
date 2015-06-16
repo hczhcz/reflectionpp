@@ -78,6 +78,8 @@ RPP_ACCESSOR_INFER_INIT()
 #ifndef ___
     #define ___ RPP_ACCESSOR_LIST_APPEND
 #endif
+#define RPP_ACCESSOR_LIST_BEGIN(Method, Object, Next) \
+    Next##_1(Method, Object
 #define RPP_ACCESSOR_LIST_1(Method, Object, Member, Next) \
     Method(Object, Member) Next##_2(Method, Object
 #define RPP_ACCESSOR_LIST_2(Method, Object, Member, Next) \
@@ -88,8 +90,10 @@ RPP_ACCESSOR_INFER_INIT()
 #define RPP_ACCESSOR_BIND_OBJECT(Object, Members) \
     rpp::AccessorObjectWrap< \
         rpp::TypeList<> \
-        RPP_ACCESSOR_LIST_1( \
-            RPP_ACCESSOR_APPEND_MEMBER, Object, Members, RPP_ACCESSOR_LIST_END \
+        RPP_ACCESSOR_LIST_BEGIN( \
+            RPP_ACCESSOR_APPEND_MEMBER, Object \
+            Members, \
+            RPP_ACCESSOR_LIST_END \
         ) /* extra ")" */ ) \
     > accessor_infer(Object);
 

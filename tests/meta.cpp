@@ -117,7 +117,7 @@ namespace rpp_another_namespace {
         rpp::HolderLocal<TestStruct>
     );
 
-    RPP_ACCESSOR_BIND_OBJECT(TestStruct, member1 ___ member2)
+    RPP_ACCESSOR_BIND_OBJECT(TestStruct, ___ member1 ___ member2)
     // RPP_ACCESSOR_BIND(TestStruct, Accessor5m1, Accessor5m2)
 
     using Accessor5 = RPP_ACCESSOR_GET(
