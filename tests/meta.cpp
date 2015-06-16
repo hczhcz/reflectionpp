@@ -115,7 +115,7 @@ namespace rpp_another_namespace {
 
     using Accessor5old = RPP_ACCESSOR_GET(
         RPP_HOLDER_STR("value5"),
-        rpp::HolderLocal<TestStruct>
+        RPP_HOLDER_LOCAL(TestStruct)
     );
 
     RPP_ACCESSOR_BIND_OBJECT(
@@ -127,10 +127,45 @@ namespace rpp_another_namespace {
 
     using Accessor5 = RPP_ACCESSOR_GET(
         RPP_HOLDER_STR("value5"),
-        rpp::HolderLocal<TestStruct>
+        RPP_HOLDER_LOCAL(TestStruct)
     );
 
     using Accessor6 = Accessor5::Meta;
+
+    struct TestStruct2: public TestStruct {
+        char member3;
+        static int member4;
+        TestStruct member5;
+    };
+    int TestStruct2::member4 = 400;
+
+    using Accessor7m3 = RPP_ACCESSOR_GET(
+        RPP_HOLDER_STR("member3"),
+        RPP_HOLDER_MEMBER(TestStruct2, member3)
+    );
+
+    using Accessor7m4 = RPP_ACCESSOR_GET(
+        RPP_HOLDER_STR("member4"),
+        RPP_HOLDER_REF(TestStruct2::member4)
+    );
+
+    using Accessor7m5 = RPP_ACCESSOR_GET(
+        RPP_HOLDER_STR("member5"),
+        RPP_HOLDER_MEMBER(TestStruct2, member5)
+    );
+
+    RPP_ACCESSOR_BIND_OBJECT(
+        TestStruct2,
+        __(TestStruct, BASE)
+        __(member3)
+        __(member4, REF)
+        __(member5)
+    )
+
+    using Accessor7 = RPP_ACCESSOR_GET(
+        RPP_HOLDER_STR("value7"),
+        RPP_HOLDER_LOCAL(TestStruct2)
+    );
 
     static_assert(
         std::is_same<
@@ -195,11 +230,25 @@ namespace rpp_another_namespace {
 
     static_assert(
         std::is_same<
-            Accessor5::Meta,
+            Accessor6,
             rpp::AccessorObject<
                 rpp::HolderConst<const char (&)[], RPP_STATIC_STR("value5")>,
                 rpp::HolderType<TestStruct &>,
                 rpp::TypeList<Accessor5m1::Meta, Accessor5m2::Meta>
+            >
+        >(), ""
+    );
+
+    static_assert(
+        std::is_same<
+            Accessor7,
+            rpp::AccessorObject<
+                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("value7")>,
+                rpp::HolderLocal<TestStruct2>,
+                rpp::TypeList<
+                    Accessor5m1, Accessor5m2,
+                    Accessor7m3, Accessor7m4, Accessor7m5
+                >
             >
         >(), ""
     );
@@ -211,20 +260,22 @@ namespace rpp_another_namespace {
         rpp::MetaImpl<rpp::VisitorAll3, Accessor4> meta4{rpp::value3};
         rpp::MetaImpl<rpp::VisitorAll3, Accessor5> meta5{TestStruct{1, 1.5}};
         rpp::MetaImpl<rpp::VisitorAll3, Accessor6> meta6;
+        rpp::MetaImpl<rpp::VisitorAll3, Accessor7> meta7{TestStruct2{}};
 
         std::vector<rpp::MetaBase<rpp::VisitorAll3> *> metalist{
-            &meta1, &meta2, &meta3, &meta4, &meta5, &meta6
+            &meta1, &meta2, &meta3, &meta4, &meta5, &meta6, &meta7
         };
 
         rpp::Visitor4 v4;
         rpp::Visitor5 v5;
 
         for (rpp::MetaBase<rpp::VisitorAll3> *meta: metalist) {
-            std::cerr << meta->getName() << ": ";
+            std::cerr << meta->getName() << "\t";
             // std::cerr << meta->getTypeInfo().name() << ", ";
             // std::cerr << meta->getPointer() << " - ";
             meta->doVisit(v4);
-            std::cerr << " - type " << meta->doVisit(v5);
+            std::cerr << std::endl;
+            std::cerr << "\ttype " << meta->doVisit(v5);
             std::cerr << std::endl;
         }
 
@@ -235,6 +286,7 @@ namespace rpp_another_namespace {
         std::cerr << " " << sizeof(Accessor4);
         std::cerr << " " << sizeof(Accessor5);
         std::cerr << " " << sizeof(Accessor6);
+        std::cerr << " " << sizeof(Accessor7);
         std::cerr << std::endl;
 
         std::cerr << "sizeof(meta):";
@@ -244,6 +296,7 @@ namespace rpp_another_namespace {
         std::cerr << " " << sizeof(meta4);
         std::cerr << " " << sizeof(meta5);
         std::cerr << " " << sizeof(meta6);
+        std::cerr << " " << sizeof(meta7);
         std::cerr << std::endl;
 
         return 0;
