@@ -87,7 +87,10 @@ namespace rpp_another_namespace {
         RPP_HOLDER_LOCAL(char)
     );
 
-    using Accessor3 = RPP_ACCESSOR_REF(rpp::value3);
+    using Accessor3 = RPP_ACCESSOR_GET(
+        RPP_HOLDER_STR("value3"),
+        RPP_HOLDER_REF(rpp::value3)
+    );
 
     using Accessor4 = RPP_ACCESSOR_GET(
         RPP_HOLDER_STR("value4"),
@@ -99,9 +102,15 @@ namespace rpp_another_namespace {
         float member2;
     };
 
-    using Accessor5m1 = RPP_ACCESSOR_MEMBER(TestStruct, member1);
+    using Accessor5m1 = RPP_ACCESSOR_GET(
+        RPP_HOLDER_STR("member1"),
+        RPP_HOLDER_MEMBER(TestStruct, member1)
+    );
 
-    using Accessor5m2 = RPP_ACCESSOR_MEMBER(TestStruct, member2);
+    using Accessor5m2 = RPP_ACCESSOR_GET(
+        RPP_HOLDER_STR("member2"),
+        RPP_HOLDER_MEMBER(TestStruct, member2)
+    );
 
     using Accessor5old = RPP_ACCESSOR_GET(
         RPP_HOLDER_STR("value5"),
@@ -122,7 +131,7 @@ namespace rpp_another_namespace {
         std::is_same<
             Accessor3,
             rpp::AccessorSimple<
-                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("rpp::value3")>,
+                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("value3")>,
                 rpp::HolderRef<char, rpp::value3>
             >
         >(), ""

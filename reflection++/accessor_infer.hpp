@@ -45,12 +45,12 @@ RPP_ACCESSOR_INFER_INIT()
     )::Target<Name, Value>
 
 // wrapper of RPP_HOLDER_REF
-#define RPP_ACCESSOR_REF(Value) \
-    RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_REF(Value))
+#define RPP_ACCESSOR_APPEND_REF(Value) \
+    ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_REF(Value))>
 
 // wrapper of RPP_HOLDER_MEMBER
-#define RPP_ACCESSOR_MEMBER(Object, Value) \
-    RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_MEMBER(Object, Value))
+#define RPP_ACCESSOR_APPEND_MEMBER(Object, Value) \
+    ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_MEMBER(Object, Value))>
 
 // call RPP_ACCESSOR_BIND and always use HolderMember
 // some helper macros
@@ -58,16 +58,19 @@ RPP_ACCESSOR_INFER_INIT()
 #ifndef ___
     #define ___ RPP_ACCESSOR_BIND_OBJECT_ALSO
 #endif
-#define RPP_ACCESSOR_BIND_OBJECT_MEMBER_1(Object, Member, Next) \
-    ::Append<RPP_ACCESSOR_MEMBER(Object, Member)> Next##_2(Object
-#define RPP_ACCESSOR_BIND_OBJECT_MEMBER_2(Object, Member, Next) \
-    ::Append<RPP_ACCESSOR_MEMBER(Object, Member)> Next##_1(Object
-#define RPP_ACCESSOR_BIND_OBJECT_END_1(Object) /* nothing */
-#define RPP_ACCESSOR_BIND_OBJECT_END_2(Object) /* nothing */
-// the main macro
+#define RPP_ACCESSOR_BIND_OBJECT_MEMBER_1(Method, Object, Member, Next) \
+    Method(Object, Member) Next##_2(Method, Object
+#define RPP_ACCESSOR_BIND_OBJECT_MEMBER_2(Method, Object, Member, Next) \
+    Method(Object, Member) Next##_1(Method, Object
+#define RPP_ACCESSOR_BIND_OBJECT_END_1(Method, Object) /* nothing */
+#define RPP_ACCESSOR_BIND_OBJECT_END_2(Method, Object) /* nothing */
+// the main macros
 #define RPP_ACCESSOR_BIND_OBJECT(Object, Members) \
     rpp::AccessorObjectWrap< \
-        rpp::TypeList<> RPP_ACCESSOR_BIND_OBJECT_MEMBER_1(Object, Members, RPP_ACCESSOR_BIND_OBJECT_END)) \
+        rpp::TypeList<> \
+        RPP_ACCESSOR_BIND_OBJECT_MEMBER_1( \
+            RPP_ACCESSOR_APPEND_MEMBER, Object, Members, RPP_ACCESSOR_BIND_OBJECT_END \
+        ) /* extra ")" */ ) \
     > accessor_infer(Object);
 
 }
