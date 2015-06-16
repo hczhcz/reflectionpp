@@ -136,8 +136,11 @@ namespace rpp_another_namespace {
         char member3;
         static int member4;
         TestStruct member5;
+
+        TestStruct2(int a, char b, int c):
+            TestStruct{a, a + 1.0f}, member3{b}, member5{c, c + 1.0f} {}
     };
-    int TestStruct2::member4 = 400;
+    int TestStruct2::member4 = 4;
 
     using Accessor7m3 = RPP_ACCESSOR_GET(
         RPP_HOLDER_STR("member3"),
@@ -260,7 +263,7 @@ namespace rpp_another_namespace {
         rpp::MetaImpl<rpp::VisitorAll3, Accessor4> meta4{rpp::value3};
         rpp::MetaImpl<rpp::VisitorAll3, Accessor5> meta5{TestStruct{1, 1.5}};
         rpp::MetaImpl<rpp::VisitorAll3, Accessor6> meta6;
-        rpp::MetaImpl<rpp::VisitorAll3, Accessor7> meta7{TestStruct2{}};
+        rpp::MetaImpl<rpp::VisitorAll3, Accessor7> meta7{TestStruct2{1, '3', 5}};
 
         std::vector<rpp::MetaBase<rpp::VisitorAll3> *> metalist{
             &meta1, &meta2, &meta3, &meta4, &meta5, &meta6, &meta7
