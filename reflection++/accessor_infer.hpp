@@ -5,6 +5,7 @@
 namespace rpp {
 
 // a compile-time wraper class of AccessorSimple
+template <class Nothing = void>
 struct AccessorSimpleWrap {
     template <class Name, class Value>
     using Build = AccessorSimple<Name, Value>;
@@ -28,7 +29,7 @@ struct AccessorObjectWrap {
 // enable accessor_infer function in the current namespace
 #define RPP_ACCESSOR_INFER_INIT() \
     /* an abstract function to infer the default accessor of a type */ \
-    rpp::AccessorSimpleWrap accessor_infer(...);
+    rpp::AccessorSimpleWrap<> accessor_infer(...);
 
 RPP_ACCESSOR_INFER_INIT()
 
