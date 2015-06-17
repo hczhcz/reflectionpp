@@ -26,25 +26,25 @@ struct AccessorObjectWrap {
     AccessorObjectWrap() = delete;
 };
 
-// enable accessor_infer function in the current namespace
+// enable accessorInfer function in the current namespace
 #define RPP_ACCESSOR_INFER_INIT() \
     /* an abstract function to infer the default accessor of a type */ \
-    rpp::AccessorSimpleWrap<> accessor_infer(...);
+    rpp::AccessorSimpleWrap<> accessorInfer(...);
 
 RPP_ACCESSOR_INFER_INIT()
 
 // set the default accessor to AccessorObject and bind members (from arguments)
 #define RPP_ACCESSOR_BIND(Type, ...) \
-    rpp::AccessorObjectWrap<rpp::TypeList<__VA_ARGS__>> accessor_infer(Type);
+    rpp::AccessorObjectWrap<rpp::TypeList<__VA_ARGS__>> accessorInfer(Type);
 
 // set the default accessor to AccessorObject and bind members (pass a TypeList)
 #define RPP_ACCESSOR_BIND_LIST(Type, Members) \
-    rpp::AccessorObjectWrap<Members> accessor_infer(Type);
+    rpp::AccessorObjectWrap<Members> accessorInfer(Type);
 
 // get the default accessor
 #define RPP_ACCESSOR_GET(Name, Value) \
     decltype( \
-        accessor_infer((*static_cast<Value *>(nullptr))()) \
+        accessorInfer((*static_cast<Value *>(nullptr))()) \
     )::Build<Name, Value>
 
 // append an accessor to a TypeList
@@ -70,7 +70,7 @@ RPP_ACCESSOR_INFER_INIT()
 // append accessors fetched from AccessorObjectWrap to a TypeList
 #define RPP_ACCESSOR_APPEND_BASE(Derived, Base) \
     ::AppendList<decltype( \
-        accessor_infer(*static_cast<Base *>(nullptr)) \
+        accessorInfer(*static_cast<Base *>(nullptr)) \
     )::List>
 
 // build a TypeList of accessors
@@ -99,6 +99,6 @@ RPP_ACCESSOR_INFER_INIT()
             Members \
             , RPP_ACCESSOR_LIST_END) \
         ) \
-    > accessor_infer(Object);
+    > accessorInfer(Object);
 
 }

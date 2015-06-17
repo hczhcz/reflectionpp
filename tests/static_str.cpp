@@ -3,9 +3,9 @@
 
 namespace rpp_another_namespace {
 
-static_assert(rpp::str_index("abc", 1) == 'b', "");
-static_assert(rpp::str_index("abc", 3) == '\0', "");
-static_assert(rpp::str_index("abc", 5) == '\0', "");
+static_assert(rpp::strIndex("abc", 1) == 'b', "");
+static_assert(rpp::strIndex("abc", 3) == '\0', "");
+static_assert(rpp::strIndex("abc", 5) == '\0', "");
 
 template <const char *str>
 struct SomeStrClass {};
