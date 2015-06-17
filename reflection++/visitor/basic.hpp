@@ -1,9 +1,8 @@
 #pragma once
 
-#include <utility>
 #include <typeinfo>
 #include "../visitor_chain.hpp"
-#include "../holder.hpp"
+#include "../accessor.hpp"
 
 namespace rpp {
 
@@ -30,7 +29,7 @@ RPP_VISITOR_REG(VisitorType)
 
 // get size of a type
 // template <class Nothing = void>
-struct VisitorSize: public VisitorBase<std::size_t> {
+struct VisitorSize: public VisitorBase<rpp_size_t> {
     template <class T>
     ReturnType visit(T &value) {
         return sizeof(value);

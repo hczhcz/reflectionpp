@@ -5,7 +5,7 @@
 
 namespace rpp {
 
-using rpp_size_t = unsigned;
+using rpp_size_t = unsigned long;
 
 // data accessors of simple data
 template <class Name, class Value>
