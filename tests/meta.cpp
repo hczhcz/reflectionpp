@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "../reflection++/visitor_common.hpp"
+#include "../reflection++/visitor_chain.hpp"
 #include "../reflection++/accessor_infer.hpp"
 #include "../reflection++/meta.hpp"
 

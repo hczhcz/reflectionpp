@@ -14,10 +14,6 @@ struct MetaBase<
 > {
     virtual const char *getName() = 0;
 
-    // TODO: add common visitors
-    // virtual const std::type_info &getTypeInfo() = 0;
-    // virtual void *getPointer() = 0;
-
     // see: using MetaBase<TypeList<Args...>>::doVisit
     void doVisit() = delete;
 };
