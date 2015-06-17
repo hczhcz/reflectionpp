@@ -140,7 +140,7 @@ struct TestStruct2: public TestStruct {
     TestStruct2(int a, char b, int c):
         TestStruct{a, a + 1.0f}, member3{b}, member5{c, c + 1.0f} {}
 };
-int TestStruct2::member4 = 4;
+int TestStruct2::member4{4};
 
 using Accessor7m3 = RPP_ACCESSOR_GET(
     RPP_HOLDER_STR("member3"),
