@@ -49,6 +49,12 @@ struct AccessorObjectHelper<
         return visitor.visit((*this)());
     }
 
+    static const char *getMemberName(rpp_size_t index) {
+        (void) index;
+
+        throw 1; // TODO
+    }
+
     template <class Visitor>
     typename Visitor::ReturnType doMemberVisit(Visitor &visitor, rpp_size_t index) {
         (void) visitor;
@@ -73,24 +79,22 @@ struct AccessorObjectHelper<
         return 1 + sizeof...(Args);
     }
 
-    template <class Visitor, rpp_size_t index>
-    typename Visitor::ReturnType doMemberVisit(Visitor &visitor) {
+    static const char *getMemberName(rpp_size_t index) {
         if (index == 0) {
-            Member member{(*this)()}; // TODO
-            return member.doRealVisit(visitor);
+            return Member::getRealName();
         } else {
-            AccessorObjectHelper<Value, TypeList<Args...>>
-                ::template doMemberVisit<Visitor, index - 1>(visitor);
+            return AccessorObjectHelper<Value, TypeList<Args...>>
+                ::getMemberName(index - 1);
         }
     }
 
     template <class Visitor>
     typename Visitor::ReturnType doMemberVisit(Visitor &visitor, rpp_size_t index) {
         if (index == 0) {
-            Member member{(*this)()}; // TODO
+            Member member{(*this)()};
             return member.doRealVisit(visitor);
         } else {
-            AccessorObjectHelper<Value, TypeList<Args...>>
+            return AccessorObjectHelper<Value, TypeList<Args...>>
                 ::template doMemberVisit<Visitor>(visitor, index - 1);
         }
     }
