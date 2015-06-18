@@ -2,6 +2,7 @@
 
 #include <ostream>
 #include <string>
+#include <memory>
 #include <array>
 #include <deque>
 #include <forward_list>
@@ -70,19 +71,6 @@ private:
         }
     }
 
-    template <class... Args>
-    void visitStr(const std::basic_string<Args...> &value) {
-        out << '"';
-
-        auto begin = std::begin(value);
-        auto end = std::end(value);
-        for (auto i = begin; i != end; ++i) {
-            writeChar(*i);
-        }
-
-        out << '"';
-    }
-
     void visitStr(const char *value) {
         out << '"';
 
@@ -101,6 +89,28 @@ private:
         }
 
         out << '"';
+    }
+
+    template <class... Args>
+    void visitStr(const std::basic_string<Args...> &value) {
+        out << '"';
+
+        auto begin = std::begin(value);
+        auto end = std::end(value);
+        for (auto i = begin; i != end; ++i) {
+            writeChar(*i);
+        }
+
+        out << '"';
+    }
+
+    template <class T>
+    void visitPtr(T &value) {
+        if (value) {
+            visit(*value); // TODO
+        } else {
+            out << "null";
+        }
     }
 
     template <class T>
@@ -153,11 +163,6 @@ public:
 
     // string
 
-    template <class... Args>
-    void visit(const std::basic_string<Args...> &value) {
-        visitStr(value);
-    }
-
     void visit(const char *value) {
         visitStr(value);
     }
@@ -166,10 +171,41 @@ public:
         visitStr(value);
     }
 
+    template <class... Args>
+    void visit(const std::basic_string<Args...> &value) {
+        visitStr(value);
+    }
+
+    // pointer
+
+    template <class... Args>
+    void visit(const std::shared_ptr<Args...> &value) {
+        visitPtr(value);
+    }
+
+    template <class... Args>
+    void visit(const std::weak_ptr<Args...> &value) {
+        visitPtr(value);
+    }
+
+    template <class... Args>
+    void visit(const std::unique_ptr<Args...> &value) {
+        visitPtr(value);
+    }
+
+    template <class T>
+    auto visit(const T *value) -> decltype(
+        static_cast<void>(
+            static_cast<int T::* /* any member pointer */>(nullptr)
+        )
+    ) {
+        visitPtr(value);
+    }
+
     // array
 
     template <class T, rpp_size_t size>
-    void visit(const T (&value)[size]) {
+    void visit(T (&value)[size]) {
         visitArr(value);
     }
 

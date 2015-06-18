@@ -11,37 +11,42 @@ namespace rpp_another_namespace {
 RPP_ACCESSOR_INFER_INIT()
 
 struct TestStruct3 {
-    int a{1};
+    static int a;
     double b{2};
 
     TestStruct3() = default;
 };
 
-struct TestStruct4 {
+int TestStruct3::a{1};
+
+struct TestStruct4: public TestStruct3 {
     TestStruct3 c;
     std::string d{"string\t字符串\n"};
     std::vector<float> e{5, 5.1, 5.2};
     std::map<std::string, unsigned> f{{"item1", 3}, {"item2", 4}};
     int g[3]{7, 8, 9};
-    bool h{true};
+    static constexpr bool h{true};
+    std::unique_ptr<int> i[2]{nullptr, nullptr};
 
     TestStruct4() = default;
 };
 
 RPP_ACCESSOR_BIND_OBJECT(
     TestStruct3,
-    __(a)
+    __(a, REF)
     __(b)
 )
 
 RPP_ACCESSOR_BIND_OBJECT(
     TestStruct4,
+    __(TestStruct3, BASE)
     __(c)
     __(d)
     __(e)
     __(f)
     __(g)
-    __(h)
+    __(h, CONST)
+    __(i)
 )
 
 static const int test2 = []() {
