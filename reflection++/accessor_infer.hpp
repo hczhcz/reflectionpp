@@ -35,11 +35,15 @@ RPP_ACCESSOR_INFER_INIT()
 
 // set the default accessor to AccessorObject and bind members (from arguments)
 #define RPP_ACCESSOR_BIND(Type, ...) \
-    rpp::AccessorObjectWrap<rpp::TypeList<__VA_ARGS__>> accessorInfer(Type);
+    rpp::AccessorObjectWrap< \
+        rpp::TypeList<__VA_ARGS__> \
+    > accessorInfer(Type &);
 
 // set the default accessor to AccessorObject and bind members (pass a TypeList)
 #define RPP_ACCESSOR_BIND_LIST(Type, Members) \
-    rpp::AccessorObjectWrap<Members> accessorInfer(Type);
+    rpp::AccessorObjectWrap< \
+        Members \
+    > accessorInfer(Type &);
 
 // get the default accessor
 #define RPP_ACCESSOR_GET(Name, Value) \
@@ -99,6 +103,6 @@ RPP_ACCESSOR_INFER_INIT()
             Members \
             , RPP_ACCESSOR_LIST_END) \
         ) \
-    > accessorInfer(Object);
+    > accessorInfer(Object &);
 
 }
