@@ -16,8 +16,9 @@ struct AccessorSimple: protected Value {
         Name, HolderType<decltype((*static_cast<Value *>(nullptr))())>
     >;
 
-    static const char *getRealName() {
-        Name name{};
+    const char *getRealName() {
+        Name name{(*this)()};
+
         return name();
     }
 
@@ -49,7 +50,7 @@ struct AccessorObjectHelper<
         return visitor.visit((*this)());
     }
 
-    static const char *getMemberName(rpp_size_t index) {
+    const char *getMemberName(rpp_size_t index) {
         (void) index;
 
         throw 1; // TODO
@@ -79,9 +80,11 @@ struct AccessorObjectHelper<
         return 1 + sizeof...(Args);
     }
 
-    static const char *getMemberName(rpp_size_t index) {
+    const char *getMemberName(rpp_size_t index) {
         if (index == 0) {
-            return Member::getRealName();
+            Member member{(*this)()};
+
+            return member.getRealName();
         } else {
             return AccessorObjectHelper<Value, TypeList<Args...>>
                 ::getMemberName(index - 1);
@@ -110,8 +113,9 @@ struct AccessorObject: protected AccessorObjectHelper<Value, Members> {
         typename AccessorObjectHelper<Value, Members>::MetaList
     >;
 
-    static const char *getRealName() {
-        Name name{};
+    const char *getRealName() {
+        Name name{(*this)()};
+
         return name();
     }
 
