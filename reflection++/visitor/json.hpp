@@ -18,13 +18,10 @@ namespace rpp {
 // render a JSON string and write it into a stream
 template <class Nothing = void>
 struct VisitorJSON: public VisitorBase<void> {
+private:
     std::ostream &out;
     rpp_size_t indent;
 
-    VisitorJSON(std::ostream &_out, rpp_size_t _indent = 0):
-        out(_out), indent(_indent) {}
-
-private:
     void writeIndent() {
         out << '\n';
         for (rpp_size_t i = 0; i < indent; ++i) {
@@ -153,6 +150,9 @@ private:
     }
 
 public:
+    VisitorJSON(std::ostream &_out, rpp_size_t _indent = 0):
+        out(_out), indent(_indent) {}
+
     void visit(bool &value) { // notice: bool only
         out << (value ? "true" : "false");
     }
