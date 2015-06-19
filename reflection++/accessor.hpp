@@ -17,9 +17,7 @@ struct AccessorSimple: protected Value {
     >;
 
     const char *getRealName() {
-        Name name{(*this)()};
-
-        return name();
+        return HolderFactory<Name>::make((*this)())();
     }
 
     template <class Visitor>
@@ -82,9 +80,7 @@ struct AccessorObjectHelper<
 
     const char *getMemberName(rpp_size_t index) {
         if (index == 0) {
-            Member member{(*this)()};
-
-            return member.getRealName();
+            return HolderFactory<Member>::make((*this)()).getRealName();
         } else {
             return AccessorObjectHelper<Value, TypeList<Args...>>
                 ::getMemberName(index - 1);
@@ -94,8 +90,7 @@ struct AccessorObjectHelper<
     template <class Visitor>
     typename Visitor::ReturnType doMemberVisit(Visitor &visitor, rpp_size_t index) {
         if (index == 0) {
-            Member member{(*this)()};
-            return member.doRealVisit(visitor);
+            return HolderFactory<Member>::make((*this)()).doRealVisit(visitor);
         } else {
             return AccessorObjectHelper<Value, TypeList<Args...>>
                 ::template doMemberVisit<Visitor>(visitor, index - 1);
@@ -114,9 +109,7 @@ struct AccessorObject: protected AccessorObjectHelper<Value, Members> {
     >;
 
     const char *getRealName() {
-        Name name{(*this)()};
-
-        return name();
+        return HolderFactory<Name>::make((*this)())();
     }
 
     template <class Visitor>

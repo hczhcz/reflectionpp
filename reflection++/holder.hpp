@@ -9,9 +9,6 @@ template <class T>
 struct HolderType {
     HolderType() {}
 
-    template <class Object>
-    HolderType(Object &) {} // as object member
-
     const HolderType<T> &operator()() {
         return *this;
     }
@@ -22,9 +19,6 @@ struct HolderType {
 template <class T, T _value>
 struct HolderConst {
     HolderConst() {}
-
-    template <class Object>
-    HolderConst(Object &) {} // as object member
 
     const T &operator()() {
         static const T value{_value};
@@ -53,9 +47,6 @@ template <class T, T &value>
 struct HolderRef {
     HolderRef() {}
 
-    template <class Object>
-    HolderRef(Object &) {} // as object member
-
     T &operator()() {
         return value;
     }
@@ -78,34 +69,33 @@ template <class Object, class T, T Object::*member>
 struct HolderMember {
     Object &object;
 
-    HolderMember(Object &_object): object{_object} {}
+    HolderMember(
+        Object &_object
+    ): object{_object} {}
+
+    HolderMember(
+        const HolderType<Object> &
+    ): object{*static_cast<Object *>(nullptr)} {}
 
     T &operator()() {
         return object.*member;
     }
 };
 
-// // data holders that use "this" pointer directly
-// template <class T>
-// struct HolderThis: public T {
-//     using T::T;
+// to construct holders
+// notice: actually constructs accessors based on holders
+template <class T>
+struct HolderFactory {
+    template <class Object, class Holder = T>
+    static auto make(Object &) -> decltype(Holder{}) {
+        return Holder{};
+    }
 
-//     using RealType = T;
-
-//     T &operator()() {
-//         return *this;
-//     }
-// };
-
-// // data holders point to a specified member of "this" pointer
-// template <class Base, class T, T Base::RealType::*member>
-// struct HolderThisMember: public Base {
-//     using Base::Base;
-
-//     T &operator()() {
-//         return this->*member;
-//     }
-// };
+    template <class Object, class Holder = T>
+    static auto make(Object &object) -> decltype(Holder{object}) {
+        return Holder{object};
+    }
+};
 
 #define RPP_HOLDER_TYPE(Type) \
     rpp::HolderType<Type>
