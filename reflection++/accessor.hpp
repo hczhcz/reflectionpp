@@ -7,6 +7,20 @@ namespace rpp {
 
 using rpp_size_t = unsigned long;
 
+// to construct accessors as a member
+template <class T>
+struct AccessorFactory {
+    template <class Object, class Accessor = T>
+    static auto make(Object &) -> decltype(Accessor{}) {
+        return Accessor{};
+    }
+
+    template <class Object, class Accessor = T>
+    static auto make(Object &object) -> decltype(Accessor{object}) {
+        return Accessor{object};
+    }
+};
+
 // data accessors of simple data
 template <class Name, class Value>
 struct AccessorSimple: protected Value {
@@ -17,7 +31,7 @@ struct AccessorSimple: protected Value {
     >;
 
     const char *getRealName() {
-        return HolderFactory<Name>::make((*this)())();
+        return AccessorFactory<Name>::make((*this)())();
     }
 
     template <class Visitor>
@@ -80,7 +94,7 @@ struct AccessorObjectHelper<
 
     const char *getMemberName(rpp_size_t index) {
         if (index == 0) {
-            return HolderFactory<Member>::make((*this)()).getRealName();
+            return AccessorFactory<Member>::make((*this)()).getRealName();
         } else {
             return AccessorObjectHelper<Value, TypeList<Args...>>
                 ::getMemberName(index - 1);
@@ -90,7 +104,7 @@ struct AccessorObjectHelper<
     template <class Visitor>
     typename Visitor::ReturnType doMemberVisit(Visitor &visitor, rpp_size_t index) {
         if (index == 0) {
-            return HolderFactory<Member>::make((*this)()).doRealVisit(visitor);
+            return AccessorFactory<Member>::make((*this)()).doRealVisit(visitor);
         } else {
             return AccessorObjectHelper<Value, TypeList<Args...>>
                 ::template doMemberVisit<Visitor>(visitor, index - 1);
@@ -109,7 +123,7 @@ struct AccessorObject: protected AccessorObjectHelper<Value, Members> {
     >;
 
     const char *getRealName() {
-        return HolderFactory<Name>::make((*this)())();
+        return AccessorFactory<Name>::make((*this)())();
     }
 
     template <class Visitor>

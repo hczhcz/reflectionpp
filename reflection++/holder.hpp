@@ -73,27 +73,8 @@ struct HolderMember {
         Object &_object
     ): object{_object} {}
 
-    HolderMember(
-        const HolderType<Object> &
-    ): object{*static_cast<Object *>(nullptr)} {}
-
     T &operator()() {
         return object.*member;
-    }
-};
-
-// to construct holders
-// notice: actually constructs accessors based on holders
-template <class T>
-struct HolderFactory {
-    template <class Object, class Holder = T>
-    static auto make(Object &) -> decltype(Holder{}) {
-        return Holder{};
-    }
-
-    template <class Object, class Holder = T>
-    static auto make(Object &object) -> decltype(Holder{object}) {
-        return Holder{object};
     }
 };
 

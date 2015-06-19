@@ -8,7 +8,17 @@ namespace rpp {
 template <class Nothing = void>
 struct AccessorSimpleWrap {
     template <class Name, class Value>
-    using Build = AccessorSimple<Name, Value>;
+    using Accessor = AccessorSimple<
+        Name,
+        Value
+    >;
+
+    // TODO
+    // template <class Name, class T>
+    // using TypeAccessor = AccessorSimple<
+    //     Name,
+    //     HolderType<T>
+    // >;
 
     // compile-time only
     AccessorSimpleWrap() = delete;
@@ -20,7 +30,17 @@ struct AccessorObjectWrap {
     using List = Members;
 
     template <class Name, class Value>
-    using Build = AccessorObject<Name, Value, Members>;
+    using Accessor = AccessorObject<Name, Value, Members>;
+
+    // TODO
+    // template <class Name, class T>
+    // using TypeAccessor = AccessorObject<
+    //     Name, HolderType<T>,
+    //     typename AccessorObjectHelper<
+    //         HolderLocal<T> /* TODO */, Members
+    //     >::MetaList
+    // >;
+
 
     // compile-time only
     AccessorObjectWrap() = delete;
@@ -49,7 +69,7 @@ RPP_ACCESSOR_INFER_INIT()
 #define RPP_ACCESSOR_GET(Name, Value) \
     decltype( \
         accessorInfer((*static_cast<Value *>(nullptr))()) \
-    )::Build<Name, Value>
+    )::Accessor<Name, Value>
 
 // append an accessor to a TypeList
 // wrapper of RPP_HOLDER_TYPE
