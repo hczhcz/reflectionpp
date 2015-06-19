@@ -57,11 +57,6 @@ struct AccessorObjectHelper<
         return 0;
     }
 
-    template <class Visitor>
-    typename Visitor::ReturnType doObjectVisit(Visitor &visitor) {
-        return visitor.visit((*this)());
-    }
-
     const char *getMemberName(rpp_size_t index) {
         (void) index;
 
@@ -82,7 +77,6 @@ struct AccessorObjectHelper<
     Value, TypeList<Member, Args...>
 >: protected AccessorObjectHelper<Value, TypeList<Args...>> {
     using AccessorObjectHelper<Value, TypeList<Args...>>::AccessorObjectHelper;
-    using AccessorObjectHelper<Value, TypeList<Args...>>::doObjectVisit;
 
     using MetaList = typename AccessorObjectHelper<Value, TypeList<Args...>>
         ::MetaList
@@ -104,7 +98,10 @@ struct AccessorObjectHelper<
     template <class Visitor>
     typename Visitor::ReturnType doMemberVisit(Visitor &visitor, rpp_size_t index) {
         if (index == 0) {
-            return AccessorFactory<Member>::make((*this)()).doRealVisit(visitor);
+            // notice: can not use universal init here
+            auto member = AccessorFactory<Member>::make((*this)());
+
+            return visitor.into(member);
         } else {
             return AccessorObjectHelper<Value, TypeList<Args...>>
                 ::template doMemberVisit<Visitor>(visitor, index - 1);
@@ -114,7 +111,7 @@ struct AccessorObjectHelper<
 
 // data accessors associated with members
 template <class Name, class Value, class Members>
-struct AccessorObject: protected AccessorObjectHelper<Value, Members> {
+struct AccessorObject: public AccessorObjectHelper<Value, Members> {
     using AccessorObjectHelper<Value, Members>::AccessorObjectHelper;
 
     using Meta = AccessorObject<
@@ -128,9 +125,7 @@ struct AccessorObject: protected AccessorObjectHelper<Value, Members> {
 
     template <class Visitor>
     typename Visitor::ReturnType doRealVisit(Visitor &visitor) {
-        return visitor.into(
-            *static_cast<AccessorObjectHelper<Value, Members> *>(this)
-        );
+        return visitor.visit((*this)());
     }
 };
 

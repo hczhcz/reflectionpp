@@ -52,7 +52,7 @@ struct MetaImpl<
     using MetaImpl<TypeList<Args...>, Accessor, Base>::doVisit;
 
     virtual typename Visitor::ReturnType doVisit(Visitor &visitor) override {
-        return Accessor::doRealVisit(visitor);
+        return visitor.into(*static_cast<Accessor *>(this));
     }
 };
 

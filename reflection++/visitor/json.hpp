@@ -246,8 +246,13 @@ public:
         visitMap(value);
     }
 
-    template <class Accessor>
-    void into(Accessor &accessor) {
+    template <class... Args>
+    void into(AccessorSimple<Args...> &accessor) {
+        accessor.doRealVisit(*this);
+    }
+
+    template <class... Args>
+    void into(AccessorObject<Args...> &accessor) {
         out << '{';
         ++indent;
 
