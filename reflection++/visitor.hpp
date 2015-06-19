@@ -12,12 +12,23 @@ struct VisitorBase {
 template <class Return = void>
 struct VisitorIgnoreBase: public VisitorBase<Return> {
     Return visit(...) {
-        return Return(); // notice: void is not constructable
+        static const Return value{};
+
+        return value;
     }
 
     Return into(...) {
-        return Return(); // notice: void is not constructable
+        static const Return value{};
+
+        return value;
     }
+};
+
+template <>
+struct VisitorIgnoreBase<void>: public VisitorBase<void> {
+    void visit(...) {}
+
+    void into(...) {}
 };
 
 }
