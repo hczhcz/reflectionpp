@@ -37,12 +37,12 @@ struct Visitor4: public VisitorBase<> {
     }
 
     template <class... Args>
-    void into(AccessorSimple<Args...> &accessor) {
+    void operator()(AccessorSimple<Args...> &accessor) {
         accessor.doRealVisit(*this);
     }
 
     template <class... Args>
-    void into(AccessorObject<Args...> &accessor) {
+    void operator()(AccessorObject<Args...> &accessor) {
         std::cerr << "object( ";
 
         for (rpp_size_t i = 0; i < accessor.size(); ++i) {
@@ -60,7 +60,7 @@ struct Visitor5: public VisitorBase<const char *> {
     }
 
     template <class Accessor>
-    const char *into(Accessor &accessor) {
+    const char *operator()(Accessor &accessor) {
         return accessor.doRealVisit(*this);
     }
 };

@@ -247,12 +247,12 @@ public:
     }
 
     template <class... Args>
-    void into(AccessorSimple<Args...> &accessor) {
+    void operator()(AccessorSimple<Args...> &accessor) {
         accessor.doRealVisit(*this);
     }
 
     template <class... Args>
-    void into(AccessorObject<Args...> &accessor) {
+    void operator()(AccessorObject<Args...> &accessor) {
         out << '{';
         ++indent;
 

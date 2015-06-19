@@ -101,7 +101,7 @@ struct AccessorObjectHelper<
             // notice: can not use universal init here
             auto member = AccessorFactory<Member>::make((*this)());
 
-            return visitor.into(member);
+            return visitor(member);
         } else {
             return AccessorObjectHelper<Value, TypeList<Args...>>
                 ::template doMemberVisit<Visitor>(visitor, index - 1);
