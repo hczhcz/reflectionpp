@@ -6,19 +6,12 @@ namespace rpp {
 
 // a compile-time wraper class of AccessorSimple
 template <class Nothing = void>
-struct AccessorSimpleWrap {
+struct AccessorSimpleWrap final {
     template <class Name, class Value>
     using Accessor = AccessorSimple<
         Name,
         Value
     >;
-
-    // TODO
-    // template <class Name, class T>
-    // using TypeAccessor = AccessorSimple<
-    //     Name,
-    //     HolderType<T>
-    // >;
 
     // compile-time only
     AccessorSimpleWrap() = delete;
@@ -26,21 +19,15 @@ struct AccessorSimpleWrap {
 
 // a compile-time wraper class of AccessorObject
 template <class Members>
-struct AccessorObjectWrap {
+struct AccessorObjectWrap final {
     using List = Members;
 
     template <class Name, class Value>
-    using Accessor = AccessorObject<Name, Value, Members>;
-
-    // TODO
-    // template <class Name, class T>
-    // using TypeAccessor = AccessorObject<
-    //     Name, HolderType<T>,
-    //     typename AccessorObjectHelper<
-    //         HolderLocal<T> /* TODO */, Members
-    //     >::MetaList
-    // >;
-
+    using Accessor = AccessorObject<
+        Name,
+        Value,
+        Members
+    >;
 
     // compile-time only
     AccessorObjectWrap() = delete;

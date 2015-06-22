@@ -14,7 +14,7 @@ constexpr char strIndex(const char *str, rpp_strlen_t index) {
 
 // a compile-time string
 template <char tail, char... c>
-struct StaticStr {
+struct StaticStr final {
     template <char next>
     using Append = StaticStr<next, c..., tail>;
 
@@ -23,7 +23,7 @@ struct StaticStr {
 };
 
 template <char... c>
-struct StaticStr<0, c...> {
+struct StaticStr<0, c...> final {
     static const char str[];
 
     template <char next>
