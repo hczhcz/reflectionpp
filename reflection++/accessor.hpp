@@ -129,4 +129,31 @@ struct AccessorObject: public AccessorObjectHelper<Value, Members> {
     }
 };
 
+// data accessors associated with dynamic members
+template <class Name, class Value, class Member>
+struct AccessorDynamic: protected Value {
+    using Value::Value;
+
+    using Meta = AccessorDynamic<
+        Name, HolderType<decltype((*static_cast<Value *>(nullptr))())>,
+        typename Member::Meta
+    >;
+
+    const char *getRealName() {
+        return AccessorFactory<Name>::make((*this)())();
+    }
+
+    template <class Visitor>
+    typename Visitor::ReturnType doRealVisit(Visitor &visitor) {
+        return visitor.visit((*this)());
+    }
+
+    template <class Visitor, class T>
+    typename Visitor::ReturnType doMemberVisit(Visitor &visitor, T &value) {
+        auto member = AccessorFactory<Member>::make(value);
+
+        return visitor(member);
+    }
+};
+
 }

@@ -271,6 +271,12 @@ public:
         writeIndent();
         out << '}';
     }
+
+    template <class... Args>
+    void operator()(AccessorDynamic<Args...> &accessor) {
+        // TODO
+        accessor.doRealVisit(*this);
+    }
 };
 
 }

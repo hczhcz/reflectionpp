@@ -46,6 +46,20 @@ struct AccessorObjectWrap {
     AccessorObjectWrap() = delete;
 };
 
+// a compile-time wraper class of AccessorDynamic
+template <class Member>
+struct AccessorDynamicWrap final {
+    template <class Name, class Value>
+    using Accessor = AccessorDynamic<
+        Name,
+        Value,
+        Member
+    >;
+
+    // compile-time only
+    AccessorDynamicWrap() = delete;
+};
+
 // enable accessorInfer function in the current namespace
 #define RPP_ACCESSOR_INFER_INIT() \
     /* an abstract function to infer the default accessor of a type */ \
@@ -63,6 +77,12 @@ RPP_ACCESSOR_INFER_INIT()
 #define RPP_ACCESSOR_BIND_LIST(Type, Members) \
     rpp::AccessorObjectWrap< \
         Members \
+    > accessorInfer(Type &);
+
+// set the default accessor to AccessorDynamic and bind the (abstract) member
+#define RPP_ACCESSOR_BIND_DYNAMIC(Type, Member) \
+    rpp::AccessorDynamicWrap< \
+        Member \
     > accessorInfer(Type &);
 
 // get the default accessor
