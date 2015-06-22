@@ -10,16 +10,16 @@
 #include <vector>
 #include <map>
 #include <unordered_map>
-#include "../visitor_chain.hpp"
+#include "../visitor.hpp"
 #include "../accessor.hpp"
 
 namespace rpp {
 
 // render a JSON string and write it into a stream
-template <class Nothing = void>
+template <class Out = std::ostream>
 struct VisitorJSON: public VisitorBase<void> {
 private:
-    std::ostream &out;
+    Out &out;
     rpp_size_t indent;
 
     void writeIndent() {
@@ -150,7 +150,7 @@ private:
     }
 
 public:
-    VisitorJSON(std::ostream &_out, rpp_size_t _indent = 0):
+    VisitorJSON(Out &_out, rpp_size_t _indent = 0):
         out(_out), indent(_indent) {}
 
     void visit(bool &value) { // notice: bool only

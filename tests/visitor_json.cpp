@@ -1,7 +1,4 @@
 #include <iostream>
-#include <vector>
-#include <map>
-#include "../reflection++/visitor_chain.hpp"
 #include "../reflection++/visitor/json.hpp"
 #include "../reflection++/accessor_infer.hpp"
 #include "../reflection++/meta.hpp"
