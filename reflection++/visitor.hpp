@@ -11,12 +11,6 @@ struct VisitorBase {
 // visitors that ignore unknown values
 template <class Return = void>
 struct VisitorIgnoreBase: public VisitorBase<Return> {
-    Return visit(...) { // notice: not necessary
-        static const Return value{};
-
-        return value;
-    }
-
     Return operator()(...) {
         static const Return value{};
 
@@ -26,8 +20,6 @@ struct VisitorIgnoreBase: public VisitorBase<Return> {
 
 template <>
 struct VisitorIgnoreBase<void>: public VisitorBase<void> {
-    void visit(...) {} // notice: not necessary
-
     void operator()(...) {}
 };
 

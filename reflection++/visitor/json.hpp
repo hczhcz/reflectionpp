@@ -248,7 +248,7 @@ public:
 
     template <class... Args>
     void operator()(AccessorSimple<Args...> &accessor) {
-        accessor.doRealVisit(*this);
+        visit(accessor());
     }
 
     template <class... Args>
@@ -274,8 +274,7 @@ public:
 
     template <class... Args>
     void operator()(AccessorDynamic<Args...> &accessor) {
-        // TODO
-        accessor.doRealVisit(*this);
+        visit(accessor()); // TODO
     }
 };
 

@@ -21,7 +21,7 @@ struct VisitorType: public VisitorBase<const std::type_info &> {
 
     template <class Accessor>
     ReturnType operator()(Accessor &accessor) {
-        return accessor.doRealVisit(*this);
+        return visit(accessor());
     }
 };
 
@@ -42,7 +42,7 @@ struct VisitorSize: public VisitorBase<rpp_size_t> {
 
     template <class Accessor>
     ReturnType operator()(Accessor &accessor) {
-        return accessor.doRealVisit(*this);
+        return visit(accessor());
     }
 };
 
@@ -58,7 +58,7 @@ struct VisitorPointer: public VisitorBase<Pointer *> {
 
     template <class Accessor>
     Pointer *operator()(Accessor &accessor) {
-        return accessor.doRealVisit(*this);
+        return visit(accessor());
     }
 };
 

@@ -38,7 +38,7 @@ struct Visitor4: public VisitorBase<> {
 
     template <class... Args>
     void operator()(AccessorSimple<Args...> &accessor) {
-        accessor.doRealVisit(*this);
+        visit(accessor());
     }
 
     template <class... Args>
@@ -61,7 +61,7 @@ struct Visitor5: public VisitorBase<const char *> {
 
     template <class Accessor>
     const char *operator()(Accessor &accessor) {
-        return accessor.doRealVisit(*this);
+        return visit(accessor());
     }
 };
 

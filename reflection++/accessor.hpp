@@ -23,7 +23,7 @@ struct AccessorFactory {
 
 // data accessors of simple data
 template <class Name, class Value>
-struct AccessorSimple: protected Value {
+struct AccessorSimple: public Value {
     using Value::Value;
 
     using Meta = AccessorSimple<
@@ -32,11 +32,6 @@ struct AccessorSimple: protected Value {
 
     const char *getRealName() {
         return AccessorFactory<Name>::make((*this)())();
-    }
-
-    template <class Visitor>
-    typename Visitor::ReturnType doRealVisit(Visitor &visitor) {
-        return visitor.visit((*this)());
     }
 };
 
@@ -48,7 +43,7 @@ struct AccessorObjectHelper;
 template <class Value>
 struct AccessorObjectHelper<
     Value, TypeList<>
->: protected Value {
+>: public Value {
     using Value::Value;
 
     using MetaList = TypeList<>;
@@ -75,7 +70,7 @@ struct AccessorObjectHelper<
 template <class Value, class Member, class... Args>
 struct AccessorObjectHelper<
     Value, TypeList<Member, Args...>
->: protected AccessorObjectHelper<Value, TypeList<Args...>> {
+>: public AccessorObjectHelper<Value, TypeList<Args...>> {
     using AccessorObjectHelper<Value, TypeList<Args...>>::AccessorObjectHelper;
 
     using MetaList = typename AccessorObjectHelper<Value, TypeList<Args...>>
@@ -122,16 +117,11 @@ struct AccessorObject: public AccessorObjectHelper<Value, Members> {
     const char *getRealName() {
         return AccessorFactory<Name>::make((*this)())();
     }
-
-    template <class Visitor>
-    typename Visitor::ReturnType doRealVisit(Visitor &visitor) {
-        return visitor.visit((*this)());
-    }
 };
 
 // data accessors associated with dynamic members
 template <class Name, class Value, class Member>
-struct AccessorDynamic: protected Value {
+struct AccessorDynamic: public Value {
     using Value::Value;
 
     using Meta = AccessorDynamic<
@@ -141,11 +131,6 @@ struct AccessorDynamic: protected Value {
 
     const char *getRealName() {
         return AccessorFactory<Name>::make((*this)())();
-    }
-
-    template <class Visitor>
-    typename Visitor::ReturnType doRealVisit(Visitor &visitor) {
-        return visitor.visit((*this)());
     }
 
     template <class Visitor, class T>
