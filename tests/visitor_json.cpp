@@ -32,12 +32,6 @@ struct TestStruct5: public TestStruct3, public TestStruct4 {
     TestStruct5() = default;
 };
 
-RPP_TYPE_DYNAMIC(decltype(TestStruct5::e), float)
-RPP_TYPE_DYNAMIC(decltype(TestStruct5::f), unsigned)
-RPP_TYPE_DYNAMIC(decltype(TestStruct5::g), int)
-RPP_TYPE_DYNAMIC(std::unique_ptr<int>, int)
-RPP_TYPE_DYNAMIC(decltype(TestStruct5::i), std::unique_ptr<int>)
-
 RPP_TYPE_OBJECT(
     TestStruct3,
     __(a, REF)
@@ -48,6 +42,12 @@ RPP_TYPE_OBJECT(
     TestStruct4,
     __(b)
 )
+
+RPP_TYPE_DYNAMIC(decltype(TestStruct5::e), float)
+RPP_TYPE_DYNAMIC(decltype(TestStruct5::f), unsigned)
+RPP_TYPE_DYNAMIC(decltype(TestStruct5::g), int)
+RPP_TYPE_DYNAMIC(std::unique_ptr<bool>, bool)
+RPP_TYPE_DYNAMIC(decltype(TestStruct5::j), std::unique_ptr<bool>)
 
 RPP_TYPE_OBJECT(
     TestStruct5,

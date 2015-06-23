@@ -52,17 +52,12 @@ struct AccessorObjectHelper<
         return 0;
     }
 
-    const char *getMemberName(rpp_size_t index) {
-        (void) index;
-
+    const char *getMemberName(rpp_size_t) {
         throw 1; // TODO
     }
 
     template <class Visitor>
-    typename Visitor::ReturnType doMemberVisit(Visitor &visitor, rpp_size_t index) {
-        (void) visitor;
-        (void) index;
-
+    typename Visitor::ReturnType doMemberVisit(Visitor &, rpp_size_t) {
         throw 1; // TODO
     }
 };
