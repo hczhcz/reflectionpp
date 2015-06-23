@@ -17,17 +17,19 @@ struct TestStruct3 {
 int TestStruct3::a{1};
 
 struct TestStruct4 {
-    double b{2.1};
+    const double b{2.1};
 };
 
 struct TestStruct5: public TestStruct3, public TestStruct4 {
     TestStruct4 c;
     std::string d{"string\t字符串\n"};
     std::vector<float> e{5, 5.1, 5.2};
-    std::map<std::string, unsigned> f{{"item1", 3}, {"item2", 4}};
-    int g[3]{7, 8, 9};
-    static constexpr bool h{true};
-    std::unique_ptr<int> i[2]{nullptr, nullptr};
+    std::map<std::string, unsigned> f{{"item1", 6}, {"item2", 7}};
+    int g[3]{8, 9, 10};
+    bool h{false};
+    static constexpr bool i{true};
+    std::unique_ptr<bool> j[2]{nullptr, nullptr};
+    char k[6]{"test\0"};
 
     TestStruct5() = default;
 };
@@ -58,8 +60,10 @@ RPP_TYPE_OBJECT(
     __(e)
     __(f)
     __(g)
-    __(h, CONST)
-    __(i)
+    __(h)
+    __(i, CONST)
+    __(j)
+    __(k)
 )
 
 static const int test2 = []() {

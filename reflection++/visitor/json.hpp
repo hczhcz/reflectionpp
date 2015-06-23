@@ -153,11 +153,21 @@ public:
     VisitorJSON(Out &_out, rpp_size_t _indent = 0):
         out(_out), indent(_indent) {}
 
-    void visit(bool &value) { // notice: bool only
+    template <class T>
+    auto visit(const T value) -> decltype(
+        static_cast<void>(
+            sizeof(char [2 - static_cast<int>(static_cast<T>(3))])
+        )
+    ) {
         out << (value ? "true" : "false");
     }
 
-    void visit(double value) { // notice: not reference
+    template <class T>
+    auto visit(const T value) -> decltype(
+        static_cast<void>(
+            sizeof(char [static_cast<int>(static_cast<T>(3)) - 2])
+        )
+    ) {
         out << value;
     }
 
