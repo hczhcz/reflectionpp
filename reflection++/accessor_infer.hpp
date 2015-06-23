@@ -47,13 +47,6 @@ struct AccessorDynamicWrap final {
     AccessorDynamicWrap() = delete;
 };
 
-// enable accessorInfer function in the current namespace
-#define RPP_ACCESSOR_INFER_INIT() \
-    /* an abstract function to infer the default accessor of a type */ \
-    rpp::AccessorSimpleWrap<> accessorInfer(...);
-
-RPP_ACCESSOR_INFER_INIT()
-
 // set the default accessor to AccessorObject and bind members (pass a TypeList)
 #define RPP_ACCESSOR_BIND_OBJECT(Type, Members) \
     rpp::AccessorObjectWrap< \
@@ -72,7 +65,18 @@ RPP_ACCESSOR_INFER_INIT()
         accessorInfer((*static_cast<Value *>(nullptr))()) \
     )::Accessor<Name, Value>
 
+// enable accessorInfer function in the current namespace
+#define RPP_ACCESSOR_INFER_INIT() \
+    /* an abstract function to infer the default accessor of a type */ \
+    rpp::AccessorSimpleWrap<> accessorInfer(...);
+
+RPP_ACCESSOR_INFER_INIT()
+
 // append an accessor to a TypeList
+#define RPP_ACCESSOR_APPEND_ACCESSOR(Object, Accessor) \
+    ::Append<Accessor>
+
+// append an accessor to a TypeList (using default accessors)
 // wrapper of RPP_HOLDER macros
 // notice: LOCAL and DYNAMIC means type casting
 #define RPP_ACCESSOR_APPEND_TYPE(Object, Type) \

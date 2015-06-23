@@ -11,24 +11,6 @@ struct VisitorTail final {
     VisitorTail() = delete;
 };
 
-// enable the visitor chain in the current namespace
-#define RPP_VISITOR_CHAIN_INIT() \
-    namespace visitor_chain { \
-        /* an empty object to control argument-dependent lookup */ \
-        /* and provide a head of the visitor chain */ \
-        static constexpr struct Here final { \
-            Here() = delete; \
-        } here{}; \
-        \
-        /* an abstract function to infer the next member of the visitor chain */ \
-        rpp::VisitorTail next(...); \
-        \
-        /* call next with VisitorTail is not allowed */ \
-        void next(Here, rpp::VisitorTail) = delete; \
-    }
-
-RPP_VISITOR_CHAIN_INIT()
-
 // register a visitor class into the visitor chain
 #define RPP_VISITOR_REG(Type) \
     namespace visitor_chain { \
@@ -66,5 +48,23 @@ RPP_VISITOR_CHAIN_INIT()
     } \
     \
     using Type = visitor_chain::Type;
+
+// enable the visitor chain in the current namespace
+#define RPP_VISITOR_CHAIN_INIT() \
+    namespace visitor_chain { \
+        /* an empty object to control argument-dependent lookup */ \
+        /* and provide a head of the visitor chain */ \
+        static constexpr struct Here final { \
+            Here() = delete; \
+        } here{}; \
+        \
+        /* an abstract function to infer the next member of the visitor chain */ \
+        rpp::VisitorTail next(...); \
+        \
+        /* call next with VisitorTail is not allowed */ \
+        void next(Here, rpp::VisitorTail) = delete; \
+    }
+
+RPP_VISITOR_CHAIN_INIT()
 
 }
