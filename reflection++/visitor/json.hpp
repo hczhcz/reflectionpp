@@ -101,17 +101,17 @@ private:
         out << '"';
     }
 
-    template <class T>
-    void visitPtr(T &value) {
+    template <class Accessor, class T>
+    void visitPtr(Accessor &accessor, T &value) {
         if (value) {
-            visit(*value); // TODO
+            accessor.doMemberVisit(*this, *value);
         } else {
             out << "null";
         }
     }
 
-    template <class T>
-    void visitArr(T &value) {
+    template <class Accessor, class T>
+    void visitArr(Accessor &accessor, T &value) {
         out << '[';
 
         auto begin = std::begin(value);
@@ -120,14 +120,14 @@ private:
             if (i != begin) {
                 out << ", ";
             }
-            visit(*i); // TODO
+            accessor.doMemberVisit(*this, *i);
         }
 
         out << ']';
     }
 
-    template <class T>
-    void visitMap(T &value) {
+    template <class Accessor, class T>
+    void visitMap(Accessor &accessor, T &value) {
         out << '{';
         ++indent;
 
@@ -141,7 +141,7 @@ private:
 
             visitStr(i->first);
             out << ": ";
-            visit(i->second); // TODO
+            accessor.doMemberVisit(*this, i->second);
         }
 
         --indent;
@@ -178,73 +178,71 @@ public:
 
     // pointer
 
-    template <class... Args>
-    void visit(const std::shared_ptr<Args...> &value) {
-        visitPtr(value);
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::shared_ptr<Args...> &value) {
+        visitPtr(accessor, value);
     }
 
-    template <class... Args>
-    void visit(const std::weak_ptr<Args...> &value) {
-        visitPtr(value);
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::weak_ptr<Args...> &value) {
+        visitPtr(accessor, value);
     }
 
-    template <class... Args>
-    void visit(const std::unique_ptr<Args...> &value) {
-        visitPtr(value);
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::unique_ptr<Args...> &value) {
+        visitPtr(accessor, value);
     }
 
-    template <class T>
-    auto visit(const T *value) -> decltype(
-        static_cast<void>(
-            static_cast<int T::* /* any member pointer */>(nullptr)
-        )
-    ) {
-        visitPtr(value);
+    template <class Accessor, class T>
+    void into(Accessor &accessor, T *&value) {
+        visitPtr(accessor, value);
     }
 
     // array
 
-    template <class T, rpp_size_t size>
-    void visit(T (&value)[size]) {
-        visitArr(value);
+    template <class Accessor, class T, rpp_size_t size>
+    void into(Accessor &accessor, T (&value)[size]) {
+        visitArr(accessor, value);
     }
 
-    template <class... Args>
-    void visit(const std::array<Args...> &value) {
-        visitArr(value);
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::array<Args...> &value) {
+        visitArr(accessor, value);
     }
 
-    template <class... Args>
-    void visit(const std::deque<Args...> &value) {
-        visitArr(value);
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::deque<Args...> &value) {
+        visitArr(accessor, value);
     }
 
-    template <class... Args>
-    void visit(const std::forward_list<Args...> &value) {
-        visitArr(value);
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::forward_list<Args...> &value) {
+        visitArr(accessor, value);
     }
 
-    template <class... Args>
-    void visit(const std::list<Args...> &value) {
-        visitArr(value);
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::list<Args...> &value) {
+        visitArr(accessor, value);
     }
 
-    template <class... Args>
-    void visit(const std::vector<Args...> &value) {
-        visitArr(value);
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::vector<Args...> &value) {
+        visitArr(accessor, value);
     }
 
     // map
 
-    template <class... Args>
-    void visit(const std::map<Args...> &value) {
-        visitMap(value);
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::map<Args...> &value) {
+        visitMap(accessor, value);
     }
 
-    template <class... Args>
-    void visit(const std::unordered_map<Args...> &value) {
-        visitMap(value);
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::unordered_map<Args...> &value) {
+        visitMap(accessor, value);
     }
+
+    // handle different types of accessors
 
     template <class... Args>
     void operator()(AccessorSimple<Args...> &accessor) {
@@ -274,7 +272,7 @@ public:
 
     template <class... Args>
     void operator()(AccessorDynamic<Args...> &accessor) {
-        visit(accessor()); // TODO
+        into(accessor, accessor());
     }
 };
 
