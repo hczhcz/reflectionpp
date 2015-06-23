@@ -59,9 +59,9 @@ struct AccessorDynamicWrap {
 
 // get the default accessor
 #define RPP_ACCESSOR_GET(Name, Value) \
-    AccessorInfer< \
+    typename AccessorInfer< \
         decltype((*static_cast<Value *>(nullptr))()) \
-    >::Accessor<Name, Value>
+    >::template Accessor<Name, Value>
 
 // enable AccessorInfer in the current namespace
 #define RPP_ACCESSOR_INFER_INIT() \
@@ -138,6 +138,14 @@ RPP_ACCESSOR_INFER_INIT()
     template <> \
     struct AccessorInfer<Object &>: public rpp::AccessorDynamicWrap< \
         RPP_ACCESSOR_GET(RPP_HOLDER_STR("member"), RPP_HOLDER_DYNAMIC(Member)) \
+    > {};
+
+// RPP_TYPE_DYNAMIC with template arguments
+// notice: fill a reference type in __VA_ARGS__
+#define RPP_TYPE_GENERIC(...) \
+    /* before the macro: template <class T, ???> */ \
+    struct AccessorInfer<__VA_ARGS__>: public rpp::AccessorDynamicWrap< \
+        RPP_ACCESSOR_GET(RPP_HOLDER_STR("member"), RPP_HOLDER_DYNAMIC(T)) \
     > {};
 
 }

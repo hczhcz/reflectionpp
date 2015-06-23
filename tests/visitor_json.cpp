@@ -45,12 +45,14 @@ RPP_TYPE_OBJECT(
     __(b)
 )
 
-RPP_TYPE_DYNAMIC(decltype(TestStruct5::c), TestStruct4)
-RPP_TYPE_DYNAMIC(decltype(TestStruct5::e), float)
-RPP_TYPE_DYNAMIC(decltype(TestStruct5::f), unsigned)
-RPP_TYPE_DYNAMIC(decltype(TestStruct5::g), int)
-RPP_TYPE_DYNAMIC(std::unique_ptr<bool>, bool)
-RPP_TYPE_DYNAMIC(decltype(TestStruct5::j), std::unique_ptr<bool>)
+template <class T, size_t size>
+RPP_TYPE_GENERIC(T (&)[size])
+template <class T, class... Args>
+RPP_TYPE_GENERIC(std::vector<T, Args...> &)
+template <class Key, class T, class... Args>
+RPP_TYPE_GENERIC(std::map<Key, T, Args...> &)
+template <class T, class... Args>
+RPP_TYPE_GENERIC(std::unique_ptr<T, Args...> &)
 
 RPP_TYPE_OBJECT(
     TestStruct5,
