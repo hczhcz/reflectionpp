@@ -257,7 +257,11 @@ static_assert(
             rpp::HolderConst<const char (&)[], RPP_STATIC_STR("value7")>,
             rpp::HolderLocal<TestStruct2>,
             rpp::TypeList<
-                Accessor5m1, Accessor5m2,
+                rpp::AccessorObject<
+                    rpp::HolderConst<const char (&)[], RPP_STATIC_STR("TestStruct")>,
+                    rpp::HolderDynamic<TestStruct>,
+                    rpp::TypeList<Accessor5m1, Accessor5m2>
+                >,
                 Accessor7m3, Accessor7m4, Accessor7m5
             >
         >
