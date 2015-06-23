@@ -122,11 +122,6 @@ using Accessor5m2 = RPP_ACCESSOR_GET(
     RPP_HOLDER_MEMBER(TestStruct, member2)
 );
 
-using Accessor5old = RPP_ACCESSOR_GET(
-    RPP_HOLDER_STR("value5"),
-    RPP_HOLDER_LOCAL(TestStruct)
-);
-
 RPP_TYPE_OBJECT(
     TestStruct,
     __(member1)
@@ -184,16 +179,6 @@ static_assert(
         rpp::AccessorSimple<
             rpp::HolderConst<const char (&)[], RPP_STATIC_STR("value3")>,
             rpp::HolderRef<char, rpp::value3>
-        >
-    >(), ""
-);
-
-static_assert(
-    std::is_same<
-        Accessor5old,
-        rpp::AccessorSimple<
-            rpp::HolderConst<const char (&)[], RPP_STATIC_STR("value5")>,
-            rpp::HolderLocal<TestStruct>
         >
     >(), ""
 );

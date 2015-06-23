@@ -6,7 +6,7 @@ namespace rpp {
 
 // a compile-time wraper class of AccessorSimple
 template <class Nothing = void>
-struct AccessorSimpleWrap final {
+struct AccessorSimpleWrap {
     template <class Name, class Value>
     using Accessor = AccessorSimple<
         Name,
@@ -19,7 +19,7 @@ struct AccessorSimpleWrap final {
 
 // a compile-time wraper class of AccessorObject
 template <class Members>
-struct AccessorObjectWrap final {
+struct AccessorObjectWrap {
     using List = Members;
 
     template <class Name, class Value>
@@ -35,7 +35,7 @@ struct AccessorObjectWrap final {
 
 // a compile-time wraper class of AccessorDynamic
 template <class Member>
-struct AccessorDynamicWrap final {
+struct AccessorDynamicWrap {
     template <class Name, class Value>
     using Accessor = AccessorDynamic<
         Name,
@@ -47,28 +47,30 @@ struct AccessorDynamicWrap final {
     AccessorDynamicWrap() = delete;
 };
 
-// set the default accessor to AccessorObject and bind members (pass a TypeList)
-#define RPP_ACCESSOR_BIND_OBJECT(Type, Members) \
-    rpp::AccessorObjectWrap< \
-        Members \
-    > accessorInfer(Type &);
+// // set the default accessor to AccessorObject and bind members (pass a TypeList)
+// #define RPP_ACCESSOR_BIND_OBJECT(Type, Members) \
+//     template <> \
+//     struct AccessorInfer<Type &>: public rpp::AccessorObjectWrap<Members> {};
 
-// set the default accessor to AccessorDynamic and bind the (abstract) member
-#define RPP_ACCESSOR_BIND_DYNAMIC(Type, Member) \
-    rpp::AccessorDynamicWrap< \
-        Member \
-    > accessorInfer(Type &);
+// // set the default accessor to AccessorDynamic and bind the (abstract) member
+// #define RPP_ACCESSOR_BIND_DYNAMIC(Type, Member) \
+//     template <> \
+//     struct AccessorInfer<Type &>: public rpp::AccessorDynamicWrap<Member> {};
 
 // get the default accessor
 #define RPP_ACCESSOR_GET(Name, Value) \
-    decltype( \
-        accessorInfer((*static_cast<Value *>(nullptr))()) \
-    )::Accessor<Name, Value>
+    AccessorInfer< \
+        decltype((*static_cast<Value *>(nullptr))()) \
+    >::Accessor<Name, Value>
 
-// enable accessorInfer function in the current namespace
+// enable AccessorInfer in the current namespace
 #define RPP_ACCESSOR_INFER_INIT() \
     /* an abstract function to infer the default accessor of a type */ \
-    rpp::AccessorSimpleWrap<> accessorInfer(...);
+    template <class T> \
+    struct AccessorInfer final: public rpp::AccessorSimpleWrap<> { \
+        /* compile-time only */ \
+        AccessorInfer() = delete; \
+    };
 
 RPP_ACCESSOR_INFER_INIT()
 
@@ -98,9 +100,9 @@ RPP_ACCESSOR_INFER_INIT()
 
 // append accessors of a base type (fetched from AccessorObjectWrap) to a TypeList
 #define RPP_ACCESSOR_APPEND_BASE_INLINE(Derived, Base) \
-    ::AppendList<decltype( \
-        accessorInfer(*static_cast<Base *>(nullptr)) \
-    )::List>
+    ::AppendList<AccessorInfer< \
+        decltype(*static_cast<Base *>(nullptr)) \
+    >::List>
 
 // build a TypeList of accessors
 #define RPP_ACCESSOR_LIST_ITEM_IMPL(Member, Method, ...) \
@@ -121,19 +123,21 @@ RPP_ACCESSOR_INFER_INIT()
 
 // a more friendly version of RPP_ACCESSOR_BIND_OBJECT
 #define RPP_TYPE_OBJECT(Object, Members) \
-    rpp::AccessorObjectWrap< \
+    template <> \
+    struct AccessorInfer<Object &>: public rpp::AccessorObjectWrap< \
         rpp::TypeList<> \
         RPP_ACCESSOR_LIST_BEGIN( \
             Object \
             Members \
             , RPP_ACCESSOR_LIST_END) \
         ) \
-    > accessorInfer(Object &);
+    > {};
 
 // a more friendly version of RPP_ACCESSOR_BIND_DYNAMIC
 #define RPP_TYPE_DYNAMIC(Object, Member) \
-    rpp::AccessorDynamicWrap< \
+    template <> \
+    struct AccessorInfer<Object &>: public rpp::AccessorDynamicWrap< \
         RPP_ACCESSOR_GET(RPP_HOLDER_STR("member"), RPP_HOLDER_DYNAMIC(Member)) \
-    > accessorInfer(Object &);
+    > {};
 
 }
