@@ -21,7 +21,7 @@ struct TestStruct4 {
 };
 
 struct TestStruct5: public TestStruct3, public TestStruct4 {
-    TestStruct4 c;
+    TestStruct4 c[2];
     std::string d{"string\t字符串\n"};
     std::vector<float> e{5, 5.1, 5.2};
     std::map<std::string, unsigned> f{{"item1", 6}, {"item2", 7}};
@@ -45,6 +45,7 @@ RPP_TYPE_OBJECT(
     __(b)
 )
 
+RPP_TYPE_DYNAMIC(decltype(TestStruct5::c), TestStruct4)
 RPP_TYPE_DYNAMIC(decltype(TestStruct5::e), float)
 RPP_TYPE_DYNAMIC(decltype(TestStruct5::f), unsigned)
 RPP_TYPE_DYNAMIC(decltype(TestStruct5::g), int)
