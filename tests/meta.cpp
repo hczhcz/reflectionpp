@@ -127,12 +127,11 @@ using Accessor5old = RPP_ACCESSOR_GET(
     RPP_HOLDER_LOCAL(TestStruct)
 );
 
-RPP_ACCESSOR_BIND_OBJECT(
+RPP_TYPE_OBJECT(
     TestStruct,
     __(member1)
     __(member2, MEMBER) // the same as __(member2)
 )
-// RPP_ACCESSOR_BIND(TestStruct, Accessor5m1, Accessor5m2)
 
 using Accessor5 = RPP_ACCESSOR_GET(
     RPP_HOLDER_STR("value5"),
@@ -166,7 +165,7 @@ using Accessor7m5 = RPP_ACCESSOR_GET(
     RPP_HOLDER_MEMBER(TestStruct2, member5)
 );
 
-RPP_ACCESSOR_BIND_OBJECT(
+RPP_TYPE_OBJECT(
     TestStruct2,
     __(TestStruct, BASE)
     __(member3)

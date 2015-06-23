@@ -28,28 +28,28 @@ struct TestStruct4: public TestStruct3 {
     TestStruct4() = default;
 };
 
-RPP_ACCESSOR_BIND_DYNAMIC(
+RPP_TYPE_DYNAMIC(
     std::vector<float>,
-    RPP_ACCESSOR_GET(RPP_HOLDER_STR("member"), RPP_HOLDER_DYNAMIC(float))
+    float
 )
 
-RPP_ACCESSOR_BIND_DYNAMIC(
+RPP_TYPE_DYNAMIC(
     decltype(TestStruct4::f),
-    RPP_ACCESSOR_GET(RPP_HOLDER_STR("member"), RPP_HOLDER_DYNAMIC(unsigned))
+    unsigned
 )
 
-RPP_ACCESSOR_BIND_DYNAMIC(
+RPP_TYPE_DYNAMIC(
     std::unique_ptr<int>,
-    RPP_ACCESSOR_GET(RPP_HOLDER_STR("member"), RPP_HOLDER_DYNAMIC(int))
+    int
 )
 
-RPP_ACCESSOR_BIND_OBJECT(
+RPP_TYPE_OBJECT(
     TestStruct3,
     __(a, REF)
     __(b)
 )
 
-RPP_ACCESSOR_BIND_OBJECT(
+RPP_TYPE_OBJECT(
     TestStruct4,
     __(TestStruct3, BASE)
     __(c)
