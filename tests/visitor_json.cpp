@@ -34,6 +34,15 @@ struct TestStruct5: public TestStruct3, public TestStruct4 {
     TestStruct5() = default;
 };
 
+template <class T, size_t size>
+RPP_TYPE_GENERIC(T (&)[size])
+template <class T, class... Args>
+RPP_TYPE_GENERIC(std::vector<T, Args...> &)
+template <class Key, class T, class... Args>
+RPP_TYPE_GENERIC(std::map<Key, T, Args...> &)
+template <class T, class... Args>
+RPP_TYPE_GENERIC(std::unique_ptr<T, Args...> &)
+
 RPP_TYPE_OBJECT(
     TestStruct3,
     __(a, REF)
@@ -44,15 +53,6 @@ RPP_TYPE_OBJECT(
     TestStruct4,
     __(b)
 )
-
-template <class T, size_t size>
-RPP_TYPE_GENERIC(T (&)[size])
-template <class T, class... Args>
-RPP_TYPE_GENERIC(std::vector<T, Args...> &)
-template <class Key, class T, class... Args>
-RPP_TYPE_GENERIC(std::map<Key, T, Args...> &)
-template <class T, class... Args>
-RPP_TYPE_GENERIC(std::unique_ptr<T, Args...> &)
 
 RPP_TYPE_OBJECT(
     TestStruct5,
@@ -79,7 +79,6 @@ static const int test2 = []() {
     > meta{TestStruct5{}};
 
     rpp::VisitorJSON<> v{std::cerr};
-
     meta.doVisit(v);
 
     return 0;

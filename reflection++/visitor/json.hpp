@@ -151,7 +151,7 @@ private:
 
 public:
     VisitorJSON(Out &_out, rpp_size_t _indent = 0):
-        out(_out), indent(_indent) {}
+        out{_out}, indent{_indent} {}
 
     template <class T>
     auto visit(const T value) -> decltype(
