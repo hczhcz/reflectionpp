@@ -123,9 +123,9 @@ using Accessor5m2 = RPP_ACCESSOR_GET(
 );
 
 RPP_TYPE_OBJECT(
-    TestStruct,
     __(member1)
-    __(member2, MEMBER) // the same as __(member2)
+    __(member2, MEMBER), // the same as __(member2)
+    TestStruct
 )
 
 using Accessor5 = RPP_ACCESSOR_GET(
@@ -161,11 +161,11 @@ using Accessor7m5 = RPP_ACCESSOR_GET(
 );
 
 RPP_TYPE_OBJECT(
-    TestStruct2,
     __(TestStruct, BASE)
     __(member3)
     __(member4, REF)
-    __(member5)
+    __(member5),
+    TestStruct2
 )
 
 using Accessor7 = RPP_ACCESSOR_GET(

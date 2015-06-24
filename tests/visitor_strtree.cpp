@@ -30,16 +30,16 @@ struct TestStruct7: public TestStruct6 {
 };
 
 RPP_TYPE_OBJECT(
-    TestStruct6,
     __(a, REF)
     __(b)
-    __(c)
+    __(c),
+    TestStruct6
 )
 
 RPP_TYPE_OBJECT(
-    TestStruct7,
     __(TestStruct6, BASE)
-    __(d)
+    __(d),
+    TestStruct7
 )
 
 static const int test2 = []() {

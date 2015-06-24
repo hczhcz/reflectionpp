@@ -35,27 +35,26 @@ struct TestStruct5: public TestStruct3, public TestStruct4 {
 };
 
 template <class T, size_t size>
-RPP_TYPE_GENERIC(T (&)[size])
+RPP_TYPE_DYNAMIC_GENERIC(T, T (&)[size])
 template <class T, class... Args>
-RPP_TYPE_GENERIC(std::vector<T, Args...> &)
+RPP_TYPE_DYNAMIC_GENERIC(T, std::vector<T, Args...> &)
 template <class Key, class T, class... Args>
-RPP_TYPE_GENERIC(std::map<Key, T, Args...> &)
+RPP_TYPE_DYNAMIC_GENERIC(T, std::map<Key, T, Args...> &)
 template <class T, class... Args>
-RPP_TYPE_GENERIC(std::unique_ptr<T, Args...> &)
+RPP_TYPE_DYNAMIC_GENERIC(T, std::unique_ptr<T, Args...> &)
 
 RPP_TYPE_OBJECT(
-    TestStruct3,
     __(a, REF)
-    __(b)
+    __(b),
+    TestStruct3
 )
 
 RPP_TYPE_OBJECT(
-    TestStruct4,
-    __(b)
+    __(b),
+    TestStruct4
 )
 
 RPP_TYPE_OBJECT(
-    TestStruct5,
     __(TestStruct3, BASE)
     __(TestStruct4, BASE_INLINE)
     __(c)
@@ -66,7 +65,8 @@ RPP_TYPE_OBJECT(
     __(h)
     __(i, CONST)
     __(j)
-    __(k)
+    __(k),
+    TestStruct5
 )
 
 static const int test2 = []() {
