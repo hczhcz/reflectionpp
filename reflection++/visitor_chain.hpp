@@ -12,22 +12,28 @@ struct VisitorTail final {
 };
 
 // register a visitor class into the visitor chain
-#define RPP_VISITOR_REG(Type) \
+// helper macros
+#define RPP_VISITOR_REG_UNIQUE_2(Counter, ...) \
     namespace visitor_chain { \
         template <class Last> \
-        Last trace_##Type(Here, rpp::VisitorTail, Last); \
+        Last trace_##Counter(Here, rpp::VisitorTail, Last); \
         \
         template <class T, class Last> \
-        auto trace_##Type(Here, T value, Last last) -> decltype( \
-            trace_##Type(here, next(here, value), value) \
+        auto trace_##Counter(Here, T value, Last last) -> decltype( \
+            trace_##Counter(here, next(here, value), value) \
         ); \
         \
-        Type next( \
-            Here, decltype(trace_##Type( \
+        __VA_ARGS__ next( \
+            Here, decltype(trace_##Counter( \
                 here, next(here, here), here) \
             ) \
         ); \
     }
+#define RPP_VISITOR_REG_UNIQUE_1(...) \
+    RPP_VISITOR_REG_UNIQUE_2(__VA_ARGS__)
+// the main macro
+#define RPP_VISITOR_REG(...) \
+    RPP_VISITOR_REG_UNIQUE_1(__COUNTER__, __VA_ARGS__)
 
 // pass all visitor classes in the chain to a type list and create a type alias
 // using Type = TypeList<Visitor1, Visitor2, ...>

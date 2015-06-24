@@ -62,10 +62,7 @@ struct VisitorPointer: public VisitorBase<Pointer *> {
     }
 };
 
-using VisitorPointerRaw = VisitorPointer<void>;
-using VisitorPointerRawConst = VisitorPointer<const void>;
-
-RPP_VISITOR_REG(VisitorPointerRaw)
-RPP_VISITOR_REG(VisitorPointerRawConst)
+RPP_VISITOR_REG(VisitorPointer<void>)
+RPP_VISITOR_REG(VisitorPointer<const void>)
 
 }
