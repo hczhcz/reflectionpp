@@ -72,10 +72,7 @@ RPP_TYPE_OBJECT(
 static const int test2 = []() {
     rpp::MetaImpl<
         rpp::TypeList<rpp::VisitorJSON<>>,
-        RPP_ACCESSOR_GET(
-            RPP_HOLDER_STR("value"),
-            RPP_HOLDER_LOCAL(TestStruct5)
-        )
+        RPP_ACCESSOR_GET_AS("value", LOCAL, TestStruct5)
     > meta{TestStruct5{}};
 
     rpp::VisitorJSON<> v{std::cerr};

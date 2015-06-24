@@ -56,10 +56,7 @@ static const int test2 = []() {
             rpp::VisitorIStrTree<Root &>,
             rpp::VisitorOStrTree<Root &>
         >,
-        RPP_ACCESSOR_GET(
-            RPP_HOLDER_STR("value"),
-            RPP_HOLDER_LOCAL(TestStruct7)
-        )
+        RPP_ACCESSOR_GET_AS("value", LOCAL, TestStruct7)
     > meta{TestStruct7{}};
 
     Root root1;

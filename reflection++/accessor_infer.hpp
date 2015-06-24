@@ -64,32 +64,33 @@ struct AccessorDynamicWrap {
 
 RPP_ACCESSOR_INFER_INIT()
 
+// get the default accessor, bind the holder's type and the name
+#define RPP_ACCESSOR_GET_AS(Name, Mode, ...) \
+    RPP_ACCESSOR_GET(RPP_HOLDER_STR(Name), RPP_HOLDER_##Mode(__VA_ARGS__))
+
 // helper macros begin
 
     // append an accessor to a TypeList
     #define RPP_ACCESSOR_APPEND_ACCESSOR(Object, Accessor) \
         ::Append<Accessor>
-
     // append an accessor to a TypeList (using default accessors)
     // wrapper of RPP_HOLDER macros
     // notice: LOCAL and DYNAMIC means type casting
     #define RPP_ACCESSOR_APPEND_TYPE(Object, Type) \
-        ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Type), RPP_HOLDER_TYPE(Object::Type))>
+        ::Append<RPP_ACCESSOR_GET_AS(#Type, TYPE, Object::Type)>
     #define RPP_ACCESSOR_APPEND_CONST(Object, Value) \
-        ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_CONST(Object::Value))>
+        ::Append<RPP_ACCESSOR_GET_AS(#Value, CONST, Object::Value)>
     #define RPP_ACCESSOR_APPEND_LOCAL(Object, Type) \
-        ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Type), RPP_HOLDER_LOCAL(Type))>
+        ::Append<RPP_ACCESSOR_GET_AS(#Type, LOCAL, Type)>
     #define RPP_ACCESSOR_APPEND_REF(Object, Value) \
-        ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_REF(Object::Value))>
+        ::Append<RPP_ACCESSOR_GET_AS(#Value, REF, Object::Value)>
     #define RPP_ACCESSOR_APPEND_DYNAMIC(Object, Type) \
-        ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Type), RPP_HOLDER_DYNAMIC(Type))>
+        ::Append<RPP_ACCESSOR_GET_AS(#Type, DYNAMIC, Type)>
     #define RPP_ACCESSOR_APPEND_MEMBER(Object, Value) \
-        ::Append<RPP_ACCESSOR_GET(RPP_HOLDER_STR(#Value), RPP_HOLDER_MEMBER(Object, Value))>
-
+        ::Append<RPP_ACCESSOR_GET_AS(#Value, MEMBER, Object, Value)>
     // append an accessor wraps a base type to a TypeList
     #define RPP_ACCESSOR_APPEND_BASE(Derived, Base) \
         RPP_ACCESSOR_APPEND_DYNAMIC(Derived, Base)
-
     // append accessors of a base type (fetched from AccessorObjectWrap) to a TypeList
     #define RPP_ACCESSOR_APPEND_BASE_INLINE(Derived, Base) \
         ::AppendList<AccessorInfer< \
@@ -97,8 +98,8 @@ RPP_ACCESSOR_INFER_INIT()
         >::List>
 
     // build a TypeList of accessors
-    #define RPP_ACCESSOR_LIST_ITEM_IMPL(Member, Method, ...) \
-        , RPP_ACCESSOR_LIST), RPP_ACCESSOR_APPEND_##Method, Member
+    #define RPP_ACCESSOR_LIST_ITEM_IMPL(Member, Mode, ...) \
+        , RPP_ACCESSOR_LIST), RPP_ACCESSOR_APPEND_##Mode, Member
     #define RPP_ACCESSOR_LIST_ITEM(...) \
         RPP_ACCESSOR_LIST_ITEM_IMPL(__VA_ARGS__, MEMBER, )
     #ifndef __
@@ -106,10 +107,10 @@ RPP_ACCESSOR_INFER_INIT()
     #endif
     #define RPP_ACCESSOR_LIST_BEGIN(Object, Next) \
         Next##_1(Object
-    #define RPP_ACCESSOR_LIST_1(Object, Method, Member, Next) \
-        Method(Object, Member) Next##_2(Object
-    #define RPP_ACCESSOR_LIST_2(Object, Method, Member, Next) \
-        Method(Object, Member) Next##_1(Object
+    #define RPP_ACCESSOR_LIST_1(Object, Mode, Member, Next) \
+        Mode(Object, Member) Next##_2(Object
+    #define RPP_ACCESSOR_LIST_2(Object, Mode, Member, Next) \
+        Mode(Object, Member) Next##_1(Object
     #define RPP_ACCESSOR_LIST_END_1(...) /* nothing */
     #define RPP_ACCESSOR_LIST_END_2(...) /* nothing */
 

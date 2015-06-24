@@ -91,36 +91,17 @@ namespace rpp_another_namespace {
 RPP_ACCESSOR_INFER_INIT()
 
 using Accessor1 = rpp::Accessor1;
-
-using Accessor2 = RPP_ACCESSOR_GET(
-    RPP_HOLDER_STR("value2"),
-    RPP_HOLDER_LOCAL(char)
-);
-
-using Accessor3 = RPP_ACCESSOR_GET(
-    RPP_HOLDER_STR("value3"),
-    RPP_HOLDER_REF(rpp::value3)
-);
-
-using Accessor4 = RPP_ACCESSOR_GET(
-    RPP_HOLDER_STR("value4"),
-    RPP_HOLDER_DYNAMIC(char)
-);
+using Accessor2 = RPP_ACCESSOR_GET_AS("value2", LOCAL, char);
+using Accessor3 = RPP_ACCESSOR_GET_AS("value3", REF, rpp::value3);
+using Accessor4 = RPP_ACCESSOR_GET_AS("value4", DYNAMIC, char);
 
 struct TestStruct {
     int member1;
     float member2;
 };
 
-using Accessor5m1 = RPP_ACCESSOR_GET(
-    RPP_HOLDER_STR("member1"),
-    RPP_HOLDER_MEMBER(TestStruct, member1)
-);
-
-using Accessor5m2 = RPP_ACCESSOR_GET(
-    RPP_HOLDER_STR("member2"),
-    RPP_HOLDER_MEMBER(TestStruct, member2)
-);
+using Accessor5m1 = RPP_ACCESSOR_GET_AS("member1", MEMBER, TestStruct, member1);
+using Accessor5m2 = RPP_ACCESSOR_GET_AS("member2", MEMBER, TestStruct, member2);
 
 RPP_TYPE_OBJECT(
     __(member1)
@@ -128,11 +109,7 @@ RPP_TYPE_OBJECT(
     TestStruct
 )
 
-using Accessor5 = RPP_ACCESSOR_GET(
-    RPP_HOLDER_STR("value5"),
-    RPP_HOLDER_LOCAL(TestStruct)
-);
-
+using Accessor5 = RPP_ACCESSOR_GET_AS("value5", LOCAL, TestStruct);
 using Accessor6 = Accessor5::Meta;
 
 struct TestStruct2: public TestStruct {
@@ -145,20 +122,9 @@ struct TestStruct2: public TestStruct {
 };
 int TestStruct2::member4{4};
 
-using Accessor7m3 = RPP_ACCESSOR_GET(
-    RPP_HOLDER_STR("member3"),
-    RPP_HOLDER_MEMBER(TestStruct2, member3)
-);
-
-using Accessor7m4 = RPP_ACCESSOR_GET(
-    RPP_HOLDER_STR("member4"),
-    RPP_HOLDER_REF(TestStruct2::member4)
-);
-
-using Accessor7m5 = RPP_ACCESSOR_GET(
-    RPP_HOLDER_STR("member5"),
-    RPP_HOLDER_MEMBER(TestStruct2, member5)
-);
+using Accessor7m3 = RPP_ACCESSOR_GET_AS("member3", MEMBER, TestStruct2, member3);
+using Accessor7m4 = RPP_ACCESSOR_GET_AS("member4", REF, TestStruct2::member4);
+using Accessor7m5 = RPP_ACCESSOR_GET_AS("member5", MEMBER, TestStruct2, member5);
 
 RPP_TYPE_OBJECT(
     __(TestStruct, BASE)
@@ -168,10 +134,7 @@ RPP_TYPE_OBJECT(
     TestStruct2
 )
 
-using Accessor7 = RPP_ACCESSOR_GET(
-    RPP_HOLDER_STR("value7"),
-    RPP_HOLDER_LOCAL(TestStruct2)
-);
+using Accessor7 = RPP_ACCESSOR_GET_AS("value7", LOCAL, TestStruct2);
 
 static_assert(
     std::is_same<
