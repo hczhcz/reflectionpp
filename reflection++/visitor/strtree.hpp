@@ -7,7 +7,7 @@
 namespace rpp {
 
 // read value from a tree of strings
-template <class Node, class Stream = std::istringstream>
+template <class Node, class Stream = std::istringstream, bool strict = true>
 struct VisitorIStrTree: public VisitorBase<void> {
 private:
     Node node;
@@ -40,7 +40,10 @@ public:
         for (rpp_size_t i = 0; i < accessor.size(); ++i) {
             VisitorIStrTree<
                 decltype(node[""]), Stream
-            > child{node[accessor.getMemberName(i)]};
+            > child{
+                strict ? node.at(accessor.getMemberName(i))
+                       : node[accessor.getMemberName(i)]
+            };
 
             accessor.doMemberVisit(child, i);
         }
@@ -88,7 +91,9 @@ public:
         for (rpp_size_t i = 0; i < accessor.size(); ++i) {
             VisitorOStrTree<
                 decltype(node[""]), Stream
-            > child{node[accessor.getMemberName(i)]};
+            > child{
+                node[accessor.getMemberName(i)]
+            };
 
             accessor.doMemberVisit(child, i);
         }
