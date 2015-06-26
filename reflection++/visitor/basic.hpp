@@ -1,6 +1,7 @@
 #pragma once
 
 #include <typeinfo>
+
 #include "../visitor_chain.hpp"
 #include "../accessor.hpp"
 

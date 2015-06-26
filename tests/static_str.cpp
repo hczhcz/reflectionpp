@@ -1,4 +1,5 @@
 #include <type_traits>
+
 #include "../reflection++/static_str.hpp"
 
 namespace rpp_another_namespace {
