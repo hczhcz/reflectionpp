@@ -8,11 +8,15 @@
 namespace rpp {
 
 // get type_info object of a type
-template <class Nothing = void>
+template <bool dynamic = true>
 struct VisitorType: public VisitorBase<const std::type_info &> {
     template <class T>
     ReturnType visit(T &value) {
-        return typeid(value);
+        if (dynamic) {
+            return typeid(value);
+        } else {
+            return typeid(T);
+        }
     }
 
     template <class T>
@@ -26,14 +30,19 @@ struct VisitorType: public VisitorBase<const std::type_info &> {
     }
 };
 
-RPP_VISITOR_REG(VisitorType<>)
+RPP_VISITOR_REG(VisitorType<true>)
+RPP_VISITOR_REG(VisitorType<false>)
 
 // get size of a type
-template <class Nothing = void>
+template <bool dynamic = true>
 struct VisitorSize: public VisitorBase<rpp_size_t> {
     template <class T>
     ReturnType visit(T &value) {
-        return sizeof(value);
+        if (dynamic) {
+            return sizeof(value);
+        } else {
+            return sizeof(T);
+        }
     }
 
     template <class T>
@@ -47,7 +56,8 @@ struct VisitorSize: public VisitorBase<rpp_size_t> {
     }
 };
 
-RPP_VISITOR_REG(VisitorSize<>)
+RPP_VISITOR_REG(VisitorSize<true>)
+RPP_VISITOR_REG(VisitorSize<false>)
 
 // get pointer of a value
 template <class Pointer>
