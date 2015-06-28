@@ -11,10 +11,10 @@ namespace rpp {
 template <class Node, class Stream = std::istringstream, bool strict = true>
 struct VisitorIStrTree: public VisitorBase<void> {
 private:
-    Node node;
+    Node &node;
 
 public:
-    VisitorIStrTree(Node _node): node{_node} {}
+    VisitorIStrTree(Node &_node): node{_node} {}
 
     template <class T>
     void visit(T &value) {
@@ -60,10 +60,10 @@ public:
 template <class Node, class Stream = std::ostringstream>
 struct VisitorOStrTree: public VisitorBase<void> {
 private:
-    Node node;
+    Node &node;
 
 public:
-    VisitorOStrTree(Node _node): node{_node} {}
+    VisitorOStrTree(Node &_node): node{_node} {}
 
     template <class T>
     void visit(T &value) {
