@@ -70,7 +70,9 @@ RPP_TYPE_OBJECT(
     TestStruct5
 )
 
-static const int test2 = []() {
+static const int test_json = []() {
+    std::cerr << "======== test: " << __FILE__ << " ========" << std::endl;
+
     rpp::MetaImpl<
         rpp::TypeList<rpp::VisitorJSON<>>,
         RPP_ACCESSOR_GET_AS("value", LOCAL, TestStruct5)

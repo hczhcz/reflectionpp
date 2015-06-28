@@ -217,7 +217,9 @@ static_assert(
     >(), ""
 );
 
-static const int test1 = []() {
+static const int test_meta = []() {
+    std::cerr << "======== test: " << __FILE__ << " ========" << std::endl;
+
     rpp::MetaImpl<rpp::VisitorAll3, Accessor1> meta1{0};
     rpp::MetaImpl<rpp::VisitorAll3, Accessor2> meta2{'A'};
     rpp::MetaImpl<rpp::VisitorAll3, Accessor3> meta3;

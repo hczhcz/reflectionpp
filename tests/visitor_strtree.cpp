@@ -43,7 +43,9 @@ RPP_TYPE_OBJECT(
     TestStruct7
 )
 
-static const int test2 = []() {
+static const int test_strtree = []() {
+    std::cerr << "======== test: " << __FILE__ << " ========" << std::endl;
+
     using Root = std::unordered_map<
         std::string,
         std::map<
@@ -68,9 +70,9 @@ static const int test2 = []() {
 
     char tag = '0';
     for (auto &i: root1) {
-        std::cout << i.first << ": " << std::endl;
+        std::cerr << i.first << ": " << std::endl;
         for (auto &j: i.second) {
-            std::cout << "    " << j.first << ": " << j.second << std::endl;
+            std::cerr << "    " << j.first << ": " << j.second << std::endl;
             j.second += tag;
             ++tag;
         }
@@ -83,9 +85,9 @@ static const int test2 = []() {
     meta.doVisit(v3);
 
     for (auto &i: root2) {
-        std::cout << i.first << ": " << std::endl;
+        std::cerr << i.first << ": " << std::endl;
         for (auto &j: i.second) {
-            std::cout << "    " << j.first << ": " << j.second << std::endl;
+            std::cerr << "    " << j.first << ": " << j.second << std::endl;
         }
     }
 
