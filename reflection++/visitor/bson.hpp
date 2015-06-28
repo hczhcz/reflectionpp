@@ -132,8 +132,21 @@ protected:
     std::string name;
 
     template <class Member>
+    void add(Member &&member) {
+        doc.append(
+            bsoncxx::builder::basic::kvp(
+                name, static_cast<Member &&>(member)
+            )
+        );
+    }
+
+    template <class Member>
     void add(const Member &member) {
-        doc.append(bsoncxx::builder::basic::kvp(name, member));
+        doc.append(
+            bsoncxx::builder::basic::kvp(
+                name, member
+            )
+        );
     }
 
 public:
@@ -148,8 +161,17 @@ protected:
     Arr &arr;
 
     template <class Member>
+    void add(Member &&member) {
+        arr.append(
+            static_cast<Member &&>(member)
+        );
+    }
+
+    template <class Member>
     void add(const Member &member) {
-        arr.append(member);
+        arr.append(
+            member
+        );
     }
 
 public:
@@ -168,8 +190,7 @@ protected:
 
     template <class Accessor, class T>
     void visitArr(Accessor &accessor, T &value) {
-        using namespace std::placeholders;
-        using namespace bsoncxx::builder::basic;
+        using bsoncxx::builder::basic::sub_array;
 
         this->add([&](sub_array arr) {
             auto begin = std::begin(value);
@@ -188,8 +209,7 @@ protected:
 
     template <class Accessor, class T>
     void visitMap(Accessor &accessor, T &value) {
-        using namespace std::placeholders;
-        using namespace bsoncxx::builder::basic;
+        using bsoncxx::builder::basic::sub_document;
 
         this->add([&](sub_document doc) {
             auto begin = std::begin(value);
@@ -208,8 +228,7 @@ protected:
 
     template <class... Args>
     void visitObj(AccessorObject<Args...> &accessor) {
-        using namespace std::placeholders;
-        using namespace bsoncxx::builder::basic;
+        using bsoncxx::builder::basic::sub_document;
 
         this->add([&](sub_document doc) {
             for (rpp_size_t i = 0; i < accessor.size(); ++i) {
@@ -240,15 +259,12 @@ protected:
 
     template <class Accessor, class T>
     void visitMap(Accessor &accessor, T &value) {
-        using namespace std::placeholders;
-        using namespace bsoncxx::builder::basic;
-
         auto begin = std::begin(value);
         auto end = std::end(value);
         for (auto i = begin; i != end; ++i) {
             VisitorBSON<
                 VisitorBSONItemBase<
-                    VisitorBSONDocBase<sub_document>
+                    VisitorBSONDocBase<Doc>
                 >
             > child{*this, i->first};
 
@@ -258,13 +274,10 @@ protected:
 
     template <class... Args>
     void visitObj(AccessorObject<Args...> &accessor) {
-        using namespace std::placeholders;
-        using namespace bsoncxx::builder::basic;
-
         for (rpp_size_t i = 0; i < accessor.size(); ++i) {
             VisitorBSON<
                 VisitorBSONItemBase<
-                    VisitorBSONDocBase<sub_document>
+                    VisitorBSONDocBase<Doc>
                 >
             > child{*this, accessor.getMemberName(i)};
 
@@ -282,15 +295,12 @@ protected:
 
     template <class Accessor, class T>
     void visitArr(Accessor &accessor, T &value) {
-        using namespace std::placeholders;
-        using namespace bsoncxx::builder::basic;
-
         auto begin = std::begin(value);
         auto end = std::end(value);
         for (auto i = begin; i != end; ++i) {
             VisitorBSON<
                 VisitorBSONItemBase<
-                    VisitorBSONArrBase<sub_array>
+                    VisitorBSONArrBase<Arr>
                 >
             > child{*this};
 
