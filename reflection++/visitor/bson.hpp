@@ -21,38 +21,38 @@
 namespace rpp {
 
 template <class Arr>
-struct BSONArrAdder {
+struct VisitorBSONArrBase: public VisitorBase<void> {
+protected:
     Arr &arr;
 
-    BSONArrAdder(Arr &_arr):
+    VisitorBSONArrBase(Arr &_arr):
         arr{_arr} {}
 
     template <class Member>
-    void operator()(const Member &member) {
+    void add(const Member &member) {
         arr.append(member);
     }
 };
 
 template <class Doc>
-struct BSONDocAdder {
+struct VisitorBSONDocBase: public VisitorBase<void> {
+protected:
     Doc &doc;
     std::string name;
 
-    BSONDocAdder(Doc &_doc, const std::string &_name):
+    VisitorBSONDocBase(Doc &_doc, const std::string &_name):
         doc{_doc}, name{_name} {}
 
     template <class Member>
-    void operator()(const Member &member) {
+    void add(const Member &member) {
         doc.append(kvp(name, member));
     }
 };
 
 // render a BSON (MongoDB document) object
-template <class Adder>
-struct VisitorBSON: public VisitorBase<void> {
+template <class Base>
+struct VisitorBSON: public Base {
 private:
-    Adder &adder;
-
     template <class Accessor, class T>
     void visitPtr(Accessor &accessor, T &value) {
         if (value) {
@@ -67,15 +67,13 @@ private:
         using namespace std::placeholders;
         using namespace bsoncxx::builder::basic;
 
-        adder([&](sub_array arr) {
+        add([&](sub_array arr) {
             auto begin = std::begin(value);
             auto end = std::end(value);
             for (auto i = begin; i != end; ++i) {
-                BSONArrAdder<sub_array> child_adder{
-                    arr
-                };
-
-                VisitorBSON<decltype(child_adder)> child{child_adder};
+                VisitorBSON<
+                    VisitorBSONArrBase<sub_array>
+                > child{arr};
 
                 accessor.doMemberVisit(child, *i);
             }
@@ -87,15 +85,13 @@ private:
         using namespace std::placeholders;
         using namespace bsoncxx::builder::basic;
 
-        adder([&](sub_document doc) {
+        add([&](sub_document doc) {
             auto begin = std::begin(value);
             auto end = std::end(value);
             for (auto i = begin; i != end; ++i) {
-                BSONDocAdder<sub_document> child_adder{
-                    i->first, doc
-                };
-
-                VisitorBSON<decltype(child_adder)> child{child_adder};
+                VisitorBSON<
+                    VisitorBSONDocBase<sub_document>
+                > child{i->first, doc};
 
                 accessor.doMemberVisit(child, i->second);
             }
@@ -103,11 +99,11 @@ private:
     }
 
 public:
-    VisitorBSON(Adder &_adder): adder{_adder} {}
+    using Base::Base;
 
     template <class T>
     void visit(const T &value) {
-        adder(value);
+        add(value);
     }
 
     // pointer
@@ -188,13 +184,11 @@ public:
         using namespace std::placeholders;
         using namespace bsoncxx::builder::basic;
 
-        adder([&](sub_document doc) {
+        add([&](sub_document doc) {
             for (rpp_size_t i = 0; i < accessor.size(); ++i) {
-                BSONDocAdder<sub_document> child_adder{
-                    accessor.getMemberName(i), doc
-                };
-
-                VisitorBSON<decltype(child_adder)> child{child_adder};
+                VisitorBSON<
+                    VisitorBSONDocBase<sub_document>
+                > child{accessor.getMemberName(i), doc};
 
                 accessor.doMemberVisit(child, i);
             }
