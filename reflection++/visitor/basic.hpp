@@ -62,8 +62,12 @@ RPP_VISITOR_REG(VisitorSize<false>)
 // get pointer of a value
 template <class Pointer>
 struct VisitorPointer: public VisitorBase<Pointer *> {
+    Pointer *visit(...) {
+        throw 1; // TODO
+    }
+
     template <class T>
-    Pointer *visit(T &value) {
+    auto visit(T &value) -> decltype(static_cast<Pointer *>(&value)) {
         return static_cast<Pointer *>(&value);
     }
 
