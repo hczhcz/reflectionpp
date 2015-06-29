@@ -1,12 +1,7 @@
-#include <typeinfo>
 #include <type_traits>
 #include <iostream>
-#include <string>
-#include <vector>
 
-#include "../reflection++/visitor_chain.hpp"
-#include "../reflection++/accessor_infer.hpp"
-#include "../reflection++/meta.hpp"
+#include "headers.hpp"
 
 namespace rpp {
 

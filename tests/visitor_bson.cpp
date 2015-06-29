@@ -2,9 +2,7 @@
 
 #include <bsoncxx/json.hpp>
 
-#include "../reflection++/visitor/bson.hpp"
-#include "../reflection++/accessor_infer.hpp"
-#include "../reflection++/meta.hpp"
+#include "headers.hpp"
 
 namespace rpp_another_namespace_bson {
 
