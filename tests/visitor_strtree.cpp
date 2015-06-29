@@ -1,42 +1,6 @@
-#include <iostream>
-
-#include "headers.hpp"
+#include "common.hpp"
 
 namespace rpp_another_namespace {
-
-RPP_ACCESSOR_INFER_INIT()
-
-char value_ts6_c[32] = "hello!";
-
-// TODO: move into a header file
-struct TestStruct6 {
-    static int a;
-    double b{200};
-    char *c{value_ts6_c};
-
-    TestStruct6() = default;
-};
-
-int TestStruct6::a{100};
-
-struct TestStruct7: public TestStruct6 {
-    TestStruct6 d;
-
-    TestStruct7() = default;
-};
-
-RPP_TYPE_OBJECT(
-    __(a, REF)
-    __(b)
-    __(c),
-    TestStruct6
-)
-
-RPP_TYPE_OBJECT(
-    __(TestStruct6, BASE)
-    __(d),
-    TestStruct7
-)
 
 static const int test_strtree = []() {
     std::cerr << "======== test: " << __FILE__ << " ========" << std::endl;

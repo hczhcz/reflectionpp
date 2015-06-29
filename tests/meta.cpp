@@ -1,7 +1,4 @@
-#include <type_traits>
-#include <iostream>
-
-#include "headers.hpp"
+#include "common.hpp"
 
 namespace rpp {
 
@@ -84,51 +81,20 @@ char value3{'C'};
 
 namespace rpp_another_namespace {
 
-RPP_ACCESSOR_INFER_INIT()
-
 using Accessor1 = rpp::Accessor1;
 using Accessor2 = RPP_ACCESSOR_GET_AS("value2", LOCAL, char);
 using Accessor3 = RPP_ACCESSOR_GET_AS("value3", REF, rpp::value3);
 using Accessor4 = RPP_ACCESSOR_GET_AS("value4", DYNAMIC, char);
 
-struct TestStruct {
-    int member1;
-    float member2;
-};
-
 using Accessor5m1 = RPP_ACCESSOR_GET_AS("member1", MEMBER, TestStruct, member1);
 using Accessor5m2 = RPP_ACCESSOR_GET_AS("member2", MEMBER, TestStruct, member2);
-
-RPP_TYPE_OBJECT(
-    __(member1)
-    __(member2, MEMBER), // the same as __(member2)
-    TestStruct
-)
 
 using Accessor5 = RPP_ACCESSOR_GET_AS("value5", LOCAL, TestStruct);
 using Accessor6 = Accessor5::Meta;
 
-struct TestStruct2: public TestStruct {
-    char member3;
-    static int member4;
-    TestStruct member5;
-
-    TestStruct2(int a, char b, int c):
-        TestStruct{a, a + 1.0f}, member3{b}, member5{c, c + 1.0f} {}
-};
-int TestStruct2::member4{4};
-
 using Accessor7m3 = RPP_ACCESSOR_GET_AS("member3", MEMBER, TestStruct2, member3);
 using Accessor7m4 = RPP_ACCESSOR_GET_AS("member4", REF, TestStruct2::member4);
 using Accessor7m5 = RPP_ACCESSOR_GET_AS("member5", MEMBER, TestStruct2, member5);
-
-RPP_TYPE_OBJECT(
-    __(TestStruct, BASE)
-    __(member3)
-    __(member4, REF)
-    __(member5),
-    TestStruct2
-)
 
 using Accessor7 = RPP_ACCESSOR_GET_AS("value7", LOCAL, TestStruct2);
 
