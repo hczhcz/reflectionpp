@@ -169,10 +169,22 @@ public:
             sizeof(char [static_cast<int>(static_cast<T>(3)) - 2])
         )
     ) {
-        out << value;
+        out << std::to_string(value);
     }
 
     // string
+
+    void visit(const char &value) {
+        out << '"';
+        writeChar(value);
+        out << '"';
+    }
+
+    void visit(const wchar_t &value) {
+        out << '"';
+        writeChar(value);
+        out << '"';
+    }
 
     void visit(const char *value) {
         visitStr(value);

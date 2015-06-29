@@ -188,6 +188,22 @@ protected:
         this->add(value);
     }
 
+    void visitVal(const uint32_t &value) {
+        this->add(static_cast<int32_t>(value));
+    }
+
+    void visitVal(const uint64_t &value) {
+        this->add(static_cast<int64_t>(value));
+    }
+
+    void visitVal(const char &value) {
+        this->add(std::string{} + value);
+    }
+
+    void visitVal(const wchar_t &value) {
+        this->add(std::wstring{} + value);
+    }
+
     template <class Accessor, class T>
     void visitArr(Accessor &accessor, T &value) {
         using bsoncxx::builder::basic::sub_array;
