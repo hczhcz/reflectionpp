@@ -11,8 +11,8 @@
 #include <map>
 #include <unordered_map>
 
-#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 
 #include "../visitor.hpp"
@@ -33,7 +33,7 @@ protected:
         if (value) {
             accessor.doMemberVisit(*this, *value);
         } else {
-            // TODO
+            this->visitVal(bsoncxx::types::b_null{});
         }
     }
 
