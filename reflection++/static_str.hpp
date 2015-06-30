@@ -1,5 +1,7 @@
 #pragma once
 
+#include "utility.hpp"
+
 namespace rpp {
 
 using rpp_strlen_t = unsigned long;

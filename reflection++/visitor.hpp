@@ -1,5 +1,7 @@
 #pragma once
 
+#include "utility.hpp"
+
 namespace rpp {
 
 // the base class of meta information visitors
