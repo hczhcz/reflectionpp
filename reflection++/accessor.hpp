@@ -53,12 +53,12 @@ struct AccessorObjectHelper<
     }
 
     const char *getMemberName(rpp_size_t) {
-        throw 1; // TODO
+        throw Exception{};
     }
 
     template <class Visitor>
     typename Visitor::ReturnType doMemberVisit(Visitor &, rpp_size_t) {
-        throw 1; // TODO
+        throw Exception{};
     }
 };
 

@@ -63,7 +63,7 @@ RPP_VISITOR_REG(VisitorSize<false>)
 template <class Pointer>
 struct VisitorPointer: public VisitorBase<Pointer *> {
     Pointer *visit(...) {
-        throw 1; // TODO
+        throw Exception{};
     }
 
     template <class T>

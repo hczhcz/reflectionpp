@@ -130,7 +130,7 @@ struct VisitorBSONViewItemBase: public VisitorBase<void>, private Element {
 private:
     template <class To>
     void castAssign(To &, ...) {
-        throw 1; // TODO
+        throw Exception{};
     }
 
     template <class To, class From>
@@ -274,7 +274,7 @@ protected:
             //     }
             //     break;
             default:
-                throw 1; // TODO
+                throw Exception{};
                 break;
         }
     }
@@ -296,7 +296,7 @@ protected:
     template <class Accessor, class T>
     void visitArr(Accessor &accessor, T &value) {
         if (this->type() != bsoncxx::type::k_array) {
-            throw 1; // TODO
+            throw Exception{};
         }
 
         auto arr = this->get_array();
@@ -324,7 +324,7 @@ protected:
     template <class Accessor, class T>
     void visitMap(Accessor &accessor, T &value) {
         if (this->type() != bsoncxx::type::k_document) {
-            throw 1; // TODO
+            throw Exception{};
         }
 
         auto doc = this->get_document();
@@ -353,7 +353,7 @@ protected:
     template <class... Args>
     void visitObj(AccessorObject<Args...> &accessor) {
         if (this->type() != bsoncxx::type::k_document) {
-            throw 1; // TODO
+            throw Exception{};
         }
 
         auto doc = this->get_document();

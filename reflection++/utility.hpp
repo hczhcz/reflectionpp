@@ -2,7 +2,12 @@
 
 namespace rpp {
 
+// type of size
 using rpp_size_t = unsigned long;
+
+// exception
+// TODO: more information
+struct Exception {};
 
 // get reference of a type
 template <class T>
