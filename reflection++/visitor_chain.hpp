@@ -11,22 +11,27 @@ struct VisitorTail final {
     VisitorTail() = delete;
 };
 
+// return reference of a type (a const reference)
+template <class T>
+T &ref_cast(const T &);
+
 // register a visitor class into the visitor chain
 // helper macros
 #define RPP_VISITOR_REG_UNIQUE_2(Counter, ...) \
     namespace visitor_chain { \
         template <class Last> \
-        Last trace_##Counter(Here, rpp::VisitorTail, Last); \
+        Last trace_##Counter(Here, rpp::VisitorTail &, Last &); \
         \
         template <class T, class Last> \
-        auto trace_##Counter(Here, T value, Last last) -> decltype( \
-            trace_##Counter(here, next(here, value), value) \
+        auto trace_##Counter(Here, T &value, Last &last) -> decltype( \
+            trace_##Counter(here, rpp::ref_cast(next(here, value)), value) \
         ); \
         \
         __VA_ARGS__ next( \
-            Here, decltype(trace_##Counter( \
-                here, next(here, here), here) \
-            ) \
+            Here, \
+            decltype( \
+                trace_##Counter(here, rpp::ref_cast(next(here, here)), here) \
+            ) & \
         ); \
     }
 #define RPP_VISITOR_REG_UNIQUE_1(...) \
@@ -40,16 +45,24 @@ struct VisitorTail final {
 #define RPP_VISITOR_COLLECT(Type) \
     namespace visitor_chain { \
         template <class... Args> \
-        rpp::TypeList<Args...> trace2_##Type(Here, rpp::VisitorTail, Args...); \
+        rpp::TypeList<Args...> trace2_##Type(Here, rpp::VisitorTail &, rpp::TypeList<Args...>); \
         \
         template <class T, class... Args> \
-        auto trace2_##Type(Here, T value, Args... args) -> decltype( \
-            trace2_##Type(here, next(here, value), args..., value) \
+        auto trace2_##Type(Here, T &value, rpp::TypeList<Args...>) -> decltype( \
+            trace2_##Type( \
+                here, \
+                rpp::ref_cast(next(here, value)), \
+                rpp::TypeList<Args...>::template Append<T>::instance() \
+            ) \
         ); \
         \
         using Type = \
-            decltype(trace2_##Type( \
-                here, next(here, here)) \
+            decltype( \
+                trace2_##Type( \
+                    here, \
+                    rpp::ref_cast(next(here, here)), \
+                    rpp::TypeList<>::instance() \
+                ) \
             ); \
     } \
     \
@@ -68,7 +81,7 @@ struct VisitorTail final {
         rpp::VisitorTail next(...); \
         \
         /* call next with VisitorTail is not allowed */ \
-        void next(Here, rpp::VisitorTail) = delete; \
+        void next(Here, rpp::VisitorTail &) = delete; \
     }
 
 RPP_VISITOR_CHAIN_INIT()

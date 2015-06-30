@@ -22,6 +22,9 @@ struct TypeList final {
 
     // compile-time only
     TypeList() = delete;
+
+    // for type inference
+    static TypeList<Args...> instance();
 };
 
 }

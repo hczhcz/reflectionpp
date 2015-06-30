@@ -3,9 +3,9 @@
 namespace rpp {
 
 struct Visitor4: public VisitorBase<> {
-    // TODO, see visitor_chain.hpp
-    // Visitor4(const Visitor4 &) = delete;
-    // Visitor4(Visitor4 &&) = default;
+    Visitor4() = default;
+    Visitor4(Visitor4 &&) = delete;
+    Visitor4(const Visitor4 &) = delete;
 
     void visit(int &value) {
         std::cerr << "int(" << value << ") ";
