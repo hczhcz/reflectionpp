@@ -8,6 +8,7 @@
 #include "../reflection++/visitor/strtree.hpp"
 #include "../reflection++/visitor/json.hpp"
 #include "../reflection++/visitor/bson.hpp"
+#include "../reflection++/visitor/bson_view.hpp"
 #include "../reflection++/visitor/mysql.hpp"
 #include "../reflection++/accessor_infer.hpp"
 #include "../reflection++/meta.hpp"
@@ -55,6 +56,24 @@ struct TestStruct5: public TestStruct3, public TestStruct4 {
     TestStruct5() = default;
 };
 
+struct TestStruct4m {
+    float b;
+};
+
+struct TestStruct5m: public TestStruct3, public TestStruct4m {
+    TestStruct4m c[2];
+    std::string d;
+    std::array<double, 3> e;
+    std::unordered_map<std::string, unsigned long> f{{"item1", 0}, {"item2", 0}};
+    float g[3];
+    int h;
+    unsigned i;
+    std::unique_ptr<bool> j[2]{nullptr, nullptr};
+    std::string k[6];
+
+    TestStruct5m() = default;
+};
+
 static char value_ts6_c[32]{"hello!"};
 
 struct TestStruct6 {
@@ -73,10 +92,14 @@ struct TestStruct7: public TestStruct6 {
 
 template <class T, size_t size>
 RPP_TYPE_DYNAMIC_GENERIC(T, T (&)[size])
+template <class T, size_t size>
+RPP_TYPE_DYNAMIC_GENERIC(T, std::array<T, size> &)
 template <class T, class... Args>
 RPP_TYPE_DYNAMIC_GENERIC(T, std::vector<T, Args...> &)
 template <class Key, class T, class... Args>
 RPP_TYPE_DYNAMIC_GENERIC(T, std::map<Key, T, Args...> &)
+template <class Key, class T, class... Args>
+RPP_TYPE_DYNAMIC_GENERIC(T, std::unordered_map<Key, T, Args...> &)
 template <class T, class... Args>
 RPP_TYPE_DYNAMIC_GENERIC(T, std::unique_ptr<T, Args...> &)
 
@@ -118,6 +141,26 @@ RPP_TYPE_OBJECT(
     __(j)
     __(k),
     TestStruct5
+)
+
+RPP_TYPE_OBJECT(
+    __(b),
+    TestStruct4m
+)
+
+RPP_TYPE_OBJECT(
+    __(TestStruct3, BASE)
+    __(TestStruct4m, BASE_INLINE)
+    __(c)
+    __(d)
+    __(e)
+    __(f)
+    __(g)
+    __(h)
+    __(i)
+    __(j)
+    __(k),
+    TestStruct5m
 )
 
 RPP_TYPE_OBJECT(

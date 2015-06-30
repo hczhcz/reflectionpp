@@ -5,6 +5,8 @@ namespace rpp_another_namespace {
 static const int test_strtree = []() {
     std::cerr << "======== test: " << __FILE__ << " ========" << std::endl;
 
+    // out
+
     using Root = std::unordered_map<
         std::string,
         std::map<
@@ -36,6 +38,8 @@ static const int test_strtree = []() {
             ++tag;
         }
     }
+
+    // in
 
     rpp::VisitorIStrTree<Root &> v2{root1};
     meta.doVisit(v2);
