@@ -10,6 +10,9 @@ using rpp_size_t = unsigned long;
 // to construct accessors as a member
 template <class T>
 struct AccessorFactory {
+    // static only
+    AccessorFactory() = delete;
+
     template <class Object, class Accessor = T>
     static auto make(Object &) -> decltype(Accessor{}) {
         return Accessor{};
@@ -27,7 +30,7 @@ struct AccessorSimple: public Value {
     using Value::Value;
 
     using Meta = AccessorSimple<
-        Name, HolderType<decltype((*static_cast<Value *>(nullptr))())>
+        Name, HolderType<HoldType<Value>>
     >;
 
     const char *getRealName() {
@@ -105,7 +108,7 @@ struct AccessorObject: public AccessorObjectHelper<Value, Members> {
     using AccessorObjectHelper<Value, Members>::AccessorObjectHelper;
 
     using Meta = AccessorObject<
-        Name, HolderType<decltype((*static_cast<Value *>(nullptr))())>,
+        Name, HolderType<HoldType<Value>>,
         typename AccessorObjectHelper<Value, Members>::MetaList
     >;
 
@@ -120,7 +123,7 @@ struct AccessorDynamic: public Value {
     using Value::Value;
 
     using Meta = AccessorDynamic<
-        Name, HolderType<decltype((*static_cast<Value *>(nullptr))())>,
+        Name, HolderType<HoldType<Value>>,
         typename Member::Meta
     >;
 

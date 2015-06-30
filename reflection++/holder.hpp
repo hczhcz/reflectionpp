@@ -4,6 +4,9 @@
 
 namespace rpp {
 
+template <class T>
+using HoldType = decltype((*static_cast<T *>(nullptr))());
+
 // data holders that hold types
 template <class T>
 struct HolderType {

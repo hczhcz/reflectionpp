@@ -50,7 +50,7 @@ struct AccessorDynamicWrap {
 // get the default accessor
 #define RPP_ACCESSOR_GET(Name, Value) \
     typename AccessorInfer< \
-        decltype((*static_cast<Value *>(nullptr))()) \
+        rpp::HoldType<Value> \
     >::template Accessor<Name, Value>
 
 // enable AccessorInfer in the current namespace
@@ -93,9 +93,7 @@ RPP_ACCESSOR_INFER_INIT()
         RPP_ACCESSOR_APPEND_DYNAMIC(Derived, Base)
     // append accessors of a base type (fetched from AccessorObjectWrap) to a TypeList
     #define RPP_ACCESSOR_APPEND_BASE_INLINE(Derived, Base) \
-        ::AppendList<AccessorInfer< \
-            decltype(*static_cast<Base *>(nullptr)) \
-        >::List>
+        ::AppendList<AccessorInfer<Base &>::List>
 
     // build a TypeList of accessors
     #define RPP_ACCESSOR_LIST_ITEM_IMPL(Member, Mode, ...) \
