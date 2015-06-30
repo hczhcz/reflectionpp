@@ -31,7 +31,7 @@ static const int test_bson = []() {
         RPP_ACCESSOR_GET_AS("value", LOCAL, TestStruct5m)
     > meta2{TestStruct5m{}};
 
-    rpp::VisitorBSONView<> view{doc.view()};
+    rpp::VisitorBSONView<> view{bsoncxx::types::b_document{doc}};
     meta2.doVisit(view);
 
     rpp::VisitorBSON<> doc2{};

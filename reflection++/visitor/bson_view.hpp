@@ -11,54 +11,11 @@
 #include <map>
 #include <unordered_map>
 
-#include <bsoncxx/document/view.hpp>
-#include <bsoncxx/array/view.hpp>
+#include <bsoncxx/types/value.hpp>
+#include <bsoncxx/types.hpp>
 
 #include "../visitor.hpp"
 #include "../accessor.hpp"
-
-// hack!!!
-namespace bsoncxx {
-
-namespace document {
-
-// wrapper of BSON document view
-struct element_local: public element {
-    const types::b_document value;
-
-    inline element_local(const view &_view): value{_view} {}
-
-    inline bsoncxx::type type() const {
-        return bsoncxx::type::k_document;
-    }
-
-    inline types::b_document get_document() const {
-        return value;
-    }
-};
-
-}
-
-namespace array {
-
-// wrapper of BSON array view
-struct element_local: public element {
-    const types::b_array value;
-
-    inline element_local(const view &_view): value{_view} {}
-
-    inline bsoncxx::type type() const {
-        return bsoncxx::type::k_array;
-    }
-
-    inline types::b_array get_array() const {
-        return value;
-    }
-};
-
-}
-
-}
 
 namespace rpp {
 
@@ -67,7 +24,7 @@ template <class Element>
 struct VisitorBSONViewItemBase;
 
 // read data from a BSON (MongoDB data) view
-template <class Base = VisitorBSONViewItemBase<bsoncxx::document::element_local>>
+template <class Base = VisitorBSONViewItemBase<bsoncxx::types::value>>
 struct VisitorBSONView: public Base {
 protected:
     template <class Accessor, class T>
