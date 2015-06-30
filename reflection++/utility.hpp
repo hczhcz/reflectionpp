@@ -4,6 +4,10 @@ namespace rpp {
 
 using rpp_size_t = unsigned long;
 
+// get reference of a type
+template <class T>
+using RefCast = T &;
+
 // a compile-time type list to contain classes
 template <class... Args>
 struct TypeList final {

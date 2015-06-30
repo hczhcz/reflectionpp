@@ -91,17 +91,17 @@ struct TestStruct7: public TestStruct6 {
 };
 
 template <class T, size_t size>
-RPP_TYPE_DYNAMIC_GENERIC(T, T (&)[size])
+RPP_TYPE_DYNAMIC_GENERIC(T, T [size])
 template <class T, size_t size>
-RPP_TYPE_DYNAMIC_GENERIC(T, std::array<T, size> &)
+RPP_TYPE_DYNAMIC_GENERIC(T, std::array<T, size>)
 template <class T, class... Args>
-RPP_TYPE_DYNAMIC_GENERIC(T, std::vector<T, Args...> &)
+RPP_TYPE_DYNAMIC_GENERIC(T, std::vector<T, Args...>)
 template <class Key, class T, class... Args>
-RPP_TYPE_DYNAMIC_GENERIC(T, std::map<Key, T, Args...> &)
+RPP_TYPE_DYNAMIC_GENERIC(T, std::map<Key, T, Args...>)
 template <class Key, class T, class... Args>
-RPP_TYPE_DYNAMIC_GENERIC(T, std::unordered_map<Key, T, Args...> &)
+RPP_TYPE_DYNAMIC_GENERIC(T, std::unordered_map<Key, T, Args...>)
 template <class T, class... Args>
-RPP_TYPE_DYNAMIC_GENERIC(T, std::unique_ptr<T, Args...> &)
+RPP_TYPE_DYNAMIC_GENERIC(T, std::unique_ptr<T, Args...>)
 
 RPP_TYPE_OBJECT(
     __(member1)

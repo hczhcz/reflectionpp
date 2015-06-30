@@ -10,10 +10,6 @@ struct VisitorTail final {
     VisitorTail() = delete;
 };
 
-// return reference of a type (a const reference)
-template <class T>
-T &ref_cast(const T &);
-
 // register a visitor class into the visitor chain
 // helper macros
 #define RPP_VISITOR_REG_UNIQUE_2(Counter, ...) \
@@ -23,13 +19,13 @@ T &ref_cast(const T &);
         \
         template <class T, class Last> \
         auto trace_##Counter(Here, T &value, Last &last) -> decltype( \
-            trace_##Counter(here, rpp::ref_cast(next(here, value)), value) \
+            trace_##Counter(here, next(here, value), value) \
         ); \
         \
-        __VA_ARGS__ next( \
+        rpp::RefCast<__VA_ARGS__> next( \
             Here, \
             decltype( \
-                trace_##Counter(here, rpp::ref_cast(next(here, here)), here) \
+                trace_##Counter(here, next(here, here), here) \
             ) & \
         ); \
     }
@@ -50,7 +46,7 @@ T &ref_cast(const T &);
         auto trace2_##Type(Here, T &value, rpp::TypeList<Args...>) -> decltype( \
             trace2_##Type( \
                 here, \
-                rpp::ref_cast(next(here, value)), \
+                next(here, value), \
                 rpp::TypeList<Args...>::template Append<T>::instance() \
             ) \
         ); \
@@ -59,7 +55,7 @@ T &ref_cast(const T &);
             decltype( \
                 trace2_##Type( \
                     here, \
-                    rpp::ref_cast(next(here, here)), \
+                    next(here, here), \
                     rpp::TypeList<>::instance() \
                 ) \
             ); \
@@ -77,7 +73,7 @@ T &ref_cast(const T &);
         } here{}; \
         \
         /* an abstract function to infer the next member of the visitor chain */ \
-        rpp::VisitorTail next(...); \
+        rpp::VisitorTail &next(...); \
         \
         /* call next with VisitorTail is not allowed */ \
         void next(Here, rpp::VisitorTail &) = delete; \
