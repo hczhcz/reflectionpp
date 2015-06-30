@@ -4,8 +4,6 @@
 
 namespace rpp {
 
-using rpp_size_t = unsigned long;
-
 // to construct accessors as a member
 template <class T>
 struct AccessorFactory {

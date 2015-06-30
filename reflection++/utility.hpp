@@ -2,6 +2,8 @@
 
 namespace rpp {
 
+using rpp_size_t = unsigned long;
+
 // a compile-time type list to contain classes
 template <class... Args>
 struct TypeList final {

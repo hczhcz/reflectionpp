@@ -4,13 +4,11 @@
 
 namespace rpp {
 
-using rpp_strlen_t = unsigned long;
-
-constexpr rpp_strlen_t strLen(const char *str, rpp_strlen_t index = 0) {
+constexpr rpp_size_t strLen(const char *str, rpp_size_t index = 0) {
     return str[index] == 0 ? index : strLen(str, index + 1);
 }
 
-constexpr char strIndex(const char *str, rpp_strlen_t index) {
+constexpr char strIndex(const char *str, rpp_size_t index) {
     return index < strLen(str) ? str[index] : 0;
 }
 
