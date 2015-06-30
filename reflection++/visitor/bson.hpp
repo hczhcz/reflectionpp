@@ -33,6 +33,7 @@ protected:
         if (value) {
             accessor.doMemberVisit(*this, *value);
         } else {
+            // notice: b_null is discouraged
             this->visitVal(bsoncxx::types::b_null{});
         }
     }

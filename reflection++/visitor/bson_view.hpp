@@ -182,12 +182,12 @@ protected:
                     castAssign(value, &from);
                 }
                 break;
-            case bsoncxx::type::k_undefined:
-                {
-                    auto from = this->get_undefined();
-                    castAssign(value, &from);
-                }
-                break;
+            // case bsoncxx::type::k_undefined:
+            //     {
+            //         auto from = this->get_undefined();
+            //         castAssign(value, &from);
+            //     }
+            //     break;
             case bsoncxx::type::k_oid:
                 {
                     auto from = this->get_oid();
@@ -207,70 +207,74 @@ protected:
                 }
                 break;
             case bsoncxx::type::k_null:
+                // notice: b_null is discouraged
                 {
                     auto from = this->get_null();
                     castAssign(value, &from);
                 }
                 break;
-            case bsoncxx::type::k_regex:
-                {
-                    auto from = this->get_regex();
-                    castAssign(value, &from);
-                }
-                break;
-            case bsoncxx::type::k_dbpointer:
-                {
-                    auto from = this->get_dbpointer();
-                    castAssign(value, &from);
-                }
-                break;
-            case bsoncxx::type::k_code:
-                {
-                    auto from = this->get_code();
-                    castAssign(value, &from);
-                }
-                break;
-            case bsoncxx::type::k_symbol:
-                {
-                    auto from = this->get_symbol();
-                    castAssign(value, &from);
-                }
-                break;
-            case bsoncxx::type::k_codewscope:
-                {
-                    auto from = this->get_codewscope();
-                    castAssign(value, &from);
-                }
-                break;
+            // case bsoncxx::type::k_regex:
+            //     {
+            //         auto from = this->get_regex();
+            //         castAssign(value, &from);
+            //     }
+            //     break;
+            // case bsoncxx::type::k_dbpointer:
+            //     {
+            //         auto from = this->get_dbpointer();
+            //         castAssign(value, &from);
+            //     }
+            //     break;
+            // case bsoncxx::type::k_code:
+            //     {
+            //         auto from = this->get_code();
+            //         castAssign(value, &from);
+            //     }
+            //     break;
+            // case bsoncxx::type::k_symbol:
+            //     {
+            //         auto from = this->get_symbol();
+            //         castAssign(value, &from);
+            //     }
+            //     break;
+            // case bsoncxx::type::k_codewscope:
+            //     {
+            //         auto from = this->get_codewscope();
+            //         castAssign(value, &from);
+            //     }
+            //     break;
             case bsoncxx::type::k_int32:
                 {
                     auto from = this->get_int32();
                     castAssign(value, &from);
                 }
                 break;
-            case bsoncxx::type::k_timestamp:
-                {
-                    auto from = this->get_timestamp();
-                    castAssign(value, &from);
-                }
-                break;
+            // case bsoncxx::type::k_timestamp:
+            //     {
+            //         auto from = this->get_timestamp();
+            //         castAssign(value, &from);
+            //     }
+            //     break;
             case bsoncxx::type::k_int64:
                 {
                     auto from = this->get_int64();
                     castAssign(value, &from);
                 }
                 break;
-            case bsoncxx::type::k_maxkey:
-                {
-                    auto from = this->get_maxkey();
-                    castAssign(value, &from);
-                }
-                break;
-            case bsoncxx::type::k_minkey:
-                {
-                    auto from = this->get_minkey();
-                    castAssign(value, &from);
-                }
+            // case bsoncxx::type::k_maxkey:
+            //     {
+            //         auto from = this->get_maxkey();
+            //         castAssign(value, &from);
+            //     }
+            //     break;
+            // case bsoncxx::type::k_minkey:
+            //     {
+            //         auto from = this->get_minkey();
+            //         castAssign(value, &from);
+            //     }
+            //     break;
+            default:
+                throw 1; // TODO
                 break;
         }
     }
