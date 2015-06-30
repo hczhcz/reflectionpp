@@ -69,8 +69,8 @@ public:
         this->visitArr(accessor, value);
     }
 
-    template <class Accessor, class... Args>
-    void into(Accessor &accessor, std::array<Args...> &value) {
+    template <class Accessor, class T, rpp_size_t size>
+    void into(Accessor &accessor, std::array<T, size> &value) {
         this->visitArr(accessor, value);
     }
 
