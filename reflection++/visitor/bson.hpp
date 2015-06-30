@@ -126,11 +126,12 @@ public:
 
 // hold a document entry
 template <class Doc>
-struct VisitorBSONDocBase: public VisitorBase<void> {
-protected:
+struct VisitorBSONAddDocBase: public VisitorBase<void> {
+private:
     Doc &doc;
     std::string name;
 
+protected:
     template <class Member>
     void add(Member &&member) {
         doc.append(
@@ -150,16 +151,17 @@ protected:
     }
 
 public:
-    VisitorBSONDocBase(Doc &_doc, const std::string &_name):
+    VisitorBSONAddDocBase(Doc &_doc, const std::string &_name):
         doc{_doc}, name{_name} {}
 };
 
 // hold an array
 template <class Arr>
-struct VisitorBSONArrBase: public VisitorBase<void> {
-protected:
+struct VisitorBSONAddArrBase: public VisitorBase<void> {
+private:
     Arr &arr;
 
+protected:
     template <class Member>
     void add(Member &&member) {
         arr.append(
@@ -175,7 +177,7 @@ protected:
     }
 
 public:
-    VisitorBSONArrBase(Arr &_arr):
+    VisitorBSONAddArrBase(Arr &_arr):
         arr{_arr} {}
 };
 
@@ -200,9 +202,9 @@ protected:
         this->add(std::string{} + value);
     }
 
-    void visitVal(const wchar_t &value) {
-        this->add(std::wstring{} + value);
-    }
+    // void visitVal(const wchar_t &value) {
+    //     this->add(std::string{} + value);
+    // }
 
     template <class Accessor, class T>
     void visitArr(Accessor &accessor, T &value) {
@@ -214,7 +216,7 @@ protected:
             for (auto i = begin; i != end; ++i) {
                 VisitorBSON<
                     VisitorBSONItemBase<
-                        VisitorBSONArrBase<sub_array>
+                        VisitorBSONAddArrBase<sub_array>
                     >
                 > child{arr};
 
@@ -233,7 +235,7 @@ protected:
             for (auto i = begin; i != end; ++i) {
                 VisitorBSON<
                     VisitorBSONItemBase<
-                        VisitorBSONDocBase<sub_document>
+                        VisitorBSONAddDocBase<sub_document>
                     >
                 > child{doc, i->first};
 
@@ -250,7 +252,7 @@ protected:
             for (rpp_size_t i = 0; i < accessor.size(); ++i) {
                 VisitorBSON<
                     VisitorBSONItemBase<
-                        VisitorBSONDocBase<sub_document>
+                        VisitorBSONAddDocBase<sub_document>
                     >
                 > child{doc, accessor.getMemberName(i)};
 
@@ -280,7 +282,7 @@ protected:
         for (auto i = begin; i != end; ++i) {
             VisitorBSON<
                 VisitorBSONItemBase<
-                    VisitorBSONDocBase<Doc>
+                    VisitorBSONAddDocBase<Doc>
                 >
             > child{*this, i->first};
 
@@ -293,7 +295,7 @@ protected:
         for (rpp_size_t i = 0; i < accessor.size(); ++i) {
             VisitorBSON<
                 VisitorBSONItemBase<
-                    VisitorBSONDocBase<Doc>
+                    VisitorBSONAddDocBase<Doc>
                 >
             > child{*this, accessor.getMemberName(i)};
 
@@ -316,7 +318,7 @@ protected:
         for (auto i = begin; i != end; ++i) {
             VisitorBSON<
                 VisitorBSONItemBase<
-                    VisitorBSONArrBase<Arr>
+                    VisitorBSONAddArrBase<Arr>
                 >
             > child{*this};
 
