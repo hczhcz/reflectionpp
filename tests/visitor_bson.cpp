@@ -9,12 +9,12 @@ static const int test_bson = []() {
 
     // out
 
-    rpp::MetaImpl<
+    RPP_META_LOCAL(
+        "value", TestStruct5,
         rpp::TypeList<
             rpp::VisitorBSON<>
-        >,
-        RPP_ACCESSOR_GET_AS("value", LOCAL, TestStruct5)
-    > meta1{TestStruct5{}};
+        >
+    ) meta1{TestStruct5{}};
 
     rpp::VisitorBSON<> doc{};
     meta1.doVisit(doc);
@@ -23,13 +23,13 @@ static const int test_bson = []() {
 
     // in
 
-    rpp::MetaImpl<
+    RPP_META_LOCAL(
+        "value", TestStruct5m,
         rpp::TypeList<
             rpp::VisitorBSON<>,
             rpp::VisitorBSONView<>
-        >,
-        RPP_ACCESSOR_GET_AS("value", LOCAL, TestStruct5m)
-    > meta2{TestStruct5m{}};
+        >
+    ) meta2{TestStruct5m{}};
 
     rpp::VisitorBSONView<> view{bsoncxx::types::b_document{doc}};
     meta2.doVisit(view);

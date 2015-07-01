@@ -15,13 +15,13 @@ static const int test_strtree = []() {
         >
     >;
 
-    rpp::MetaImpl<
+    RPP_META_LOCAL(
+        "value", TestStruct7,
         rpp::TypeList<
             rpp::VisitorIStrTree<Root &>,
             rpp::VisitorOStrTree<Root &>
-        >,
-        RPP_ACCESSOR_GET_AS("value", LOCAL, TestStruct7)
-    > meta{TestStruct7{}};
+        >
+    ) meta{TestStruct7{}};
 
     Root root1;
     Root root2;
