@@ -82,21 +82,21 @@ char value3{'C'};
 namespace rpp_another_namespace {
 
 using Accessor1 = rpp::Accessor1;
-using Accessor2 = RPP_ACCESSOR_GET_AS("value2", LOCAL, char);
-using Accessor3 = RPP_ACCESSOR_GET_AS("value3", REF, rpp::value3);
-using Accessor4 = RPP_ACCESSOR_GET_AS("value4", DYNAMIC, char);
+using Accessor2 = RPP_ACCESSOR_GET_AS(LOCAL, "value2", char);
+using Accessor3 = RPP_ACCESSOR_GET_AS(REF, "value3", rpp::value3);
+using Accessor4 = RPP_ACCESSOR_GET_AS(DYNAMIC, "value4", char);
 
-using Accessor5m1 = RPP_ACCESSOR_GET_AS("member1", MEMBER, TestStruct, member1);
-using Accessor5m2 = RPP_ACCESSOR_GET_AS("member2", MEMBER, TestStruct, member2);
+using Accessor5m1 = RPP_ACCESSOR_GET_AS(MEMBER, "member1", TestStruct, member1);
+using Accessor5m2 = RPP_ACCESSOR_GET_AS(MEMBER, "member2", TestStruct, member2);
 
-using Accessor5 = RPP_ACCESSOR_GET_AS("value5", LOCAL, TestStruct);
+using Accessor5 = RPP_ACCESSOR_GET_AS(LOCAL, "value5", TestStruct);
 using Accessor6 = Accessor5::Meta;
 
-using Accessor7m3 = RPP_ACCESSOR_GET_AS("member3", MEMBER, TestStruct2, member3);
-using Accessor7m4 = RPP_ACCESSOR_GET_AS("member4", REF, TestStruct2::member4);
-using Accessor7m5 = RPP_ACCESSOR_GET_AS("member5", MEMBER, TestStruct2, member5);
+using Accessor7m3 = RPP_ACCESSOR_GET_AS(MEMBER, "member3", TestStruct2, member3);
+using Accessor7m4 = RPP_ACCESSOR_GET_AS(REF, "member4", TestStruct2::member4);
+using Accessor7m5 = RPP_ACCESSOR_GET_AS(MEMBER, "member5", TestStruct2, member5);
 
-using Accessor7 = RPP_ACCESSOR_GET_AS("value7", LOCAL, TestStruct2);
+using Accessor7 = RPP_ACCESSOR_GET_AS(LOCAL, "value7", TestStruct2);
 
 static_assert(
     std::is_same<

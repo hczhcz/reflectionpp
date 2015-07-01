@@ -61,32 +61,32 @@ struct MetaImpl<
 #define RPP_META_TYPE(Type, ...) \
     rpp::MetaImpl< \
         __VA_ARGS__, \
-        RPP_ACCESSOR_GET_AS(#Type, TYPE, Type) \
+        RPP_ACCESSOR_GET_AS(TYPE, #Type, Type) \
     >
 #define RPP_META_CONST(Value, ...) \
     rpp::MetaImpl< \
         __VA_ARGS__, \
-        RPP_ACCESSOR_GET_AS(#Value, CONST, Value) \
+        RPP_ACCESSOR_GET_AS(CONST, #Value, Value) \
     >
 #define RPP_META_LOCAL(Name, Type, ...) \
     rpp::MetaImpl< \
         __VA_ARGS__, \
-        RPP_ACCESSOR_GET_AS(Name, LOCAL, Type) \
+        RPP_ACCESSOR_GET_AS(LOCAL, Name, Type) \
     >
 #define RPP_META_REF(Value, ...) \
     rpp::MetaImpl< \
         __VA_ARGS__, \
-        RPP_ACCESSOR_GET_AS(#Value, REF, Value) \
+        RPP_ACCESSOR_GET_AS(REF, #Value, Value) \
     >
 #define RPP_META_DYNAMIC(Name, Type, ...) \
     rpp::MetaImpl< \
         __VA_ARGS__, \
-        RPP_ACCESSOR_GET_AS(Name, DYNAMIC, Type) \
+        RPP_ACCESSOR_GET_AS(DYNAMIC, Name, Type) \
     >
 #define RPP_META_MEMBER(Object, Value, ...) \
     rpp::MetaImpl< \
         __VA_ARGS__, \
-        RPP_ACCESSOR_GET_AS(#Value, MEMBER, Object, Value) \
+        RPP_ACCESSOR_GET_AS(MEMBER, #Value, Object, Value) \
     >
 
 }
