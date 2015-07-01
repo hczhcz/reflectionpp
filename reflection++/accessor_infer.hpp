@@ -53,6 +53,10 @@ struct AccessorDynamicWrap {
         rpp::HoldType<Value> \
     >::template Accessor<Name, Value>
 
+// get the default accessor, bind the holder's type and the name
+#define RPP_ACCESSOR_GET_AS(Name, Mode, ...) \
+    RPP_ACCESSOR_GET(RPP_HOLDER_STR(Name), RPP_HOLDER_##Mode(__VA_ARGS__))
+
 // enable AccessorInfer in the current namespace
 #define RPP_ACCESSOR_INFER_INIT() \
     /* an abstract function to infer the default accessor of a type */ \
@@ -64,18 +68,14 @@ struct AccessorDynamicWrap {
 
 RPP_ACCESSOR_INFER_INIT()
 
-// get the default accessor, bind the holder's type and the name
-#define RPP_ACCESSOR_GET_AS(Name, Mode, ...) \
-    RPP_ACCESSOR_GET(RPP_HOLDER_STR(Name), RPP_HOLDER_##Mode(__VA_ARGS__))
-
 // helper macros begin
 
     // append an accessor to a TypeList
     #define RPP_ACCESSOR_APPEND_ACCESSOR(Object, Accessor) \
         ::Append<Accessor>
     // append an accessor to a TypeList (using default accessors)
-    // wrapper of RPP_HOLDER macros
-    // notice: LOCAL and DYNAMIC means type casting
+    // wrappers of RPP_ACCESSOR_GET_AS
+    // notice: LOCAL and DYNAMIC as member means type casting
     #define RPP_ACCESSOR_APPEND_TYPE(Object, Type) \
         ::Append<RPP_ACCESSOR_GET_AS(#Type, TYPE, Object::Type)>
     #define RPP_ACCESSOR_APPEND_CONST(Object, Value) \
@@ -130,7 +130,7 @@ RPP_ACCESSOR_INFER_INIT()
 #define RPP_TYPE_DYNAMIC(Member, Object) \
     template <> \
     struct AccessorInfer<Object &>: public rpp::AccessorDynamicWrap< \
-        RPP_ACCESSOR_GET(RPP_HOLDER_STR("member"), RPP_HOLDER_DYNAMIC(Member)) \
+        RPP_ACCESSOR_GET_AS("member", DYNAMIC, Member) \
     > {};
 
 // RPP_TYPE_OBJECT with template arguments
@@ -151,7 +151,7 @@ RPP_ACCESSOR_INFER_INIT()
 #define RPP_TYPE_DYNAMIC_GENERIC(Member, ...) \
     /* before the macro: template <???> */ \
     struct AccessorInfer<rpp::RefCast<__VA_ARGS__>>: public rpp::AccessorDynamicWrap< \
-        RPP_ACCESSOR_GET(RPP_HOLDER_STR("member"), RPP_HOLDER_DYNAMIC(Member)) \
+        RPP_ACCESSOR_GET_AS("member", DYNAMIC, Member) \
     > {};
 
 }
