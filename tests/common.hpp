@@ -10,7 +10,6 @@
 #include "../reflection++/visitor/bson.hpp"
 #include "../reflection++/visitor/bson_view.hpp"
 #include "../reflection++/visitor/mysql.hpp"
-#include "../reflection++/accessor_infer.hpp"
 #include "../reflection++/meta.hpp"
 
 namespace rpp_another_namespace {

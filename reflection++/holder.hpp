@@ -81,6 +81,7 @@ struct HolderMember {
     }
 };
 
+// generate a holder type
 #define RPP_HOLDER_TYPE(Type) \
     rpp::HolderType<Type>
 #define RPP_HOLDER_CONST(Value) \
