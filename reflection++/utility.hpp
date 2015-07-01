@@ -9,6 +9,10 @@ using rpp_size_t = unsigned long;
 // TODO: more information
 struct Exception {};
 
+// wrap a type (for macro arguments)
+#define RPP_PASS(...) \
+    decltype((static_cast<auto (*)() -> __VA_ARGS__>(nullptr))())
+
 // get reference of a type
 template <class T>
 using RefCast = T &;

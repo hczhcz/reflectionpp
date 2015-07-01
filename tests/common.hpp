@@ -83,8 +83,9 @@ struct TestStruct6 {
     TestStruct6() = default;
 };
 
+template <class T>
 struct TestStruct7: public TestStruct6 {
-    TestStruct6 d;
+    T d;
 
     TestStruct7() = default;
 };
@@ -169,10 +170,11 @@ RPP_TYPE_OBJECT(
     TestStruct6
 )
 
-RPP_TYPE_OBJECT(
+template <class T>
+RPP_TYPE_OBJECT_GENERIC(
     __(TestStruct6, BASE)
     __(d),
-    TestStruct7
+    TestStruct7<T>
 )
 
 }

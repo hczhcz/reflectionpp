@@ -16,12 +16,12 @@ static const int test_strtree = []() {
     >;
 
     RPP_META_LOCAL(
-        "value", TestStruct7,
+        "value", TestStruct7<TestStruct6>,
         rpp::TypeList<
             rpp::VisitorIStrTree<Root &>,
             rpp::VisitorOStrTree<Root &>
         >
-    ) meta{TestStruct7{}};
+    ) meta{TestStruct7<TestStruct6>{}};
 
     Root root1;
     Root root2;

@@ -140,7 +140,7 @@ RPP_ACCESSOR_INFER_INIT()
     struct AccessorInfer<rpp::RefCast<__VA_ARGS__>>: public rpp::AccessorObjectWrap< \
         rpp::TypeList<> \
         RPP_ACCESSOR_LIST_BEGIN( \
-            Object \
+            RPP_PASS(__VA_ARGS__) \
             Members \
             , RPP_ACCESSOR_LIST_END) \
         ) \
