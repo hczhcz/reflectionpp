@@ -181,13 +181,13 @@ static_assert(
 static const int test_meta = []() {
     std::cerr << "======== test: " << __FILE__ << " ========" << std::endl;
 
-    rpp::MetaImpl<rpp::VisitorAll3, Accessor1> meta1{0};
-    rpp::MetaImpl<rpp::VisitorAll3, Accessor2> meta2{'A'};
-    rpp::MetaImpl<rpp::VisitorAll3, Accessor3> meta3;
-    rpp::MetaImpl<rpp::VisitorAll3, Accessor4> meta4{rpp::value3};
-    rpp::MetaImpl<rpp::VisitorAll3, Accessor5> meta5{TestStruct{1, 1.5}};
-    rpp::MetaImpl<rpp::VisitorAll3, Accessor6> meta6;
-    rpp::MetaImpl<rpp::VisitorAll3, Accessor7> meta7{TestStruct2{1, '3', 5}};
+    rpp::MetaImpl<Accessor1, rpp::VisitorAll3> meta1{0};
+    rpp::MetaImpl<Accessor2, rpp::VisitorAll3> meta2{'A'};
+    rpp::MetaImpl<Accessor3, rpp::VisitorAll3> meta3;
+    rpp::MetaImpl<Accessor4, rpp::VisitorAll3> meta4{rpp::value3};
+    rpp::MetaImpl<Accessor5, rpp::VisitorAll3> meta5{TestStruct{1, 1.5}};
+    rpp::MetaImpl<Accessor6, rpp::VisitorAll3> meta6;
+    rpp::MetaImpl<Accessor7, rpp::VisitorAll3> meta7{TestStruct2{1, '3', 5}};
 
     std::vector<rpp::MetaBase<rpp::VisitorAll3> *> metalist{
         &meta1, &meta2, &meta3, &meta4, &meta5, &meta6, &meta7
