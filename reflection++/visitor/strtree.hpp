@@ -21,6 +21,15 @@ public:
         Stream buf{node};
 
         buf >> value;
+
+        if (!buf.eof()) {
+            throw Exception{};
+        }
+    }
+
+    template <class... Args>
+    void visit(std::basic_string<Args...> &value) { // TODO
+        value = node;
     }
 
     template <class Accessor, class T>
@@ -71,6 +80,11 @@ public:
 
         buf << value;
         node = buf.str();
+    }
+
+    template <class... Args>
+    void visit(const std::basic_string<Args...> &value) { // TODO
+        node = value;
     }
 
     template <class Accessor, class T>
