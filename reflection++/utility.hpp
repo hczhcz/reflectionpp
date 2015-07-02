@@ -17,6 +17,10 @@ struct Exception {};
 template <class T>
 using RefCast = T &;
 
+// get the actual object of a member pointer
+template <class Object, class T>
+Object realObject(T Object::*);
+
 // a compile-time type list to contain classes
 template <class... Args>
 struct TypeList final {

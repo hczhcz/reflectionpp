@@ -82,19 +82,23 @@ struct HolderMember {
 };
 
 // generate a holder type
-#define RPP_HOLDER_TYPE(Type) \
-    rpp::HolderType<Type>
-#define RPP_HOLDER_CONST(Value) \
-    rpp::HolderConst<decltype(Value), Value>
-#define RPP_HOLDER_STR(Str) \
-    rpp::HolderConst<const char (&)[], RPP_STATIC_STR(Str)>
-#define RPP_HOLDER_LOCAL(Type) \
-    rpp::HolderLocal<Type>
-#define RPP_HOLDER_REF(Value) \
-    rpp::HolderRef<decltype(Value), Value>
-#define RPP_HOLDER_DYNAMIC(Type) \
-    rpp::HolderDynamic<Type>
-#define RPP_HOLDER_MEMBER(Object, Value) \
-    rpp::HolderMember<Object, decltype(Object::Value), &Object::Value>
+#define RPP_HOLDER_TYPE(...) \
+    rpp::HolderType<__VA_ARGS__>
+#define RPP_HOLDER_CONST(...) \
+    rpp::HolderConst<decltype(__VA_ARGS__), __VA_ARGS__>
+#define RPP_HOLDER_STR(...) \
+    rpp::HolderConst<const char (&)[], RPP_STATIC_STR(__VA_ARGS__)>
+#define RPP_HOLDER_LOCAL(...) \
+    rpp::HolderLocal<__VA_ARGS__>
+#define RPP_HOLDER_REF(...) \
+    rpp::HolderRef<decltype(__VA_ARGS__), __VA_ARGS__>
+#define RPP_HOLDER_DYNAMIC(...) \
+    rpp::HolderDynamic<__VA_ARGS__>
+#define RPP_HOLDER_MEMBER(Object, ...) \
+    rpp::HolderMember< \
+        decltype(rpp::realObject(&Object::__VA_ARGS__)), \
+        decltype(Object::__VA_ARGS__), \
+        &Object::__VA_ARGS__ \
+    >
 
 }
