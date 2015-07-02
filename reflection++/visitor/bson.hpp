@@ -27,17 +27,6 @@ struct VisitorBSONRootDocBase;
 // render a BSON (MongoDB data) object
 template <class Base = VisitorBSONRootDocBase<bsoncxx::builder::basic::document>>
 struct VisitorBSON: public Base {
-protected:
-    template <class Accessor, class T>
-    void visitPtr(Accessor &accessor, T &value) {
-        if (value) {
-            accessor.doMemberVisit(*this, *value);
-        } else {
-            // notice: b_null is discouraged
-            this->visitVal(bsoncxx::types::b_null{});
-        }
-    }
-
 public:
     using Base::Base;
 
@@ -45,22 +34,22 @@ public:
 
     template <class Accessor, class... Args>
     void into(Accessor &accessor, std::shared_ptr<Args...> &value) {
-        visitPtr(accessor, value);
+        this->visitPtr(this, accessor, value);
     }
 
     template <class Accessor, class... Args>
     void into(Accessor &accessor, std::weak_ptr<Args...> &value) {
-        visitPtr(accessor, value);
+        this->visitPtr(this, accessor, value);
     }
 
     template <class Accessor, class... Args>
     void into(Accessor &accessor, std::unique_ptr<Args...> &value) {
-        visitPtr(accessor, value);
+        this->visitPtr(this, accessor, value);
     }
 
     template <class Accessor, class T>
     void into(Accessor &accessor, T *&value) {
-        visitPtr(accessor, value);
+        this->visitPtr(this, accessor, value);
     }
 
     // array
@@ -207,6 +196,16 @@ protected:
     //     this->add(std::string{} + value);
     // }
 
+    template <class Self, class Accessor, class T>
+    void visitPtr(Self *self, Accessor &accessor, T &value) {
+        if (value) {
+            accessor.doMemberVisit(*self, *value);
+        } else {
+            // notice: b_null is discouraged
+            this->visitVal(bsoncxx::types::b_null{});
+        }
+    }
+
     template <class Accessor, class T>
     void visitArr(Accessor &accessor, T &value) {
         using bsoncxx::builder::basic::sub_array;
@@ -273,6 +272,9 @@ protected:
     template <class T>
     void visitVal(const T &value) = delete;
 
+    template <class Self, class Accessor, class T>
+    void visitPtr(Self *self, Accessor &accessor, T &value) = delete;
+
     template <class Accessor, class T>
     void visitArr(Accessor &accessor, T &value) = delete;
 
@@ -311,6 +313,9 @@ struct VisitorBSONRootArrBase: public VisitorBase<void>, public Arr {
 protected:
     template <class T>
     void visitVal(const T &value) = delete;
+
+    template <class Self, class Accessor, class T>
+    void visitPtr(Self *self, Accessor &accessor, T &value) = delete;
 
     template <class Accessor, class T>
     void visitArr(Accessor &accessor, T &value) {

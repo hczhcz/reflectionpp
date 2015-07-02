@@ -26,17 +26,6 @@ struct VisitorBSONViewItemBase;
 // read data from a BSON (MongoDB data) view
 template <class Base = VisitorBSONViewItemBase<bsoncxx::types::value>>
 struct VisitorBSONView: public Base {
-protected:
-    template <class Accessor, class T>
-    void visitPtr(Accessor &accessor, T &value) {
-        if (value) {
-            accessor.doMemberVisit(*this, *value);
-        } else {
-            // TODO: ???
-            // this->visitVal(bsoncxx::types::b_null{});
-        }
-    }
-
 public:
     using Base::Base;
 
@@ -44,22 +33,22 @@ public:
 
     template <class Accessor, class... Args>
     void into(Accessor &accessor, std::shared_ptr<Args...> &value) {
-        visitPtr(accessor, value);
+        this->visitPtr(this, accessor, value);
     }
 
     template <class Accessor, class... Args>
     void into(Accessor &accessor, std::weak_ptr<Args...> &value) {
-        visitPtr(accessor, value);
+        this->visitPtr(this, accessor, value);
     }
 
     template <class Accessor, class... Args>
     void into(Accessor &accessor, std::unique_ptr<Args...> &value) {
-        visitPtr(accessor, value);
+        this->visitPtr(this, accessor, value);
     }
 
     template <class Accessor, class T>
     void into(Accessor &accessor, T *&value) {
-        visitPtr(accessor, value);
+        this->visitPtr(this, accessor, value);
     }
 
     // array
@@ -292,6 +281,24 @@ protected:
     //     visitVal(str);
     //     value = str[0];
     // }
+
+    template <class Self, class Accessor, class T>
+    void visitPtr(Self *self, Accessor &accessor, T &value) {
+        // notice: special case
+        // TODO
+        if (this->type() == bsoncxx::type::k_null) {
+            // leak?
+            value = nullptr;
+        } else {
+            if (!value) {
+                value = T{
+                    new typename std::pointer_traits<T>::element_type{}
+                };
+            }
+            accessor.doMemberVisit(*self, *value);
+        }
+
+    }
 
     template <class Accessor, class T>
     void visitArr(Accessor &accessor, T &value) {
