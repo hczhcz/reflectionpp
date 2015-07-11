@@ -50,7 +50,7 @@ struct TestStruct5: public TestStruct3, public TestStruct4 {
     bool h{false};
     static constexpr bool i{true};
     std::unique_ptr<bool> j[2]{nullptr, nullptr};
-    char k[6]{"test\0"};
+    char k[6]{'t', 'e', 's', 't', 0, 0};
 
     TestStruct5() = default;
 };
