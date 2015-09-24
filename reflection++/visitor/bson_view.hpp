@@ -351,7 +351,7 @@ protected:
                 i->offset
             };
 
-            value.push_back();
+            value.push_back({});
             accessor.doMemberVisit(child, value.back());
         }
     }

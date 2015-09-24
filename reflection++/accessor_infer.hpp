@@ -75,7 +75,7 @@ RPP_ACCESSOR_INFER_INIT()
         ::Append<Accessor>
     // append an accessor to a TypeList (using default accessors)
     // wrappers of RPP_ACCESSOR_AS
-    // notice: LOCAL and DYNAMIC as member means type casting
+    // notice: LOCAL or DYNAMIC as member means type casting
     #define RPP_ACCESSOR_APPEND_TYPE(Object, Type) \
         ::Append<RPP_ACCESSOR_AS(TYPE, #Type, Object::Type)>
     #define RPP_ACCESSOR_APPEND_CONST(Object, Value) \
