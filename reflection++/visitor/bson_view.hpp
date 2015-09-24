@@ -65,34 +65,34 @@ public:
 
     template <class Accessor, class... Args>
     void into(Accessor &accessor, std::deque<Args...> &value) {
-        this->visitArr(accessor, value);
+        this->visitDynArr(accessor, value);
     }
 
     template <class Accessor, class... Args>
     void into(Accessor &accessor, std::forward_list<Args...> &value) {
-        this->visitArr(accessor, value);
+        this->visitDynArr(accessor, value);
     }
 
     template <class Accessor, class... Args>
     void into(Accessor &accessor, std::list<Args...> &value) {
-        this->visitArr(accessor, value);
+        this->visitDynArr(accessor, value);
     }
 
     template <class Accessor, class... Args>
     void into(Accessor &accessor, std::vector<Args...> &value) {
-        this->visitArr(accessor, value);
+        this->visitDynArr(accessor, value);
     }
 
     // map
 
     template <class Accessor, class... Args>
     void into(Accessor &accessor, std::map<Args...> &value) {
-        this->visitMap(accessor, value);
+        this->visitDynMap(accessor, value);
     }
 
     template <class Accessor, class... Args>
     void into(Accessor &accessor, std::unordered_map<Args...> &value) {
-        this->visitMap(accessor, value);
+        this->visitDynMap(accessor, value);
     }
 
     // handle different types of accessors
@@ -329,6 +329,34 @@ protected:
     }
 
     template <class Accessor, class T>
+    void visitDynArr(Accessor &accessor, T &value) {
+        if (this->type() != bsoncxx::type::k_array) {
+            throw Exception{};
+        }
+
+        value.clear();
+
+        auto arr = this->get_array();
+
+        auto begin = std::begin(arr.value);
+        auto end = std::end(arr.value);
+        for (auto i = begin; i != end; ++i) {
+            VisitorBSONView<
+                VisitorBSONViewItemBase<
+                    bsoncxx::array::element
+                >
+            > child{
+                i->raw,
+                i->length,
+                i->offset
+            };
+
+            value.push_back();
+            accessor.doMemberVisit(child, value.back());
+        }
+    }
+
+    template <class Accessor, class T>
     void visitMap(Accessor &accessor, T &value) {
         if (this->type() != bsoncxx::type::k_document) {
             throw Exception{};
@@ -354,6 +382,33 @@ protected:
             };
 
             accessor.doMemberVisit(child, i->second);
+        }
+    }
+
+    template <class Accessor, class T>
+    void visitDynMap(Accessor &accessor, T &value) {
+        if (this->type() != bsoncxx::type::k_document) {
+            throw Exception{};
+        }
+
+        value.clear();
+
+        auto doc = this->get_document();
+
+        auto begin = std::begin(doc.value);
+        auto end = std::end(doc.value);
+        for (auto i = begin; i != end; ++i) {
+            VisitorBSONView<
+                VisitorBSONViewItemBase<
+                    bsoncxx::document::element
+                >
+            > child{
+                i->raw,
+                i->length,
+                i->offset
+            };
+
+            accessor.doMemberVisit(child, value[i->key().to_string()]);
         }
     }
 

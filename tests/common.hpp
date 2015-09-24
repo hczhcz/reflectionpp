@@ -63,7 +63,7 @@ struct TestStruct5m: public TestStruct3, public TestStruct4m {
     TestStruct4m c[2];
     std::string d;
     std::array<double, 3> e;
-    std::unordered_map<std::string, unsigned long> f{{"item1", 0}, {"item2", 0}};
+    std::unordered_map<std::string, unsigned long> f{};
     float g[3];
     int h;
     unsigned i;
