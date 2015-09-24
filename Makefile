@@ -13,13 +13,14 @@ CAT = less
 
 HPP_COMMON = $(wildcard reflection++/*.hpp)
 HPP_VISITOR = $(wildcard reflection++/visitor/*.hpp)
+HPP_TESTS = tests/common.hpp
 CPP_MAIN = tests/main.cpp
 CPP_TESTS = $(wildcard tests/*.cpp)
 
 default:
 	echo "make test\nmake pp\nmake nm\nmake clean"
 
-tests.out: $(HPP_COMMON) $(HPP_VISITOR) $(CPP_TESTS)
+tests.out: $(HPP_COMMON) $(HPP_VISITOR) $(HPP_TESTS) $(CPP_TESTS)
 	$(CC) $(FLAGS) $(CFLAGS) $(LFLAGS) $(CPP_TESTS) -o $@
 
 main.cpp.out:
