@@ -284,7 +284,6 @@ protected:
 
     template <class Self, class Accessor, class T>
     void visitPtr(Self *self, Accessor &accessor, T &value) {
-        // notice: special case
         // TODO
         if (this->type() == bsoncxx::type::k_null) {
             // leak?
@@ -297,7 +296,6 @@ protected:
             }
             accessor.doMemberVisit(*self, *value);
         }
-
     }
 
     template <class Accessor, class T>

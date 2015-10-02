@@ -1,6 +1,15 @@
 #pragma once
 
 #include <sstream>
+#include <string>
+#include <memory>
+#include <array>
+#include <deque>
+#include <forward_list>
+#include <list>
+#include <vector>
+#include <map>
+#include <unordered_map>
 
 #include "../visitor.hpp"
 #include "../accessor.hpp"
@@ -32,13 +41,105 @@ public:
         value = node;
     }
 
-    template <class Accessor, class T>
-    void into(Accessor &, T &value) {
-        // TODO: support STL classes
-        Stream buf{node};
+    // pointer
 
-        buf >> value;
+    template <class Accessor, class T>
+    void into(Accessor &accessor, std::shared_ptr<T> &value) {
+        if (!value) {
+            value = new T{}; // TODO: argument T?
+        }
+
+        accessor.doMemberVisit(*this, *value);
     }
+
+    template <class Accessor, class T>
+    void into(Accessor &accessor, std::weak_ptr<T> &value) {
+        if (!value) {
+            value = new T{}; // TODO: argument T?
+        }
+
+        accessor.doMemberVisit(*this, *value);
+    }
+
+    template <class Accessor, class T, class... Args>
+    void into(Accessor &accessor, std::unique_ptr<T, Args...> &value) {
+        if (!value) {
+            value = std::unique_ptr<T, Args...>{new T{}}; // TODO: argument T?
+        }
+
+        accessor.doMemberVisit(*this, *value);
+    }
+
+    template <class Accessor, class T>
+    void into(Accessor &accessor, T *&value) {
+        if (!value) {
+            value = new T{};
+        }
+
+        accessor.doMemberVisit(*this, *value);
+    }
+
+    // array
+
+    template <class Accessor, class T, rpp_size_t size>
+    void into(Accessor &accessor, T (&value)[size]) {
+        // this->visitArr(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    template <class Accessor, class T, rpp_size_t size>
+    void into(Accessor &accessor, std::array<T, size> &value) {
+        // this->visitArr(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::deque<Args...> &value) {
+        // this->visitArr(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::forward_list<Args...> &value) {
+        // this->visitArr(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::list<Args...> &value) {
+        // this->visitArr(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::vector<Args...> &value) {
+        // this->visitArr(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    // map
+
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::map<Args...> &value) {
+        // this->visitMap(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::unordered_map<Args...> &value) {
+        // this->visitMap(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    // handle different types of accessors
 
     template <class... Args>
     void operator()(AccessorSimple<Args...> &accessor) {
@@ -87,14 +188,97 @@ public:
         node = value;
     }
 
-    template <class Accessor, class T>
-    void into(Accessor &, T &value) {
-        // TODO: support STL classes
-        Stream buf;
+    // pointer
 
-        buf << value;
-        node = buf.str();
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::shared_ptr<Args...> &value) {
+        if (value) {
+            accessor.doMemberVisit(*this, *value);
+        }
     }
+
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::weak_ptr<Args...> &value) {
+        if (value) {
+            accessor.doMemberVisit(*this, *value);
+        }
+    }
+
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::unique_ptr<Args...> &value) {
+        if (value) {
+            accessor.doMemberVisit(*this, *value);
+        }
+    }
+
+    template <class Accessor, class T>
+    void into(Accessor &accessor, T *&value) {
+        if (value) {
+            accessor.doMemberVisit(*this, *value);
+        }
+    }
+
+    // array
+
+    template <class Accessor, class T, rpp_size_t size>
+    void into(Accessor &accessor, T (&value)[size]) {
+        // this->visitArr(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    template <class Accessor, class T, rpp_size_t size>
+    void into(Accessor &accessor, std::array<T, size> &value) {
+        // this->visitArr(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::deque<Args...> &value) {
+        // this->visitArr(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::forward_list<Args...> &value) {
+        // this->visitArr(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::list<Args...> &value) {
+        // this->visitArr(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::vector<Args...> &value) {
+        // this->visitArr(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    // map
+
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::map<Args...> &value) {
+        // this->visitMap(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    template <class Accessor, class... Args>
+    void into(Accessor &accessor, std::unordered_map<Args...> &value) {
+        // this->visitMap(accessor, value); // TODO
+        static_cast<void>(accessor);
+        static_cast<void>(value);
+    }
+
+    // handle different types of accessors
 
     template <class... Args>
     void operator()(AccessorSimple<Args...> &accessor) {
