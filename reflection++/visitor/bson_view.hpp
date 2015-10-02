@@ -398,17 +398,23 @@ protected:
         auto begin = std::begin(doc.value);
         auto end = std::end(doc.value);
         for (auto i = begin; i != end; ++i) {
-            VisitorBSONView<
-                VisitorBSONViewItemBase<
-                    bsoncxx::document::element
-                >
-            > child{
-                i->raw,
-                i->length,
-                i->offset
-            };
+            // TODO: unknown bug
+            //       sometimes infinite loop (known: when doc is empty)
+            try {
+                VisitorBSONView<
+                    VisitorBSONViewItemBase<
+                        bsoncxx::document::element
+                    >
+                > child{
+                    i->raw,
+                    i->length,
+                    i->offset
+                };
 
-            accessor.doMemberVisit(child, value[i->key().to_string()]);
+                accessor.doMemberVisit(child, value[i->key().to_string()]);
+            } catch (...) {
+                break;
+            }
         }
     }
 
