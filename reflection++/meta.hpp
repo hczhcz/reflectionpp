@@ -29,27 +29,27 @@ struct MetaBase<
 
 // the implementation of MetaBase
 // implemented vitrual functions
-template <class Accessor, class Visitors, class Base = MetaBase<Visitors>>
+template <class Name, class Accessor, class Visitors, class Base = MetaBase<Visitors>>
 struct MetaImpl;
 
-template <class Accessor, class Base>
+template <class Name, class Accessor, class Base>
 struct MetaImpl<
-    Accessor, TypeList<>, Base
->: public Base, protected Accessor {
+    Name, Accessor, TypeList<>, Base
+>: public Base, protected Name, protected Accessor {
     using Accessor::Accessor;
     using Base::doVisit;
 
     virtual const char *getName() override {
-        return Accessor::getRealName();
+        return (*static_cast<Name *>(this))();
     }
 };
 
-template <class Accessor, class Visitor, class... Args, class Base>
+template <class Name, class Accessor, class Visitor, class... Args, class Base>
 struct MetaImpl<
-    Accessor, TypeList<Visitor, Args...>, Base
->: public MetaImpl<Accessor, TypeList<Args...>, Base> {
-    using MetaImpl<Accessor, TypeList<Args...>, Base>::MetaImpl;
-    using MetaImpl<Accessor, TypeList<Args...>, Base>::doVisit;
+    Name, Accessor, TypeList<Visitor, Args...>, Base
+>: public MetaImpl<Name, Accessor, TypeList<Args...>, Base> {
+    using MetaImpl<Name, Accessor, TypeList<Args...>, Base>::MetaImpl;
+    using MetaImpl<Name, Accessor, TypeList<Args...>, Base>::doVisit;
 
     virtual typename Visitor::ReturnType doVisit(Visitor &visitor) override {
         return visitor(*static_cast<Accessor *>(this));
@@ -60,32 +60,38 @@ struct MetaImpl<
 // wrappers of RPP_ACCESSOR_AS
 #define RPP_META_TYPE(Type, ...) \
     rpp::MetaImpl< \
-        RPP_ACCESSOR_AS(TYPE, #Type, Type), \
+        RPP_HOLDER_STR(#Type), \
+        RPP_ACCESSOR_AS(TYPE, Type), \
         __VA_ARGS__ \
     >
 #define RPP_META_CONST(Value, ...) \
     rpp::MetaImpl< \
-        RPP_ACCESSOR_AS(CONST, #Value, Value), \
+        RPP_HOLDER_STR(#Value), \
+        RPP_ACCESSOR_AS(CONST, Value), \
         __VA_ARGS__ \
     >
 #define RPP_META_LOCAL(Name, Type, ...) \
     rpp::MetaImpl< \
-        RPP_ACCESSOR_AS(LOCAL, Name, Type), \
+        RPP_HOLDER_STR(Name), \
+        RPP_ACCESSOR_AS(LOCAL, Type), \
         __VA_ARGS__ \
     >
 #define RPP_META_REF(Value, ...) \
     rpp::MetaImpl< \
-        RPP_ACCESSOR_AS(REF, #Value, Value), \
+        RPP_HOLDER_STR(#Value), \
+        RPP_ACCESSOR_AS(REF, Value), \
         __VA_ARGS__ \
     >
 #define RPP_META_DYNAMIC(Name, Type, ...) \
     rpp::MetaImpl< \
-        RPP_ACCESSOR_AS(DYNAMIC, Name, Type), \
+        RPP_HOLDER_STR(Name), \
+        RPP_ACCESSOR_AS(DYNAMIC, Type), \
         __VA_ARGS__ \
     >
 #define RPP_META_MEMBER(Object, Value, ...) \
     rpp::MetaImpl< \
-        RPP_ACCESSOR_AS(MEMBER, #Value, Object, Value), \
+        RPP_HOLDER_STR(#Value), \
+        RPP_ACCESSOR_AS(MEMBER, Object, Value), \
         __VA_ARGS__ \
     >
 

@@ -7,11 +7,8 @@ namespace rpp {
 // a compile-time wraper class of AccessorSimple
 template <class Nothing = void>
 struct AccessorSimpleWrap {
-    template <class Name, class Value>
-    using Accessor = AccessorSimple<
-        Name,
-        Value
-    >;
+    template <class Value>
+    using Accessor = AccessorSimple<Value>;
 
     // compile-time only
     AccessorSimpleWrap() = delete;
@@ -22,12 +19,8 @@ template <class Members>
 struct AccessorObjectWrap {
     using List = Members;
 
-    template <class Name, class Value>
-    using Accessor = AccessorObject<
-        Name,
-        Value,
-        Members
-    >;
+    template <class Value>
+    using Accessor = AccessorObject<Value, Members>;
 
     // compile-time only
     AccessorObjectWrap() = delete;
@@ -36,26 +29,22 @@ struct AccessorObjectWrap {
 // a compile-time wraper class of AccessorDynamic
 template <class Member>
 struct AccessorDynamicWrap {
-    template <class Name, class Value>
-    using Accessor = AccessorDynamic<
-        Name,
-        Value,
-        Member
-    >;
+    template <class Value>
+    using Accessor = AccessorDynamic<Value, Member>;
 
     // compile-time only
     AccessorDynamicWrap() = delete;
 };
 
 // get the default accessor
-#define RPP_ACCESSOR(Name, Value) \
+#define RPP_ACCESSOR(Value) \
     typename AccessorInfer< \
         rpp::HoldType<Value> \
-    >::template Accessor<Name, Value>
+    >::template Accessor<Value>
 
-// get the default accessor, bind the holder's type and the name
-#define RPP_ACCESSOR_AS(Mode, Name, ...) \
-    RPP_ACCESSOR(RPP_HOLDER_STR(Name), RPP_HOLDER_##Mode(__VA_ARGS__))
+// get the default accessor, bind the holder's type
+#define RPP_ACCESSOR_AS(Mode, ...) \
+    RPP_ACCESSOR(RPP_HOLDER_##Mode(__VA_ARGS__))
 
 // enable AccessorInfer in the current namespace
 #define RPP_ACCESSOR_INFER_INIT() \
@@ -71,23 +60,23 @@ RPP_ACCESSOR_INFER_INIT()
 // helper macros begin
 
     // append an accessor to a TypeList
-    #define RPP_ACCESSOR_APPEND_ACCESSOR(Object, Accessor) \
-        ::Append<Accessor>
+    #define RPP_ACCESSOR_APPEND_ACCESSOR(Object, Name, Accessor) \
+        ::Append<Name>::Append<Accessor>
     // append an accessor to a TypeList (using default accessors)
     // wrappers of RPP_ACCESSOR_AS
     // notice: LOCAL or DYNAMIC as member means type casting
     #define RPP_ACCESSOR_APPEND_TYPE(Object, Type) \
-        ::Append<RPP_ACCESSOR_AS(TYPE, #Type, Object::Type)>
+        ::Append<RPP_HOLDER_STR(#Type)>::Append<RPP_ACCESSOR_AS(TYPE, Object::Type)>
     #define RPP_ACCESSOR_APPEND_CONST(Object, Value) \
-        ::Append<RPP_ACCESSOR_AS(CONST, #Value, Object::Value)>
+        ::Append<RPP_HOLDER_STR(#Value)>::Append<RPP_ACCESSOR_AS(CONST, Object::Value)>
     #define RPP_ACCESSOR_APPEND_LOCAL(Object, Type) \
-        ::Append<RPP_ACCESSOR_AS(LOCAL, #Type, Type)>
+        ::Append<RPP_HOLDER_STR(#Type)>::Append<RPP_ACCESSOR_AS(LOCAL, Type)>
     #define RPP_ACCESSOR_APPEND_REF(Object, Value) \
-        ::Append<RPP_ACCESSOR_AS(REF, #Value, Object::Value)>
+        ::Append<RPP_HOLDER_STR(#Value)>::Append<RPP_ACCESSOR_AS(REF, Object::Value)>
     #define RPP_ACCESSOR_APPEND_DYNAMIC(Object, Type) \
-        ::Append<RPP_ACCESSOR_AS(DYNAMIC, #Type, Type)>
+        ::Append<RPP_HOLDER_STR(#Type)>::Append<RPP_ACCESSOR_AS(DYNAMIC, Type)>
     #define RPP_ACCESSOR_APPEND_MEMBER(Object, Value) \
-        ::Append<RPP_ACCESSOR_AS(MEMBER, #Value, Object, Value)>
+        ::Append<RPP_HOLDER_STR(#Value)>::Append<RPP_ACCESSOR_AS(MEMBER, Object, Value)>
     // append an accessor wraps a base type to a TypeList
     #define RPP_ACCESSOR_APPEND_BASE(Derived, Base) \
         RPP_ACCESSOR_APPEND_DYNAMIC(Derived, Base)
@@ -132,7 +121,7 @@ RPP_ACCESSOR_INFER_INIT()
 #define RPP_TYPE_DYNAMIC(Member, Object) \
     template <> \
     struct AccessorInfer<Object &>: public rpp::AccessorDynamicWrap< \
-        RPP_ACCESSOR_AS(DYNAMIC, "member", Member) \
+        RPP_ACCESSOR_AS(DYNAMIC, Member) \
     > {};
 
 // RPP_TYPE_OBJECT with template arguments
@@ -153,7 +142,7 @@ RPP_ACCESSOR_INFER_INIT()
 #define RPP_TYPE_DYNAMIC_GENERIC(Member, ...) \
     /* before the macro: template <???> */ \
     struct AccessorInfer<rpp::RefCast<__VA_ARGS__>>: public rpp::AccessorDynamicWrap< \
-        RPP_ACCESSOR_AS(DYNAMIC, "member", Member) \
+        RPP_ACCESSOR_AS(DYNAMIC, Member) \
     > {};
 
 }
