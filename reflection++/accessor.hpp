@@ -22,17 +22,13 @@ struct AccessorFactory {
 };
 
 // data accessors of simple data
-template <class Name, class Value>
+template <class Value>
 struct AccessorSimple: public Value {
     using Value::Value;
 
     using Meta = AccessorSimple<
-        Name, HolderType<HoldType<Value>>
+        HolderType<HoldType<Value>>
     >;
-
-    const char *getRealName() {
-        return AccessorFactory<Name>::make((*this)())();
-    }
 };
 
 // helper class of AccessObject
@@ -62,15 +58,16 @@ struct AccessorObjectHelper<
     }
 };
 
-template <class Value, class Member, class... Args>
+template <class Value, class Name, class Member, class... Args>
 struct AccessorObjectHelper<
-    Value, TypeList<Member, Args...>
+    Value, TypeList<Name, Member, Args...>
 >: public AccessorObjectHelper<Value, TypeList<Args...>> {
     using AccessorObjectHelper<Value, TypeList<Args...>>::AccessorObjectHelper;
 
     using MetaList = typename AccessorObjectHelper<Value, TypeList<Args...>>
         ::MetaList
-        ::template Push<typename Member::Meta>;
+        ::template Push<typename Member::Meta>
+        ::template Push<Name>;
 
     rpp_size_t size() {
         return 1 + sizeof...(Args);
@@ -78,7 +75,7 @@ struct AccessorObjectHelper<
 
     const char *getMemberName(rpp_size_t index) {
         if (index == 0) {
-            return AccessorFactory<Member>::make((*this)()).getRealName();
+            return AccessorFactory<Name>::make((*this)())();
         } else {
             return AccessorObjectHelper<Value, TypeList<Args...>>
                 ::getMemberName(index - 1);
@@ -100,33 +97,25 @@ struct AccessorObjectHelper<
 };
 
 // data accessors associated with members
-template <class Name, class Value, class Members>
+template <class Value, class Members>
 struct AccessorObject: public AccessorObjectHelper<Value, Members> {
     using AccessorObjectHelper<Value, Members>::AccessorObjectHelper;
 
     using Meta = AccessorObject<
-        Name, HolderType<HoldType<Value>>,
+        HolderType<HoldType<Value>>,
         typename AccessorObjectHelper<Value, Members>::MetaList
     >;
-
-    const char *getRealName() {
-        return AccessorFactory<Name>::make((*this)())();
-    }
 };
 
 // data accessors associated with dynamic members
-template <class Name, class Value, class Member>
+template <class Value, class Member>
 struct AccessorDynamic: public Value {
     using Value::Value;
 
     using Meta = AccessorDynamic<
-        Name, HolderType<HoldType<Value>>,
+        HolderType<HoldType<Value>>,
         typename Member::Meta
     >;
-
-    const char *getRealName() {
-        return AccessorFactory<Name>::make((*this)())();
-    }
 
     template <class Visitor, class T>
     typename Visitor::ReturnType doMemberVisit(Visitor &visitor, T &value) {
