@@ -70,7 +70,7 @@ struct AccessorObjectHelper<
         ::template Push<Name>;
 
     rpp_size_t size() {
-        return 1 + sizeof...(Args);
+        return 1 + AccessorObjectHelper<Value, TypeList<Args...>>::size();
     }
 
     const char *getMemberName(rpp_size_t index) { // TODO
