@@ -63,14 +63,12 @@ RPP_VISITOR_REG(Visitor5)
 RPP_VISITOR_COLLECT(VisitorAll3)
 
 using Accessor1 = AccessorSimple<
-    RPP_HOLDER_STR("value1"),
     RPP_HOLDER_LOCAL(int)
 >;
 
 static_assert(std::is_same<
     Accessor1,
     AccessorSimple<
-        HolderConst<decltype(RPP_STATIC_STR("value1")), RPP_STATIC_STR("value1")>,
         HolderLocal<int>
     >
 >(), "");
@@ -82,27 +80,26 @@ char value3{'C'};
 namespace rpp_another_namespace {
 
 using Accessor1 = rpp::Accessor1;
-using Accessor2 = RPP_ACCESSOR_AS(LOCAL, "value2", char);
-using Accessor3 = RPP_ACCESSOR_AS(REF, "value3", rpp::value3);
-using Accessor4 = RPP_ACCESSOR_AS(DYNAMIC, "value4", char);
+using Accessor2 = RPP_ACCESSOR_AS(LOCAL, char);
+using Accessor3 = RPP_ACCESSOR_AS(REF, rpp::value3);
+using Accessor4 = RPP_ACCESSOR_AS(DYNAMIC, char);
 
-using Accessor5m1 = RPP_ACCESSOR_AS(MEMBER, "member1", TestStruct, member1);
-using Accessor5m2 = RPP_ACCESSOR_AS(MEMBER, "member2", TestStruct, member2);
+using Accessor5m1 = RPP_ACCESSOR_AS(MEMBER, TestStruct, member1);
+using Accessor5m2 = RPP_ACCESSOR_AS(MEMBER, TestStruct, member2);
 
-using Accessor5 = RPP_ACCESSOR_AS(LOCAL, "value5", TestStruct);
+using Accessor5 = RPP_ACCESSOR_AS(LOCAL, TestStruct);
 using Accessor6 = Accessor5::Meta;
 
-using Accessor7m3 = RPP_ACCESSOR_AS(MEMBER, "member3", TestStruct2, member3);
-using Accessor7m4 = RPP_ACCESSOR_AS(REF, "member4", TestStruct2::member4);
-using Accessor7m5 = RPP_ACCESSOR_AS(MEMBER, "member5", TestStruct2, member5);
+using Accessor7m3 = RPP_ACCESSOR_AS(MEMBER, TestStruct2, member3);
+using Accessor7m4 = RPP_ACCESSOR_AS(REF, TestStruct2::member4);
+using Accessor7m5 = RPP_ACCESSOR_AS(MEMBER, TestStruct2, member5);
 
-using Accessor7 = RPP_ACCESSOR_AS(LOCAL, "value7", TestStruct2);
+using Accessor7 = RPP_ACCESSOR_AS(LOCAL, TestStruct2);
 
 static_assert(
     std::is_same<
         Accessor3,
         rpp::AccessorSimple<
-            rpp::HolderConst<const char (&)[], RPP_STATIC_STR("value3")>,
             rpp::HolderRef<char, rpp::value3>
         >
     >(), ""
@@ -112,7 +109,6 @@ static_assert(
     std::is_same<
         Accessor5m1,
         rpp::AccessorSimple<
-            rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member1")>,
             rpp::HolderMember<TestStruct, int, &TestStruct::member1>
         >
     >(), ""
@@ -122,7 +118,6 @@ static_assert(
     std::is_same<
         Accessor5m1::Meta,
         rpp::AccessorSimple<
-            rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member1")>,
             rpp::HolderType<int &>
         >
     >(), ""
@@ -132,7 +127,6 @@ static_assert(
     std::is_same<
         Accessor5m2,
         rpp::AccessorSimple<
-            rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member2")>,
             rpp::HolderMember<TestStruct, float, &TestStruct::member2>
         >
     >(), ""
@@ -142,9 +136,13 @@ static_assert(
     std::is_same<
         Accessor5,
         rpp::AccessorObject<
-            rpp::HolderConst<const char (&)[], RPP_STATIC_STR("value5")>,
             rpp::HolderLocal<TestStruct>,
-            rpp::TypeList<Accessor5m1, Accessor5m2>
+            rpp::TypeList<
+                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member1")>,
+                Accessor5m1,
+                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member2")>,
+                Accessor5m2
+            >
         >
     >(), ""
 );
@@ -153,9 +151,13 @@ static_assert(
     std::is_same<
         Accessor6,
         rpp::AccessorObject<
-            rpp::HolderConst<const char (&)[], RPP_STATIC_STR("value5")>,
             rpp::HolderType<TestStruct &>,
-            rpp::TypeList<Accessor5m1::Meta, Accessor5m2::Meta>
+            rpp::TypeList<
+                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member1")>,
+                Accessor5m1::Meta,
+                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member2")>,
+                Accessor5m2::Meta
+            >
         >
     >(), ""
 );
@@ -164,15 +166,24 @@ static_assert(
     std::is_same<
         Accessor7,
         rpp::AccessorObject<
-            rpp::HolderConst<const char (&)[], RPP_STATIC_STR("value7")>,
             rpp::HolderLocal<TestStruct2>,
             rpp::TypeList<
+                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("TestStruct")>,
                 rpp::AccessorObject<
-                    rpp::HolderConst<const char (&)[], RPP_STATIC_STR("TestStruct")>,
                     rpp::HolderDynamic<TestStruct>,
-                    rpp::TypeList<Accessor5m1, Accessor5m2>
+                    rpp::TypeList<
+                        rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member1")>,
+                        Accessor5m1,
+                        rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member2")>,
+                        Accessor5m2
+                    >
                 >,
-                Accessor7m3, Accessor7m4, Accessor7m5
+                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member3")>,
+                Accessor7m3,
+                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member4")>,
+                Accessor7m4,
+                rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member5")>,
+                Accessor7m5
             >
         >
     >(), ""
@@ -181,13 +192,41 @@ static_assert(
 static const int test_meta = []() {
     std::cerr << "======== test: " << __FILE__ << " ========" << std::endl;
 
-    rpp::MetaImpl<Accessor1, rpp::VisitorAll3> meta1{0};
-    rpp::MetaImpl<Accessor2, rpp::VisitorAll3> meta2{'A'};
-    rpp::MetaImpl<Accessor3, rpp::VisitorAll3> meta3;
-    rpp::MetaImpl<Accessor4, rpp::VisitorAll3> meta4{rpp::value3};
-    rpp::MetaImpl<Accessor5, rpp::VisitorAll3> meta5{TestStruct{1, 1.5}};
-    rpp::MetaImpl<Accessor6, rpp::VisitorAll3> meta6;
-    rpp::MetaImpl<Accessor7, rpp::VisitorAll3> meta7{TestStruct2{1, '3', 5}};
+    rpp::MetaImpl<
+        RPP_HOLDER_STR("value1"),
+        Accessor1,
+        rpp::VisitorAll3
+    > meta1{0};
+    rpp::MetaImpl<
+        RPP_HOLDER_STR("value2"),
+        Accessor2,
+        rpp::VisitorAll3
+    > meta2{'A'};
+    rpp::MetaImpl<
+        RPP_HOLDER_STR("value3"),
+        Accessor3,
+        rpp::VisitorAll3
+    > meta3;
+    rpp::MetaImpl<
+        RPP_HOLDER_STR("value4"),
+        Accessor4,
+        rpp::VisitorAll3
+    > meta4{rpp::value3};
+    rpp::MetaImpl<
+        RPP_HOLDER_STR("value5"),
+        Accessor5,
+        rpp::VisitorAll3
+    > meta5{TestStruct{1, 1.5}};
+    rpp::MetaImpl<
+        RPP_HOLDER_STR("value6"),
+        Accessor6,
+        rpp::VisitorAll3
+    > meta6;
+    rpp::MetaImpl<
+        RPP_HOLDER_STR("value7"),
+        Accessor7,
+        rpp::VisitorAll3
+    > meta7{TestStruct2{1, '3', 5}};
 
     std::vector<rpp::MetaBase<rpp::VisitorAll3> *> metalist{
         &meta1, &meta2, &meta3, &meta4, &meta5, &meta6, &meta7

@@ -4,7 +4,7 @@
 
 namespace rpp {
 
-// to construct accessors as a member
+// to construct accessors as a member of object
 template <class T>
 struct AccessorFactory {
     // static only
@@ -48,7 +48,7 @@ struct AccessorObjectHelper<
         return 0;
     }
 
-    const char *getMemberName(rpp_size_t) {
+    const char *getMemberName(rpp_size_t) { // TODO
         throw Exception{};
     }
 
@@ -73,8 +73,9 @@ struct AccessorObjectHelper<
         return 1 + sizeof...(Args);
     }
 
-    const char *getMemberName(rpp_size_t index) {
+    const char *getMemberName(rpp_size_t index) { // TODO
         if (index == 0) {
+            // notice: Name is a holder object
             return AccessorFactory<Name>::make((*this)())();
         } else {
             return AccessorObjectHelper<Value, TypeList<Args...>>
