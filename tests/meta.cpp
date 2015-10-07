@@ -88,7 +88,7 @@ using Accessor5m1 = RPP_ACCESSOR_AS(MEMBER, TestStruct, member1);
 using Accessor5m2 = RPP_ACCESSOR_AS(MEMBER, TestStruct, member2);
 
 using Accessor5 = RPP_ACCESSOR_AS(LOCAL, TestStruct);
-using Accessor6 = Accessor5::Meta;
+using Accessor6 = Accessor5::Type;
 
 using Accessor7m3 = RPP_ACCESSOR_AS(MEMBER, TestStruct2, member3);
 using Accessor7m4 = RPP_ACCESSOR_AS(REF, TestStruct2::member4);
@@ -116,7 +116,7 @@ static_assert(
 
 static_assert(
     std::is_same<
-        Accessor5m1::Meta,
+        Accessor5m1::Type,
         rpp::AccessorSimple<
             rpp::HolderType<int &>
         >
@@ -154,9 +154,9 @@ static_assert(
             rpp::HolderType<TestStruct &>,
             rpp::TypeList<
                 rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member1")>,
-                Accessor5m1::Meta,
+                Accessor5m1::Type,
                 rpp::HolderConst<const char (&)[], RPP_STATIC_STR("member2")>,
-                Accessor5m2::Meta
+                Accessor5m2::Type
             >
         >
     >(), ""

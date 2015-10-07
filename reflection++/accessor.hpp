@@ -26,7 +26,7 @@ template <class Value>
 struct AccessorSimple: public Value {
     using Value::Value;
 
-    using Meta = AccessorSimple<
+    using Type = AccessorSimple<
         HolderType<HoldType<Value>>
     >;
 };
@@ -42,7 +42,7 @@ struct AccessorObjectHelper<
 >: public Value {
     using Value::Value;
 
-    using MetaList = TypeList<>;
+    using MemberTypes = TypeList<>;
 
     rpp_size_t size() {
         return 0;
@@ -64,9 +64,9 @@ struct AccessorObjectHelper<
 >: public AccessorObjectHelper<Value, TypeList<Args...>> {
     using AccessorObjectHelper<Value, TypeList<Args...>>::AccessorObjectHelper;
 
-    using MetaList = typename AccessorObjectHelper<Value, TypeList<Args...>>
-        ::MetaList
-        ::template Push<typename Member::Meta>
+    using MemberTypes = typename AccessorObjectHelper<Value, TypeList<Args...>>
+        ::MemberTypes
+        ::template Push<typename Member::Type>
         ::template Push<Name>;
 
     rpp_size_t size() {
@@ -102,9 +102,9 @@ template <class Value, class Members>
 struct AccessorObject: public AccessorObjectHelper<Value, Members> {
     using AccessorObjectHelper<Value, Members>::AccessorObjectHelper;
 
-    using Meta = AccessorObject<
+    using Type = AccessorObject<
         HolderType<HoldType<Value>>,
-        typename AccessorObjectHelper<Value, Members>::MetaList
+        typename AccessorObjectHelper<Value, Members>::MemberTypes
     >;
 };
 
@@ -113,9 +113,9 @@ template <class Value, class Member>
 struct AccessorDynamic: public Value {
     using Value::Value;
 
-    using Meta = AccessorDynamic<
+    using Type = AccessorDynamic<
         HolderType<HoldType<Value>>,
-        typename Member::Meta
+        typename Member::Type
     >;
 
     template <class Visitor, class T>
