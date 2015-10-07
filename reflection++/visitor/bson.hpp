@@ -1,5 +1,12 @@
 #pragma once
 
+#include "../visitor.hpp"
+#include "../accessor.hpp"
+
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
+
 #include <functional>
 #include <string>
 #include <memory>
@@ -10,13 +17,6 @@
 #include <vector>
 #include <map>
 #include <unordered_map>
-
-#include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/basic/array.hpp>
-#include <bsoncxx/builder/basic/kvp.hpp>
-
-#include "../visitor.hpp"
-#include "../accessor.hpp"
 
 namespace rpp {
 

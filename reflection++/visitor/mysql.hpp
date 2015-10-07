@@ -1,10 +1,10 @@
 #pragma once
 
-#include <ostream>
-#include <string>
-
 #include "../visitor.hpp"
 #include "../accessor.hpp"
+
+#include <ostream>
+#include <string>
 
 namespace rpp {
 

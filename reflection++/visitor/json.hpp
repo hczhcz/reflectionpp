@@ -1,5 +1,8 @@
 #pragma once
 
+#include "../visitor.hpp"
+#include "../accessor.hpp"
+
 #include <ostream>
 #include <string>
 #include <memory>
@@ -10,9 +13,6 @@
 #include <vector>
 #include <map>
 #include <unordered_map>
-
-#include "../visitor.hpp"
-#include "../accessor.hpp"
 
 namespace rpp {
 

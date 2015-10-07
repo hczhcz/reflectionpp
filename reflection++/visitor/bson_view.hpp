@@ -1,5 +1,11 @@
 #pragma once
 
+#include "../visitor.hpp"
+#include "../accessor.hpp"
+
+#include <bsoncxx/types/value.hpp>
+#include <bsoncxx/types.hpp>
+
 #include <functional>
 #include <string>
 #include <memory>
@@ -10,12 +16,6 @@
 #include <vector>
 #include <map>
 #include <unordered_map>
-
-#include <bsoncxx/types/value.hpp>
-#include <bsoncxx/types.hpp>
-
-#include "../visitor.hpp"
-#include "../accessor.hpp"
 
 namespace rpp {
 
