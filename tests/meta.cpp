@@ -7,6 +7,9 @@ struct Visitor4: public VisitorBase<> {
     Visitor4(Visitor4 &&) = delete;
     Visitor4(const Visitor4 &) = delete;
 
+    long misc1;
+    std::string misc2;
+
     void visit(int &value) {
         std::cerr << "int(" << value << ") ";
     }

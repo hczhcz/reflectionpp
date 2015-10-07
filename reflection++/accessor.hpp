@@ -48,7 +48,7 @@ struct AccessorObjectHelper<
         return 0;
     }
 
-    const char *getMemberName(rpp_size_t) { // TODO
+    const char *getMemberName(rpp_size_t) {
         throw Exception{};
     }
 
@@ -73,7 +73,7 @@ struct AccessorObjectHelper<
         return 1 + AccessorObjectHelper<Value, TypeList<Args...>>::size();
     }
 
-    const char *getMemberName(rpp_size_t index) { // TODO
+    const char *getMemberName(rpp_size_t index) {
         if (index == 0) {
             // notice: Name is a holder object
             return AccessorFactory<Name>::make((*this)())();

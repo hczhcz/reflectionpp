@@ -22,7 +22,7 @@ struct VisitorTail final {
             trace_##Counter(here, next(here, value), value) \
         ); \
         \
-        rpp::RefCast<__VA_ARGS__> next( \
+        RPP_PASS(__VA_ARGS__) &next( \
             Here, \
             decltype( \
                 trace_##Counter(here, next(here, here), here) \
