@@ -13,14 +13,6 @@ struct Exception {};
 #define RPP_PASS(...) \
     decltype((static_cast<auto (*)() -> __VA_ARGS__>(nullptr))())
 
-// get reference of a type
-template <class T>
-using RefCast = T &;
-
-// get the actual object of a member pointer
-template <class Object, class T>
-Object realObject(T Object::*);
-
 // a compile-time type list to contain classes
 template <class... Args>
 struct TypeList final {

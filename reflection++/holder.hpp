@@ -1,5 +1,6 @@
 #pragma once
 
+#include "traits.hpp"
 #include "static_str.hpp"
 
 namespace rpp {
@@ -96,7 +97,7 @@ struct HolderMember {
     rpp::HolderDynamic<__VA_ARGS__>
 #define RPP_HOLDER_MEMBER(Object, ...) \
     rpp::HolderMember< \
-        decltype(rpp::realObject(&Object::__VA_ARGS__)), \
+        decltype(rpp::memberToObject(&Object::__VA_ARGS__)), \
         decltype(Object::__VA_ARGS__), \
         &Object::__VA_ARGS__ \
     >

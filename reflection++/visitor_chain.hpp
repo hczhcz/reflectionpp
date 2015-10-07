@@ -1,5 +1,6 @@
 #pragma once
 
+#include "traits.hpp"
 #include "visitor.hpp"
 
 namespace rpp {
