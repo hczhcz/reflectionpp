@@ -61,23 +61,23 @@ RPP_VISITOR_REG(VisitorSize<false>)
 
 // get pointer of a value
 template <class Pointer>
-struct VisitorPointer: public VisitorBase<Pointer *> {
-    Pointer *visit(...) {
+struct VisitorPointer: public VisitorBase<Pointer> {
+    Pointer visit(...) {
         throw Exception{};
     }
 
     template <class T>
-    auto visit(T &value) -> decltype(static_cast<Pointer *>(&value)) {
-        return static_cast<Pointer *>(&value);
+    auto visit(T &value) -> decltype(static_cast<Pointer>(&value)) {
+        return static_cast<Pointer>(&value);
     }
 
     template <class Accessor>
-    Pointer *operator()(Accessor &accessor) {
+    Pointer operator()(Accessor &accessor) {
         return visit(accessor());
     }
 };
 
-RPP_VISITOR_REG(VisitorPointer<void>)
-RPP_VISITOR_REG(VisitorPointer<const void>)
+RPP_VISITOR_REG(VisitorPointer<void *>)
+RPP_VISITOR_REG(VisitorPointer<const void *>)
 
 }
