@@ -155,20 +155,16 @@ public:
         out{_out}, indent{_indent} {}
 
     template <class T>
-    auto visit(const T value) -> decltype(
-        static_cast<void>(
-            sizeof(char [2 - static_cast<int>(static_cast<T>(3))])
-        )
-    ) {
+    auto visit(const T value) -> Ensure<
+        static_cast<int>(static_cast<T>(2)) == 1
+    > {
         out << (value ? "true" : "false");
     }
 
     template <class T>
-    auto visit(const T value) -> decltype(
-        static_cast<void>(
-            sizeof(char [static_cast<int>(static_cast<T>(3)) - 2])
-        )
-    ) {
+    auto visit(const T value) -> Ensure<
+        static_cast<int>(static_cast<T>(2)) == 2
+    > {
         out << std::to_string(value);
     }
 
