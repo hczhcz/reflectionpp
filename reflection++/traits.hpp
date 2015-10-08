@@ -2,9 +2,9 @@
 
 namespace rpp {
 
-// get reference of a type
+// get a reference to a type
 template <class T>
-using RefCast = T &;
+using GetRef = T &;
 
 // get the actual object of a member pointer
 template <class Object, class T>

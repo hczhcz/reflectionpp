@@ -128,7 +128,7 @@ RPP_ACCESSOR_INFER_INIT()
 // __VA_ARGS__ is the type of object
 #define RPP_TYPE_OBJECT_GENERIC(Members, ...) \
     /* before the macro: template <???> */ \
-    struct AccessorInfer<rpp::RefCast<__VA_ARGS__>>: public rpp::AccessorObjectWrap< \
+    struct AccessorInfer<rpp::GetRef<__VA_ARGS__>>: public rpp::AccessorObjectWrap< \
         rpp::TypeList<> \
         RPP_MEMBER_LIST_BEGIN( \
             RPP_PASS(__VA_ARGS__) \
@@ -141,7 +141,7 @@ RPP_ACCESSOR_INFER_INIT()
 // __VA_ARGS__ is the type of object
 #define RPP_TYPE_DYNAMIC_GENERIC(Member, ...) \
     /* before the macro: template <???> */ \
-    struct AccessorInfer<rpp::RefCast<__VA_ARGS__>>: public rpp::AccessorDynamicWrap< \
+    struct AccessorInfer<rpp::GetRef<__VA_ARGS__>>: public rpp::AccessorDynamicWrap< \
         RPP_ACCESSOR_AS(DYNAMIC, Member) \
     > {};
 
