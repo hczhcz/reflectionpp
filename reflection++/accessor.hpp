@@ -27,7 +27,7 @@ struct AccessorSimple: public Value {
     using Value::Value;
 
     using Type = AccessorSimple<
-        HolderType<HoldType<Value>>
+        HolderType<GetReturn<Value>>
     >;
 };
 
@@ -103,7 +103,7 @@ struct AccessorObject: public AccessorObjectHelper<Value, Members> {
     using AccessorObjectHelper<Value, Members>::AccessorObjectHelper;
 
     using Type = AccessorObject<
-        HolderType<HoldType<Value>>,
+        HolderType<GetReturn<Value>>,
         typename AccessorObjectHelper<Value, Members>::MemberTypes
     >;
 };
@@ -114,7 +114,7 @@ struct AccessorDynamic: public Value {
     using Value::Value;
 
     using Type = AccessorDynamic<
-        HolderType<HoldType<Value>>,
+        HolderType<GetReturn<Value>>,
         typename Member::Type
     >;
 

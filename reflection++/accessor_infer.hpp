@@ -39,7 +39,7 @@ struct AccessorDynamicWrap {
 // get the default accessor
 #define RPP_ACCESSOR(Value) \
     typename AccessorInfer< \
-        rpp::HoldType<Value> \
+        rpp::GetReturn<Value> \
     >::template Accessor<Value>
 
 // get the default accessor, bind the holder's type
