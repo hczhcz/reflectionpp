@@ -23,7 +23,7 @@ default:
 tests.out: $(HPP_COMMON) $(HPP_VISITOR) $(HPP_TESTS) $(CPP_TESTS)
 	$(CC) $(FLAGS) $(CFLAGS) $(LFLAGS) $(CPP_TESTS) -o $@
 
-main.cpp.out:
+main.cpp.out: $(HPP_COMMON) $(HPP_VISITOR) $(HPP_TESTS) $(CPP_TESTS)
 	$(CC) -E $(FLAGS) $(CFLAGS) $(CPP_MAIN) -o $@
 
 names.nm.out: tests.out
