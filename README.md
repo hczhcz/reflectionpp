@@ -74,8 +74,3 @@ Compile it like this:
     clang++ -std=c++11 your_code.cpp
 
 If you want to use the BSON visitor, [bson-cxx](https://github.com/mongodb/mongo-cxx-driver) is required.
-
-License
----
-
-Tell me if you need a licensed version :)
