@@ -1,13 +1,29 @@
 #pragma once
 
+// TODO: include?
+#define RPP_EXCEPTION_PRINT
+#ifdef RPP_EXCEPTION_PRINT
+    #include <iostream>
+#endif
+
 namespace rpp {
 
 // type of size
 using rpp_size_t = unsigned long;
 
 // exception
-// TODO: more information
-struct Exception {};
+struct Exception {
+    // TODO
+    Exception() {
+        //
+    }
+
+    Exception(const char *file, const rpp_size_t line, const char *func) {
+        #ifdef RPP_EXCEPTION_PRINT
+            std::cerr << "ERROR: " << file << ":" << line << " " << func << std::endl;
+        #endif
+    }
+};
 
 // wrap a type (for macro arguments)
 #define RPP_PASS(...) \
